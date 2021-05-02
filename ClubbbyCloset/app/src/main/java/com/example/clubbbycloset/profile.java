@@ -17,7 +17,7 @@ import java.io.InputStreamReader;
 
 public class profile extends AppCompatActivity {
     private static final String FILE_NAME = "userdata.txt";
-    ImageView bhome, bsearch, badd, bvote, bprofile;
+    ImageView bhome, bsearch, badd, bvote, bprofile, blogout;
     TextView tvusername;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +29,8 @@ public class profile extends AppCompatActivity {
         badd = (ImageView) this.findViewById(R.id.add);
         bvote = (ImageView) this.findViewById(R.id.vote);
         bprofile = (ImageView) this.findViewById(R.id.profile);
+        blogout = (ImageView)this.findViewById(R.id.logout);
+
         tvusername= (TextView)this.findViewById(R.id.username);
         try {
             tvusername.setText(load());
@@ -68,6 +70,15 @@ public class profile extends AppCompatActivity {
             public void onClick(View v) {
                 Intent vote = new Intent(profile.this, vote.class);
                 startActivity(vote); // takes the user to the signup activity
+            }
+
+        });
+
+        blogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent login = new Intent(profile.this, login.class);
+                startActivity(login); // takes the user to the signup activity
             }
 
         });

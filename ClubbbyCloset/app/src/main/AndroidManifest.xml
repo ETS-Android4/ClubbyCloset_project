@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ClubbbyCloset">
-        <activity android:name=".usersProfile"/>
+        <activity android:name=".searchResults"></activity>
+        <activity android:name=".usersProfile" />
         <activity android:name=".vote" />
         <activity android:name=".search" />
         <activity android:name=".signup" />

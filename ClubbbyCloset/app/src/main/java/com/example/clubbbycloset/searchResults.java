@@ -2,32 +2,45 @@ package com.example.clubbbycloset;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Random;
 
-public class usersProfile extends AppCompatActivity {
-    private static final String FILE_NAME = "allUsersData.txt";
+public class searchResults extends AppCompatActivity {
     ImageView bhome, bsearch, badd, bvote, bprofile;
-    TextView name;
-    ImageView profileImg;
+    TextView tv1,tv2,tv3,tvTitolo;
+    private static final String FILE_NAME = "allUsersData.txt";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_users_profile);
+        setContentView(R.layout.activity_search_results);
+
+        String res = load();
+        String[] l = res.split(";");
+        String[] users =new String[l.length];
+
+        for(int i = 0; i<l.length; i++){
+            users[i] = l[i].split(":")[0];
+            //Toast.makeText(getApplicationContext(), users[i], Toast.LENGTH_SHORT).show();
+        }
 
         Bundle Extra = getIntent().getExtras();
-        String textView = Extra.getString("user");
-        //Toast.makeText(getApplicationContext(), "Nome "+textView, Toast.LENGTH_SHORT).show();
+        String textView = Extra.getString("categorie");
+        Toast.makeText(getApplicationContext(), "Nome "+textView, Toast.LENGTH_SHORT).show();
+
+        tvTitolo =(TextView)this.findViewById(R.id.categoria);
+        tvTitolo.setText(textView);
 
         bhome = (ImageView) this.findViewById(R.id.home);
         bsearch = (ImageView) this.findViewById(R.id.search);
@@ -35,24 +48,49 @@ public class usersProfile extends AppCompatActivity {
         bvote = (ImageView) this.findViewById(R.id.vote);
         bprofile = (ImageView) this.findViewById(R.id.profile);
 
-        name = (TextView)this.findViewById(R.id.username);
-        name.setText(textView);
+        tv1 = (TextView)this.findViewById(R.id.home1);
+        tv1.setText(users[new Random().nextInt(l.length)]);
 
-        profileImg=(ImageView)this.findViewById(R.id.profile_img);
-        String[] res = load().split(";");
-        for(int i = 0 ; i<res.length; i++){
-            if (res[i].split(":")[0].equals(textView)){
-                String img = res[i].split(":")[1];
-                //Toast.makeText(getApplicationContext(), "img src" + img, Toast.LENGTH_SHORT).show();
-                int id = getResources().getIdentifier(img,"drawable", "com.example.clubbbycloset");
-                profileImg.setBackgroundResource(id);
+        tv2 = (TextView)this.findViewById(R.id.home2);
+        tv2.setText(users[new Random().nextInt(l.length)]);
+
+        tv3 = (TextView)this.findViewById(R.id.home3);
+        tv3.setText(users[new Random().nextInt(l.length)]);
+
+        tv1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent profilo = new Intent(searchResults.this, usersProfile.class);
+                profilo.putExtra("user", tv1.getText());
+                startActivity(profilo);
             }
-        }
+        });
+
+        tv2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent profilo = new Intent(searchResults.this, usersProfile.class);
+                profilo.putExtra("user", tv2.getText());
+                startActivity(profilo);
+            }
+        });
+
+        tv3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent profilo = new Intent(searchResults.this, usersProfile.class);
+                profilo.putExtra("user", tv3.getText());
+                startActivity(profilo);
+            }
+        });
 
         bhome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent home = new Intent(usersProfile.this, home.class);
+                Intent home = new Intent(searchResults.this, home.class);
                 startActivity(home);
             }
         });
@@ -60,7 +98,7 @@ public class usersProfile extends AppCompatActivity {
         bsearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent search = new Intent(usersProfile.this, search.class);
+                Intent search = new Intent(searchResults.this, search.class);
                 startActivity(search);
             }
         });
@@ -68,7 +106,7 @@ public class usersProfile extends AppCompatActivity {
         bprofile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent profile = new Intent(usersProfile.this, profile.class);
+                Intent profile = new Intent(searchResults.this, profile.class);
                 startActivity(profile);
             }
         });
@@ -76,7 +114,7 @@ public class usersProfile extends AppCompatActivity {
         bvote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent vote = new Intent(usersProfile.this, vote.class);
+                Intent vote = new Intent(searchResults.this, vote.class);
                 startActivity(vote); // takes the user to the signup activity
             }
 

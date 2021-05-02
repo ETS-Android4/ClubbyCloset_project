@@ -115,6 +115,7 @@
         android:background="@color/purple">
 
         <ImageView
+            android:id="@+id/profile_img"
             android:layout_width="84dp"
             android:layout_height="81dp"
             android:layout_marginLeft="10dp"

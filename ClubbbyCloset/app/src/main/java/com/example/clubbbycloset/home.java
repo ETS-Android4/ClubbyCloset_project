@@ -61,6 +61,26 @@ public class home extends AppCompatActivity {
             }
         });
 
+        tv2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent profilo = new Intent(home.this, usersProfile.class);
+                profilo.putExtra("user", tv2.getText());
+                startActivity(profilo);
+            }
+        });
+
+        tv3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent profilo = new Intent(home.this, usersProfile.class);
+                profilo.putExtra("user", tv3.getText());
+                startActivity(profilo);
+            }
+        });
+
         bhome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -11,13 +11,12 @@ import android.widget.Toast;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-
 public class MainActivity extends AppCompatActivity {
     private static final String USERS_FILE = "allUsersData.txt";
     private String users = "laura.p:profilo1;elisa.a:profilo2;angelo.maria:profilo3;giorgidp:profilo2;giudc:profilo1;giacomo96:profilo3";
 
     private static final String TOPICS_FILE = "topics.txt";
-    private String topics = "matrimonio,evento,occasione:img1;passegiata in compagnia,sport,amici,corsa:img2;aperitivo al mare,ape,amici,amiche,compagnia,appuntamento:img3;cena fuori,appuntamento,amici,ristorante:img4;università,scuola,liceo:img5;colloquio,lavoro,formale:img6;gita fuori porta,sportivo,amici,viaggio:img7";
+    private String topics = "matrimonio/evento/occasione:img1;passegiata in compagnia/sport/amici/corsa:img2;aperitivo al mare/ape/amici/amiche/compagnia/appuntamento:img3;cena fuori/appuntamento/amici/ristorante:img4;università/scuola/liceo:img5;colloquio/lavoro/formale:img6;gita fuori porta/sportivo/amici/viaggio:img7;varie/cose:img8";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

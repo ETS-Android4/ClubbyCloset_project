@@ -30,72 +30,109 @@
                     android:id="@+id/row1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
-
-                    <ImageView
-                        android:layout_width="180dp"
-                        android:layout_height="180dp"
-                        android:layout_marginLeft="10dp"
-                        android:src="@drawable/a1" />
-
-                    <ImageView
-                        android:layout_width="180dp"
-                        android:layout_height="180dp"
-                        android:src="@drawable/a2"
-                        android:layout_marginRight="10dp"/>
+                    <LinearLayout
+                        android:layout_width="195dp"
+                        android:layout_height="220dp">
+                        <ImageView
+                            android:id="@+id/topicimg1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="3dp"
+                            android:layout_marginRight="3dp"
+                            />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="195dp"
+                        android:layout_height="220dp">
+                        <ImageView
+                            android:id="@+id/topicimg2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="3dp"
+                            android:layout_marginRight="3dp"
+                            />
+                    </LinearLayout>
                 </TableRow>
                 <TableRow
                     android:id="@+id/row3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
-
-                    <ImageView
-                        android:layout_width="180dp"
-                        android:layout_height="180dp"
-                        android:src="@drawable/a5"
-                        android:layout_marginLeft="12dp"
-                        />
-                    <ImageView
-                        android:layout_width="180dp"
-                        android:layout_height="180dp"
-                        android:src="@drawable/a6"
-
-                        android:layout_marginRight="12dp"/>
+                    <LinearLayout
+                        android:layout_width="195dp"
+                        android:layout_height="220dp">
+                        <ImageView
+                            android:id="@+id/topicimg3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="3dp"
+                            android:layout_marginRight="3dp"
+                            />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="195dp"
+                        android:layout_height="220dp">
+                        <ImageView
+                            android:id="@+id/topicimg4"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="3dp"
+                            android:layout_marginRight="3dp"
+                            />
+                    </LinearLayout>
                 </TableRow>
                 <TableRow
                     android:id="@+id/row5"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
-
-                    <ImageView
-                        android:layout_width="180dp"
-                        android:layout_height="180dp"
-                        android:src="@drawable/a3"
-                        android:layout_marginLeft="12dp"
-                        />
-                    <ImageView
-                        android:layout_width="180dp"
-                        android:layout_height="180dp"
-                        android:src="@drawable/a4"
-
-                        android:layout_marginRight="12dp"/>
+                    <LinearLayout
+                        android:layout_width="195dp"
+                        android:layout_height="220dp">
+                        <ImageView
+                            android:id="@+id/topicimg5"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="3dp"
+                            android:layout_marginRight="3dp"
+                            />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="195dp"
+                        android:layout_height="220dp">
+                        <ImageView
+                            android:id="@+id/topicimg6"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="3dp"
+                            android:layout_marginRight="3dp"
+                            />
+                    </LinearLayout>
                 </TableRow>
                 <TableRow
                     android:id="@+id/row7"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
-
-                    <ImageView
-                        android:layout_width="180dp"
-                        android:layout_height="180dp"
-                        android:src="@drawable/a3"
-                        android:layout_marginLeft="12dp"
-                        />
-                    <ImageView
-                        android:layout_width="180dp"
-                        android:layout_height="180dp"
-                        android:src="@drawable/a4"
-
-                        android:layout_marginRight="12dp"/>
+                    <LinearLayout
+                        android:layout_width="195dp"
+                        android:layout_height="220dp">
+                        <ImageView
+                            android:id="@+id/topicimg7"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="3dp"
+                            android:layout_marginRight="3dp"
+                            />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="195dp"
+                        android:layout_height="220dp">
+                        <ImageView
+                            android:id="@+id/topicimg8"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="3dp"
+                            android:layout_marginRight="3dp"
+                            />
+                    </LinearLayout>
                 </TableRow>
 
             </TableLayout>

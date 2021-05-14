@@ -34,8 +34,6 @@ public class home extends AppCompatActivity {
             //Toast.makeText(getApplicationContext(), users[i], Toast.LENGTH_SHORT).show();
         }
 
-
-
         bhome = (ImageView) this.findViewById(R.id.home);
         bsearch = (ImageView) this.findViewById(R.id.search);
         badd = (ImageView) this.findViewById(R.id.add);

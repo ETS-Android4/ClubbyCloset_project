@@ -38,19 +38,24 @@ public class search extends AppCompatActivity {
         stopic = (EditText)this.findViewById(R.id.et_search);
 
         String[] res = load();
+        String[] res2 = load();
         String[] imgSrc = res;
-        String[] topic = res;
+        String[] topic = res2;
 
-        for( int i =0; i<res.length; i++){
+        for( int i =0; i<res.length ; i++){
+            //Toast.makeText(getApplicationContext(), "ciclo " + res[i] , Toast.LENGTH_SHORT).show();
             String[] item = res[i].split(":");
-            imgSrc[i] = item[1];
+            String[] item2=  res2[i].split(":");
+            //Toast.makeText(getApplicationContext(), "item[topic, img] " + item[0].split("/")[0] + "\n " + item2[1].split("/")[0] , Toast.LENGTH_SHORT).show();
             topic[i] = item[0].split("/")[0];
+            imgSrc[i] = item2[1].split("/")[0];
+            //Toast.makeText(getApplicationContext(), "dopo split\n img" + imgSrc[i] + " \ntopic " + topic[i], Toast.LENGTH_SHORT).show();
         }
 
 
 
         if (res.length >=8){
-
+            //Toast.makeText(getApplicationContext(), "imags" + imgSrc[0] + "topics " + topic[0], Toast.LENGTH_SHORT).show();
             topicImg1 = (ImageView) this.findViewById(R.id.topicimg1);
             int id = getResources().getIdentifier(imgSrc[0],"drawable", "com.example.clubbbycloset");
             topicImg1.setBackgroundResource(id);
@@ -185,7 +190,7 @@ public class search extends AppCompatActivity {
                         for(int j = 0 ; j<topics.length; j++){
                             //Toast.makeText(getApplicationContext(), "secondo for " + topics[j] +" "+ insert, Toast.LENGTH_SHORT).show();
                             if (topics[j].contains(insert)){
-                                Toast.makeText(getApplicationContext(), "Find in  " + items +"---"+ insert, Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(getApplicationContext(), "Find in  " + items +"---"+ insert, Toast.LENGTH_SHORT).show();
                                 switchActivity(insert);
                             }
                         }

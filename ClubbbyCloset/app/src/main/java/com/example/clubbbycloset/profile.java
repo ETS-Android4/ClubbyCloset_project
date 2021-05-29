@@ -2,9 +2,23 @@ package com.example.clubbbycloset;
 
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -13,14 +27,23 @@ import android.widget.Toast;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Random;
 
 public class profile extends AppCompatActivity {
+    private static int RESULT_LOAD_IMAGE = 1;
     private static final String FILE_USER = "userdata.txt";
     private static final String FILE_IMG = "images.txt";
-    ImageView bhome, bsearch, badd, bvote, bprofile, blogout, topicImg1,topicImg2, topicImg3, topicImg4, topicImg5, topicImg6, topicImg7, topicImg8;
+
+    private String picturePath = "";
+    private static final int REQUEST_EXTERNAL_STORAGE = 1;
+    private static String[] PERMISSIONS_STORAGE = {
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
+    ImageView bhome, bsearch, badd, bvote, bprofile, blogout, bprofileImg, topicImg1,topicImg2, topicImg3, topicImg4, topicImg5, topicImg6, topicImg7, topicImg8;
     TextView tvusername;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,10 +56,27 @@ public class profile extends AppCompatActivity {
         bvote = (ImageView) this.findViewById(R.id.vote);
         bprofile = (ImageView) this.findViewById(R.id.profile);
         blogout = (ImageView)this.findViewById(R.id.logout);
+        bprofileImg = (ImageView)this.findViewById(R.id.profile_img);
 
         tvusername= (TextView)this.findViewById(R.id.username);
         try {
-            tvusername.setText(load(FILE_USER));
+            String[] t =load(FILE_USER).split(";");
+            Toast.makeText(getApplicationContext(), "Scritto   " + load(FILE_USER),Toast.LENGTH_SHORT).show();
+            for (int i = 0; i< t.length; i++){
+                String[] s = t[i].split(":");
+                if (s[0].equals("username")){
+                    tvusername.setText(s[1]);
+                }
+                if(s[0].equals("profileImg")){
+                    if(s.length > 1 ) {
+                        Toast.makeText(getApplicationContext(), "in profile img   " + s[1], Toast.LENGTH_SHORT).show();
+                        Bitmap bm = BitmapFactory.decodeFile(s[1]);
+                        Bitmap resized = Bitmap.createScaledBitmap(bm, 200, 200, false);
+                        Bitmap conv_bm = getRoundedRectBitmap(resized, 200);
+                        bprofileImg.setImageBitmap(conv_bm);
+                    }
+                }
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -46,6 +86,14 @@ public class profile extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        bprofileImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(i, RESULT_LOAD_IMAGE);
+            }
+        });
 
         bhome.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,16 +149,7 @@ public class profile extends AppCompatActivity {
         StringBuilder sb = new StringBuilder();
         String text;
         while ((text = br.readLine()) != null) {
-            if(FILE_NAME.equals(FILE_USER)){
-                String[] t =text.split(";");
-                for (int i =0; t[i] != null; i++){
-                    String[] s = t[i].split(":");
-                    if (s[0].equals("username")){
-                        return s[1];
-                    }
-                }
-            }
-            else {
+            if(text!= null){
                 return text;
             }
             if (fis != null) {
@@ -168,5 +207,80 @@ public class profile extends AppCompatActivity {
 
     }
 
+    //to load img from gallery
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        verifyStoragePermissions(this);
+        if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
+            Uri selectedImage = data.getData();
+            String[] filePathColumn = {MediaStore.Images.Media.DATA};
+            Cursor cursor = getContentResolver().query(selectedImage,
+                    filePathColumn, null, null, null);
+            cursor.moveToFirst();
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            picturePath = cursor.getString(columnIndex);
+            try {
+                changeProfileImg(picturePath,FILE_USER);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            cursor.close();
+            Bitmap bm = BitmapFactory.decodeFile(picturePath);
+            Bitmap resized = Bitmap.createScaledBitmap(bm, 200, 200, false);
+            Bitmap conv_bm = getRoundedRectBitmap(resized, 200);
+            bprofileImg.setImageBitmap(conv_bm);
+        }
+    }
 
+    public static Bitmap getRoundedRectBitmap(Bitmap bitmap, int pixels) {
+        Bitmap result = null;
+        try {
+            result = Bitmap.createBitmap(200, 200, Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(result);
+
+            int color = 0xff424242;
+            Paint paint = new Paint();
+            Rect rect = new Rect(0, 0, 200, 200);
+            paint.setAntiAlias(true);
+            canvas.drawARGB(0, 0, 0, 0);
+            paint.setColor(color);
+            canvas.drawCircle(100, 100, 100, paint);
+            paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+            canvas.drawBitmap(bitmap, rect, rect, paint);
+
+        } catch (NullPointerException e) {
+        } catch (OutOfMemoryError o) {
+        }
+        return result;
+    }
+
+    //to give the permission for load img
+    public static void verifyStoragePermissions(Activity activity) {
+        // Check if we have write permission
+        int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            // We don't have permission so prompt the user
+            ActivityCompat.requestPermissions(
+                    activity,
+                    PERMISSIONS_STORAGE,
+                    REQUEST_EXTERNAL_STORAGE
+            );
+        }
+    }
+
+    public void changeProfileImg(String picPath, String FILE_NAME) throws IOException {
+        String t =load(FILE_USER)+picPath;
+        FileOutputStream fos = null;
+        fos = openFileOutput(FILE_NAME, MODE_PRIVATE);
+        fos.write(t.getBytes());
+        Toast.makeText(getApplicationContext(), "Scritto   " + t,Toast.LENGTH_SHORT).show();
+        if (fos != null) {
+            try {
+                fos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }

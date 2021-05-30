@@ -24,7 +24,9 @@ import android.widget.Toast;
 
 
 public class signup extends AppCompatActivity {
-    private static final String FILE_NAME = "userdata.txt";
+    private static final String FILE_USER = "userdata.txt";
+    private static final String FILE_IMG = "userimg.txt";
+
     Button b1;
     TextView b2;
     EditText ed2,ed3,ed4;
@@ -55,7 +57,8 @@ public class signup extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(),
                             "Registered "+ username ,Toast.LENGTH_SHORT).show();
                     try {
-                        save("username:"+username+";password:"+psw+";profileImg:");
+                        save(FILE_USER, "username:"+username+";password:"+psw+";profileImg:");
+                        save(FILE_IMG, "username:"+username+";imgSrc");
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -77,36 +80,9 @@ public class signup extends AppCompatActivity {
         });
     }
 
-    public String load(){
-        FileInputStream fis = null;
-        try{
-            fis = openFileInput(FILE_NAME);
-            InputStreamReader isr = new InputStreamReader(fis);
-            BufferedReader br = new BufferedReader(isr);
-            StringBuilder sb = new StringBuilder();
-            String text;
-            while ((text = br.readLine()) != null) {
-                sb.append(text);
-            }
-            return sb.toString();
 
-        }catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }finally {
-            if (fis != null) {
-                try {
-                    fis.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        return null;
-    }
 
-    public void save(String text) throws IOException {
+    public void save(String FILE_NAME, String text) throws IOException {
         FileOutputStream fos = null;
         fos = openFileOutput(FILE_NAME, MODE_PRIVATE);
         fos.write(text.getBytes());

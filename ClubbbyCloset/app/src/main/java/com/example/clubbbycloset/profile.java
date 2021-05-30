@@ -12,10 +12,12 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -35,7 +37,8 @@ import java.util.Random;
 public class profile extends AppCompatActivity {
     private static int RESULT_LOAD_IMAGE = 1;
     private static final String FILE_USER = "userdata.txt";
-    private static final String FILE_IMG = "images.txt";
+    private static final String FILE_IMG = "userimg.txt";
+
 
     private String picturePath = "";
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
@@ -43,12 +46,21 @@ public class profile extends AppCompatActivity {
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
-    ImageView bhome, bsearch, badd, bvote, bprofile, blogout, bprofileImg, topicImg1,topicImg2, topicImg3, topicImg4, topicImg5, topicImg6, topicImg7, topicImg8;
+    ImageView bhome, bsearch, badd, bvote, bprofile, blogout, bprofileImg,topicImg1,topicImg2, topicImg3, topicImg4, topicImg5, topicImg6, topicImg7, topicImg8;
+
     TextView tvusername;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+
+        try {
+            Toast.makeText(getApplicationContext(), "letto   " + load(FILE_IMG),Toast.LENGTH_SHORT).show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         bhome = (ImageView) this.findViewById(R.id.home);
         bsearch = (ImageView) this.findViewById(R.id.search);
@@ -58,10 +70,22 @@ public class profile extends AppCompatActivity {
         blogout = (ImageView)this.findViewById(R.id.logout);
         bprofileImg = (ImageView)this.findViewById(R.id.profile_img);
 
+        topicImg1 = (ImageView) this.findViewById(R.id.topicimg1);
+        topicImg2 = (ImageView) this.findViewById(R.id.topicimg2);
+        topicImg3 = (ImageView) this.findViewById(R.id.topicimg3);
+        topicImg4 = (ImageView) this.findViewById(R.id.topicimg4);
+        topicImg5 = (ImageView) this.findViewById(R.id.topicimg5);
+        topicImg6 = (ImageView) this.findViewById(R.id.topicimg6);
+        topicImg7 = (ImageView) this.findViewById(R.id.topicimg7);
+        topicImg8 = (ImageView) this.findViewById(R.id.topicimg8);
+
+        ImageView[] imgs = {topicImg1,topicImg2, topicImg3, topicImg4, topicImg5, topicImg6, topicImg7, topicImg8};
+
+
         tvusername= (TextView)this.findViewById(R.id.username);
         try {
             String[] t =load(FILE_USER).split(";");
-            Toast.makeText(getApplicationContext(), "Scritto   " + load(FILE_USER),Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getApplicationContext(), "Scritto   " + load(FILE_USER),Toast.LENGTH_SHORT).show();
             for (int i = 0; i< t.length; i++){
                 String[] s = t[i].split(":");
                 if (s[0].equals("username")){
@@ -69,7 +93,7 @@ public class profile extends AppCompatActivity {
                 }
                 if(s[0].equals("profileImg")){
                     if(s.length > 1 ) {
-                        Toast.makeText(getApplicationContext(), "in profile img   " + s[1], Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getApplicationContext(), "in profile img   " + s[1], Toast.LENGTH_SHORT).show();
                         Bitmap bm = BitmapFactory.decodeFile(s[1]);
                         Bitmap resized = Bitmap.createScaledBitmap(bm, 200, 200, false);
                         Bitmap conv_bm = getRoundedRectBitmap(resized, 200);
@@ -81,11 +105,13 @@ public class profile extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        try {
+        setPhotos(FILE_IMG, imgs);
+
+        /*try {
             setImages();
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
 
         bprofileImg.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -141,6 +167,53 @@ public class profile extends AppCompatActivity {
         });
     }
 
+    private void setPhotos(String FILE_NAME, ImageView[] imgs) {
+        try {
+            Toast.makeText(getApplicationContext(), "letto 22222  " + load(FILE_NAME).split(";")[1].split(":")[0],Toast.LENGTH_SHORT).show();
+            String[] res = load(FILE_NAME).split(";")[1].split(":");
+            for(int i =1 ; i<res.length; i++){
+                if(i<imgs.length) {
+                    Bitmap bm = BitmapFactory.decodeFile(res[i]);
+                    Bitmap rotatedBitmap = rotateImage(res[i], bm);
+                    imgs[i-1].setImageBitmap(rotatedBitmap);
+                }
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static Bitmap rotateImage(String path, Bitmap source) throws IOException {
+        Float angle = null;
+        ExifInterface ei = new ExifInterface(path);
+        int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+                ExifInterface.ORIENTATION_UNDEFINED);
+
+        switch(orientation) {
+
+            case ExifInterface.ORIENTATION_ROTATE_90:
+                angle = Float.valueOf(90);
+                break;
+
+            case ExifInterface.ORIENTATION_ROTATE_180:
+                angle = Float.valueOf(180);
+                break;
+
+            case ExifInterface.ORIENTATION_ROTATE_270:
+                angle = Float.valueOf(270);
+                break;
+
+            case ExifInterface.ORIENTATION_NORMAL:
+            default:
+                angle = Float.valueOf(0);
+        }
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(),
+                matrix, true);
+    }
+
     public String load(String FILE_NAME) throws IOException {
         FileInputStream fis = null;
         fis = openFileInput(FILE_NAME);
@@ -163,50 +236,6 @@ public class profile extends AppCompatActivity {
         return null;
     }
 
-    public void setImages() throws IOException {
-        String resd = load(FILE_IMG).split(";")[0].split(":")[1];
-        String resu = load(FILE_IMG).split(";")[1].split(":")[1];
-        String aux = resd + "/" + resu;
-        String[] imgSrc = aux.split("/");
-        int size = imgSrc.length;
-        if (imgSrc.length >=8){
-            //Toast.makeText(getApplicationContext(), "imags" + imgSrc[0] + "topics " + topic[0], Toast.LENGTH_SHORT).show();
-            topicImg1 = (ImageView) this.findViewById(R.id.topicimg1);
-            int id = getResources().getIdentifier(imgSrc[new Random().nextInt(size)],"drawable", "com.example.clubbbycloset");
-            topicImg1.setBackgroundResource(id);
-
-            topicImg2 = (ImageView) this.findViewById(R.id.topicimg2);
-            id = getResources().getIdentifier(imgSrc[new Random().nextInt(size)],"drawable", "com.example.clubbbycloset");
-            topicImg2.setBackgroundResource(id);
-
-            topicImg3 = (ImageView) this.findViewById(R.id.topicimg3);
-            id = getResources().getIdentifier(imgSrc[new Random().nextInt(size)],"drawable", "com.example.clubbbycloset");
-            topicImg3.setBackgroundResource(id);
-
-            topicImg4 = (ImageView) this.findViewById(R.id.topicimg4);
-            id = getResources().getIdentifier(imgSrc[new Random().nextInt(size)],"drawable", "com.example.clubbbycloset");
-            topicImg4.setBackgroundResource(id);
-
-            topicImg5 = (ImageView) this.findViewById(R.id.topicimg5);
-            id = getResources().getIdentifier(imgSrc[new Random().nextInt(size)],"drawable", "com.example.clubbbycloset");
-            topicImg5.setBackgroundResource(id);
-
-            topicImg6 = (ImageView) this.findViewById(R.id.topicimg6);
-            id = getResources().getIdentifier(imgSrc[new Random().nextInt(size)],"drawable", "com.example.clubbbycloset");
-            topicImg6.setBackgroundResource(id);
-
-            topicImg7 = (ImageView) this.findViewById(R.id.topicimg7);
-            id = getResources().getIdentifier(imgSrc[new Random().nextInt(size)],"drawable", "com.example.clubbbycloset");
-            topicImg7.setBackgroundResource(id);
-
-            topicImg8 = (ImageView) this.findViewById(R.id.topicimg8);
-            id = getResources().getIdentifier(imgSrc[new Random().nextInt(size)],"drawable", "com.example.clubbbycloset");
-            topicImg8.setBackgroundResource(id);
-
-        }
-
-    }
-
     //to load img from gallery
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -226,7 +255,13 @@ public class profile extends AppCompatActivity {
             }
             cursor.close();
             Bitmap bm = BitmapFactory.decodeFile(picturePath);
-            Bitmap resized = Bitmap.createScaledBitmap(bm, 200, 200, false);
+            Bitmap rotatedBitmap=null;
+            try {
+                rotatedBitmap = rotateImage(picturePath, bm);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            Bitmap resized = Bitmap.createScaledBitmap(rotatedBitmap, 200, 200, false);
             Bitmap conv_bm = getRoundedRectBitmap(resized, 200);
             bprofileImg.setImageBitmap(conv_bm);
         }
@@ -253,7 +288,6 @@ public class profile extends AppCompatActivity {
         }
         return result;
     }
-
     //to give the permission for load img
     public static void verifyStoragePermissions(Activity activity) {
         // Check if we have write permission

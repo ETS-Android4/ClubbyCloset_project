@@ -40,7 +40,6 @@ public class home extends AppCompatActivity {
     private static final String FILE_USERS = "allUsersData.txt";
 
     private static int RESULT_LOAD_IMAGE = 1;
-    private static final String FILE_IMG = "images.txt";
     private static final String FILE_USERIMG = "userimg.txt";
 
     private String picturePath = "";
@@ -210,7 +209,6 @@ public class home extends AppCompatActivity {
             cursor.close();
         }
     }
-
 
     //to give the permission for load img
     public static void verifyStoragePermissions(Activity activity) {

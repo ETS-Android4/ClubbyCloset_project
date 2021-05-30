@@ -1,28 +1,48 @@
 package com.example.clubbbycloset;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class search extends AppCompatActivity {
-    private static final String FILE_NAME = "topics.txt";
+    private static final String FILE_TOPIC = "topics.txt";
     ImageView bhome, bsearch, badd, bvote, bprofile, topicImg1,  topicImg2,  topicImg3,  topicImg4,  topicImg5,  topicImg6,  topicImg7,  topicImg8;
     TextView t1,t2,t3,t4 ,t5, t6, t7, t8;
     EditText stopic;
+
+
+    private static int RESULT_LOAD_IMAGE = 1;
+    private static final String FILE_USERIMG = "userimg.txt";
+
+    private String picturePath = "";
+    private static final int REQUEST_EXTERNAL_STORAGE = 1;
+    private static String[] PERMISSIONS_STORAGE = {
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,8 +57,8 @@ public class search extends AppCompatActivity {
 
         stopic = (EditText)this.findViewById(R.id.et_search);
 
-        String[] res = load();
-        String[] res2 = load();
+        String[] res = load(FILE_TOPIC).split(";");
+        String[] res2 = load(FILE_TOPIC).split(";");
         String[] imgSrc = res;
         String[] topic = res2;
 
@@ -179,7 +199,7 @@ public class search extends AppCompatActivity {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
 
                     String insert = String.valueOf(stopic.getText());
-                    String[] forSearch = load();
+                    String[] forSearch = load(FILE_TOPIC).split(";");
 
                     for( int i =0; i<forSearch.length; i++){
                         //Toast.makeText(getApplicationContext(), "ciclo " + forSearch[i] , Toast.LENGTH_SHORT).show();
@@ -235,9 +255,28 @@ public class search extends AppCompatActivity {
             }
 
         });
+
+        badd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PopupMenu popup = new PopupMenu(search.this, badd);
+                popup.getMenuInflater().inflate(R.menu.popup_menu, popup.getMenu());
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    public boolean onMenuItemClick(MenuItem item) {
+                        Toast.makeText(search.this,"You Clicked : " + item.getTitle(), Toast.LENGTH_SHORT).show();
+                        if (item.getTitle().equals("Add new img")){
+                            Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                            startActivityForResult(i, RESULT_LOAD_IMAGE);
+                        }
+                        return true;
+                    }
+                });
+                popup.show();//showing popup menu
+            }
+        });
     }
 
-    public String[] load() {
+    public String load(String FILE_NAME) {
         FileInputStream fis = null;
         try {
             fis = openFileInput(FILE_NAME);
@@ -249,7 +288,7 @@ public class search extends AppCompatActivity {
                 sb.append(text);
             }
             //Toast.makeText(getApplicationContext(), sb.toString(), Toast.LENGTH_SHORT).show();
-            return sb.toString().split(";");
+            return sb.toString();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -270,6 +309,57 @@ public class search extends AppCompatActivity {
         Intent profilo = new Intent(search.this, searchResults.class);
         profilo.putExtra("categorie", topic);
         startActivity(profilo);
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        verifyStoragePermissions(this);
+        if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
+            Uri selectedImage = data.getData();
+            String[] filePathColumn = {MediaStore.Images.Media.DATA};
+            Cursor cursor = getContentResolver().query(selectedImage,
+                    filePathColumn, null, null, null);
+            cursor.moveToFirst();
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            picturePath = cursor.getString(columnIndex);
+            try {
+                changeProfileImg(picturePath,FILE_USERIMG);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            cursor.close();
+        }
+    }
+
+    //to give the permission for load img
+    public static void verifyStoragePermissions(Activity activity) {
+        // Check if we have write permission
+        int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            // We don't have permission so prompt the user
+            ActivityCompat.requestPermissions(
+                    activity,
+                    PERMISSIONS_STORAGE,
+                    REQUEST_EXTERNAL_STORAGE
+            );
+        }
+    }
+
+    public void changeProfileImg(String picPath, String FILE_NAME) throws IOException {
+        Toast.makeText(getApplicationContext(), "LETTO  " + load(FILE_NAME),Toast.LENGTH_SHORT).show();
+        String t =load(FILE_NAME)+":"+picPath;
+        FileOutputStream fos = null;
+        fos = openFileOutput(FILE_NAME, MODE_PRIVATE);
+        fos.write(t.getBytes());
+        Toast.makeText(getApplicationContext(), "Scritto   " + t,Toast.LENGTH_SHORT).show();
+        if (fos != null) {
+            try {
+                fos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 }

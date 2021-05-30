@@ -21,8 +21,10 @@ import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,6 +38,7 @@ import java.util.Random;
 
 public class profile extends AppCompatActivity {
     private static int RESULT_LOAD_IMAGE = 1;
+    private static int RESULT_NEW_IMAGE = 2;
     private static final String FILE_USER = "userdata.txt";
     private static final String FILE_IMG = "userimg.txt";
 
@@ -94,9 +97,9 @@ public class profile extends AppCompatActivity {
                 if(s[0].equals("profileImg")){
                     if(s.length > 1 ) {
                         //Toast.makeText(getApplicationContext(), "in profile img   " + s[1], Toast.LENGTH_SHORT).show();
-                        Bitmap bm = BitmapFactory.decodeFile(s[1]);
+                        Bitmap bm = BitmapFactory.decodeFile(s[(s.length-1)]);
                         Bitmap resized = Bitmap.createScaledBitmap(bm, 200, 200, false);
-                        Bitmap conv_bm = getRoundedRectBitmap(resized, 200);
+                        Bitmap conv_bm = getRoundedRectBitmap(rotateImage(s[(s.length-1)],resized), 200);
                         bprofileImg.setImageBitmap(conv_bm);
                     }
                 }
@@ -165,11 +168,30 @@ public class profile extends AppCompatActivity {
             }
 
         });
+
+        badd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PopupMenu popup = new PopupMenu(profile.this, badd);
+                popup.getMenuInflater().inflate(R.menu.popup_menu, popup.getMenu());
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    public boolean onMenuItemClick(MenuItem item) {
+                        Toast.makeText(profile.this,"You Clicked : " + item.getTitle(), Toast.LENGTH_SHORT).show();
+                        if (item.getTitle().equals("Add new img")){
+                            Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                            startActivityForResult(i, RESULT_NEW_IMAGE);
+                        }
+                        return true;
+                    }
+                });
+                popup.show();//showing popup menu
+            }
+        });
     }
 
     private void setPhotos(String FILE_NAME, ImageView[] imgs) {
         try {
-            Toast.makeText(getApplicationContext(), "letto 22222  " + load(FILE_NAME).split(";")[1].split(":")[0],Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getApplicationContext(), "letto 22222  " + load(FILE_NAME).split(";")[1].split(":")[0],Toast.LENGTH_SHORT).show();
             String[] res = load(FILE_NAME).split(";")[1].split(":");
             for(int i =1 ; i<res.length; i++){
                 if(i<imgs.length) {
@@ -236,7 +258,7 @@ public class profile extends AppCompatActivity {
         return null;
     }
 
-    //to load img from gallery
+    //to load img from gallery for img profile
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         verifyStoragePermissions(this);
@@ -264,6 +286,23 @@ public class profile extends AppCompatActivity {
             Bitmap resized = Bitmap.createScaledBitmap(rotatedBitmap, 200, 200, false);
             Bitmap conv_bm = getRoundedRectBitmap(resized, 200);
             bprofileImg.setImageBitmap(conv_bm);
+        }
+        else if (requestCode == RESULT_NEW_IMAGE && resultCode == RESULT_OK && null != data) {
+            Uri selectedImage = data.getData();
+            String[] filePathColumn = {MediaStore.Images.Media.DATA};
+            Cursor cursor = getContentResolver().query(selectedImage,
+                    filePathColumn, null, null, null);
+            cursor.moveToFirst();
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            picturePath = cursor.getString(columnIndex);
+            try {
+                changeProfileImg(picturePath,FILE_IMG);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            cursor.close();
+            Intent profile = new Intent(profile.this, profile.class);
+            startActivity(profile); // takes the user to the signup activity
         }
     }
 
@@ -304,7 +343,7 @@ public class profile extends AppCompatActivity {
     }
 
     public void changeProfileImg(String picPath, String FILE_NAME) throws IOException {
-        String t =load(FILE_USER)+picPath;
+        String t =load(FILE_NAME)+":"+picPath;
         FileOutputStream fos = null;
         fos = openFileOutput(FILE_NAME, MODE_PRIVATE);
         fos.write(t.getBytes());

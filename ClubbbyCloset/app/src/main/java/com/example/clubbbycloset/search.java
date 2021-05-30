@@ -263,7 +263,7 @@ public class search extends AppCompatActivity {
                 popup.getMenuInflater().inflate(R.menu.popup_menu, popup.getMenu());
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     public boolean onMenuItemClick(MenuItem item) {
-                        Toast.makeText(search.this,"You Clicked : " + item.getTitle(), Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(search.this,"You Clicked : " + item.getTitle(), Toast.LENGTH_SHORT).show();
                         if (item.getTitle().equals("Add new img")){
                             Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                             startActivityForResult(i, RESULT_LOAD_IMAGE);
@@ -347,12 +347,12 @@ public class search extends AppCompatActivity {
     }
 
     public void changeProfileImg(String picPath, String FILE_NAME) throws IOException {
-        Toast.makeText(getApplicationContext(), "LETTO  " + load(FILE_NAME),Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getApplicationContext(), "LETTO  " + load(FILE_NAME),Toast.LENGTH_SHORT).show();
         String t =load(FILE_NAME)+":"+picPath;
         FileOutputStream fos = null;
         fos = openFileOutput(FILE_NAME, MODE_PRIVATE);
         fos.write(t.getBytes());
-        Toast.makeText(getApplicationContext(), "Scritto   " + t,Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getApplicationContext(), "Scritto   " + t,Toast.LENGTH_SHORT).show();
         if (fos != null) {
             try {
                 fos.close();

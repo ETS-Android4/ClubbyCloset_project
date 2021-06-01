@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".home">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/bottomAppBar"
+            app:layout_constraintBottom_toTopOf="@id/bottomAppBar">
+                <TableLayout
+                    android:id="@+id/tableLayout1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    >
+                    <TableRow
+                        android:id="@+id/row10"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/purple">
+                        <TextView
+                            android:layout_width="200dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginBottom="5dp"
+                            android:layout_marginLeft="12dp"
+                            android:text="CATEGORY"
+                            android:fontFamily="@font/heebo_medium"
+                            android:textSize="18dp"
+                            android:background="@color/purple"
+                            android:textColor="@color/ice"
+                            />
+                    </TableRow>
+                    <TableRow
+                        android:id="@+id/row11"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white">
+                        <ImageView
+                            android:id="@+id/foto1"
+                            android:layout_width="200dp"
+                            android:layout_height="450dp"
+                            android:clickable="true" />
+
+                        <ImageView
+                            android:id="@+id/foto2"
+                            android:layout_width="200dp"
+                            android:layout_height="450dp"
+                            android:clickable="true" />
+                    </TableRow>
+                    <TableRow
+                        android:id="@+id/row12"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white">
+                        <TextView
+                            android:id="@+id/right_vote"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/purple"
+                            android:fontFamily="@font/heebo_medium"
+                            android:textSize="18dp"
+                            android:layout_gravity="center_horizontal"
+                            android:text="RESULT"/>
+                        <TextView
+                            android:id="@+id/left_vote"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/purple"
+                            android:fontFamily="@font/heebo_medium"
+                            android:textSize="18dp"
+                            android:layout_gravity="center_horizontal"
+                            android:text="RESULT"/>
+                    </TableRow>
+                    <TableRow
+                        android:id="@+id/row13"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/purple"
+                            android:fontFamily="@font/heebo_medium"
+                            android:text="Descrizione evento\ndescrizione evento\norario\nluogo\ncose\ncose "/>
+                    </TableRow>
+
+                </TableLayout>
+            </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/bottomAppBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:background="@color/purple">
+
+        <TableLayout
+            android:id="@+id/tableLayout2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TableRow
+                android:id="@+id/row2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/home"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="35dp"
+                    android:clickable="true"
+                    android:src="@drawable/home"
+                    app:layout_constraintBottom_toBottomOf="@+id/bottomAppBar"
+                    app:layout_constraintLeft_toLeftOf="@+id/bottomAppBar" />
+
+                <ImageView
+                    android:id="@+id/search"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="35dp"
+                    android:clickable="true"
+                    android:src="@drawable/search"
+                    app:layout_constraintBottom_toBottomOf="@+id/bottomAppBar"
+                    app:layout_constraintLeft_toLeftOf="@+id/home"
+                    app:layout_constraintRight_toRightOf="@id/add" />
+
+                <ImageView
+                    android:id="@+id/add"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="35dp"
+                    android:clickable="true"
+                    android:src="@drawable/add"
+                    app:layout_constraintBottom_toBottomOf="@+id/bottomAppBar"
+                    app:layout_constraintLeft_toLeftOf="@+id/vote"
+                    app:layout_constraintRight_toRightOf="@id/search" />
+
+                <ImageView
+                    android:id="@+id/vote"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="35dp"
+                    android:clickable="true"
+                    android:src="@drawable/vote"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="@id/profile"
+                    app:layout_constraintRight_toRightOf="@id/add" />
+
+                <ImageView
+                    android:id="@+id/profile"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="35dp"
+                    android:clickable="true"
+                    android:src="@drawable/profile"
+                    app:layout_constraintBottom_toBottomOf="@+id/bottomAppBar"
+                    app:layout_constraintRight_toRightOf="@+id/bottomAppBar" />
+
+            </TableRow>
+        </TableLayout>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+

@@ -198,12 +198,14 @@
             android:background="@color/purple">
 
             <ImageView
+                android:id="@+id/vote1"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
-                android:background="@drawable/profile" />
+                android:background="@drawable/profile"
+                android:clickable="true"/>
 
             <ImageView
                 android:layout_width="60dp"

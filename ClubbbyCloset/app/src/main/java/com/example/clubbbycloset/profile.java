@@ -34,13 +34,17 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Random;
 
 public class profile extends AppCompatActivity {
+
     private static int RESULT_LOAD_IMAGE = 1;
-    private static int RESULT_NEW_IMAGE = 2;
+    private static int RESULT_LOAD_VOTE = 2;
+    private static int RESULT_LOAD_IMAGE_PROFILE = 3;
     private static final String FILE_USER = "userdata.txt";
     private static final String FILE_IMG = "userimg.txt";
+    private static final String FILE_VOTE ="uservote.txt";
 
 
     private String picturePath = "";
@@ -49,7 +53,10 @@ public class profile extends AppCompatActivity {
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
-    ImageView bhome, bsearch, badd, bvote, bprofile, blogout, bprofileImg,topicImg1,topicImg2, topicImg3, topicImg4, topicImg5, topicImg6, topicImg7, topicImg8;
+
+    ArrayList<Uri> mArrayUri;
+
+    ImageView bhome, bsearch, badd, bvote, bprofile, blogout, bprofileImg,topicImg1,topicImg2, topicImg3, topicImg4, topicImg5, topicImg6, topicImg7, topicImg8, vote1;
 
     TextView tvusername;
 
@@ -75,11 +82,11 @@ public class profile extends AppCompatActivity {
         topicImg6 = (ImageView) this.findViewById(R.id.topicimg6);
         topicImg7 = (ImageView) this.findViewById(R.id.topicimg7);
         topicImg8 = (ImageView) this.findViewById(R.id.topicimg8);
+        vote1 = (ImageView) this.findViewById(R.id.vote1);
+        tvusername= (TextView)this.findViewById(R.id.username);
 
         ImageView[] imgs = {topicImg1,topicImg2, topicImg3, topicImg4, topicImg5, topicImg6, topicImg7, topicImg8};
 
-
-        tvusername= (TextView)this.findViewById(R.id.username);
         try {
             String[] t =load(FILE_USER).split(";");
             //Toast.makeText(getApplicationContext(), "Scritto   " + load(FILE_USER),Toast.LENGTH_SHORT).show();
@@ -101,14 +108,27 @@ public class profile extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        setPhotos(FILE_IMG, imgs);
-
-        /*try {
-            setImages();
+        try {
+            String[] t =load(FILE_VOTE).split(";");
+            //Toast.makeText(getApplicationContext(), "Scritto   " + load(FILE_USER),Toast.LENGTH_SHORT).show();
+            for (int i = 0; i< t.length; i++){
+                String[] s = t[i].split(":");
+                if(s[0].equals("voteSrc")){
+                    if(s.length > 1 ) {
+                        //Toast.makeText(getApplicationContext(), "in profile img   " + s[1], Toast.LENGTH_SHORT).show();
+                        Bitmap bm = BitmapFactory.decodeFile(s[(s.length-1)]);
+                        Bitmap resized = Bitmap.createScaledBitmap(bm, 200, 200, false);
+                        Bitmap conv_bm = getRoundedRectBitmap(rotateImage(s[(s.length-1)],resized), 200);
+                        vote1.setImageBitmap(conv_bm);
+                    }
+                }
+            }
         } catch (IOException e) {
             e.printStackTrace();
-        }*/
+        }
+
+
+        setPhotos(FILE_IMG, imgs);
 
         bprofileImg.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -166,20 +186,33 @@ public class profile extends AppCompatActivity {
         badd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PopupMenu popup = new PopupMenu(profile.this, badd);
+                PopupMenu popup = new PopupMenu(home.this, badd);
                 popup.getMenuInflater().inflate(R.menu.popup_menu, popup.getMenu());
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     public boolean onMenuItemClick(MenuItem item) {
-                        //Toast.makeText(profile.this,"You Clicked : " + item.getTitle(), Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(home.this,"You Clicked : " + item.getTitle(), Toast.LENGTH_SHORT).show();
                         if (item.getTitle().equals("Add new img")){
                             Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                            startActivityForResult(i, RESULT_NEW_IMAGE);
+                            startActivityForResult(i, RESULT_LOAD_IMAGE);
+                        } if (item.getTitle().equals("Add new vote")){
+                            Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                            i.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                            startActivityForResult(i, RESULT_LOAD_VOTE);
                         }
                         return true;
                     }
                 });
                 popup.show();//showing popup menu
             }
+        });
+
+        vote1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent voteView = new Intent(profile.this, voteView.class);
+                startActivity(voteView); // takes the user to the signup activity
+            }
+
         });
     }
 
@@ -256,7 +289,7 @@ public class profile extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         verifyStoragePermissions(this);
-        if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
+        if (requestCode == RESULT_LOAD_IMAGE_PROFILE && resultCode == RESULT_OK && null != data) {
             Uri selectedImage = data.getData();
             String[] filePathColumn = {MediaStore.Images.Media.DATA};
             Cursor cursor = getContentResolver().query(selectedImage,
@@ -281,7 +314,7 @@ public class profile extends AppCompatActivity {
             Bitmap conv_bm = getRoundedRectBitmap(resized, 200);
             bprofileImg.setImageBitmap(conv_bm);
         }
-        else if (requestCode == RESULT_NEW_IMAGE && resultCode == RESULT_OK && null != data) {
+        else if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
             Uri selectedImage = data.getData();
             String[] filePathColumn = {MediaStore.Images.Media.DATA};
             Cursor cursor = getContentResolver().query(selectedImage,

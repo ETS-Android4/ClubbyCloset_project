@@ -199,15 +199,18 @@
 
             <ImageView
                 android:id="@+id/vote1"
+                android:clickable="true"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
                 android:background="@drawable/profile"
-                android:clickable="true"/>
+                />
 
             <ImageView
+                android:id="@+id/vote2"
+                android:clickable="true"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:layout_marginLeft="10dp"
@@ -216,6 +219,8 @@
                 android:background="@drawable/profile" />
 
             <ImageView
+                android:id="@+id/vote3"
+                android:clickable="true"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:layout_marginLeft="10dp"
@@ -224,6 +229,8 @@
                 android:background="@drawable/profile" />
 
             <ImageView
+                android:id="@+id/vote4"
+                android:clickable="true"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:layout_marginLeft="10dp"
@@ -232,6 +239,8 @@
                 android:background="@drawable/profile" />
 
             <ImageView
+                android:id="@+id/vote5"
+                android:clickable="true"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:layout_marginLeft="10dp"

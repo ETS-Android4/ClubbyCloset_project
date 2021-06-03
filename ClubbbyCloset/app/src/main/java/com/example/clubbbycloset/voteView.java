@@ -27,13 +27,14 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 
 public class voteView extends AppCompatActivity {
     ImageView bhome, bsearch, badd, bvote, bprofile , f1, f2;
 
     private static final String FILE_VOTE ="uservote.txt";
-
     private static int RESULT_LOAD_IMAGE = 1;
+    private static int RESULT_LOAD_VOTE = 2;
     private static final String FILE_USERIMG = "userimg.txt";
 
     private String picturePath = "";
@@ -42,11 +43,16 @@ public class voteView extends AppCompatActivity {
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
+    ArrayList<Uri> mArrayUri;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vote_view);
 
+        Bundle Extra = getIntent().getExtras();
+        String numb = Extra.getString("numb");
+        Toast.makeText(getApplicationContext(), "numero "+ numb , Toast.LENGTH_SHORT).show();
 
         bhome = (ImageView) this.findViewById(R.id.home);
         bsearch = (ImageView) this.findViewById(R.id.search);
@@ -56,13 +62,7 @@ public class voteView extends AppCompatActivity {
         f1= (ImageView) this.findViewById(R.id.foto1);
         f2= (ImageView) this.findViewById(R.id.foto2);
         ImageView[] imgs = {f1, f2};
-        setPhotosVote(FILE_VOTE, imgs);
-        /*String[] imgSrc = load(FILE_VOTE).split(";");
-        Toast.makeText(getApplicationContext(), "LETTO 0  " + imgSrc[0],Toast.LENGTH_SHORT).show();
-        Toast.makeText(getApplicationContext(), "LETTO 0 : 1  " + imgSrc[0].split(":")[1],Toast.LENGTH_SHORT).show();
-        Toast.makeText(getApplicationContext(), "LETTO 0 : 2  " + imgSrc[0].split(":")[2],Toast.LENGTH_SHORT).show();*/
-
-
+        setPhotosVote(FILE_VOTE, imgs, numb);
 
         bhome.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -108,6 +108,10 @@ public class voteView extends AppCompatActivity {
                         if (item.getTitle().equals("Add new img")){
                             Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                             startActivityForResult(i, RESULT_LOAD_IMAGE);
+                        } if (item.getTitle().equals("Add new vote")){
+                            Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                            i.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                            startActivityForResult(i, RESULT_LOAD_VOTE);
                         }
                         return true;
                     }
@@ -146,30 +150,26 @@ public class voteView extends AppCompatActivity {
         return null;
     }
 
-    private void setPhotosVote(String FILE_NAME, ImageView[] imgs) {
-        try {
-            String[] res = load(FILE_NAME).split(";")[1].split(":");
-            /*Toast.makeText(getApplicationContext(), "LETTO 1  " + res[1],Toast.LENGTH_SHORT).show();
-            Toast.makeText(getApplicationContext(), "LETTO 2  " + res[2],Toast.LENGTH_SHORT).show();
-            Bitmap bm = BitmapFactory.decodeFile(res[1]);
-            Bitmap rotatedBitmap = rotateImage(res[1], bm);
-            imgs[0].setImageBitmap(rotatedBitmap);
-
-            bm = BitmapFactory.decodeFile(res[2]);
-            rotatedBitmap = rotateImage(res[2], bm);
-            imgs[1].setImageBitmap(rotatedBitmap);*/
-
-            for(int i = 1 ; i<res.length; i++){
-                if(i<=imgs.length) {
-                    Bitmap bm = BitmapFactory.decodeFile(res[i]);
-                    Bitmap rotatedBitmap = rotateImage(res[i], bm);
-                    imgs[i-1].setImageBitmap(rotatedBitmap);
+    private void setPhotosVote(String FILE_NAME, ImageView[] imgs, String numb) {
+        //Toast.makeText(getApplicationContext(), "numero in func " + numb, Toast.LENGTH_SHORT).show();
+        if(numb != "0") {
+            String[] vs = load(FILE_NAME).split(";");
+            int j = vs.length - Integer.parseInt(numb);
+            //Toast.makeText(getApplicationContext(), "numero  J:  " + j, Toast.LENGTH_SHORT).show();
+            String[] res = vs[j].split(":");
+                for (int i = 1; i < res.length; i++) {
+                    if (i <= imgs.length) {
+                        Bitmap bm = BitmapFactory.decodeFile(res[i]);
+                        Bitmap rotatedBitmap = null;
+                        try {
+                            rotatedBitmap = rotateImage(res[i], bm);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        imgs[i - 1].setImageBitmap(rotatedBitmap);
+                    }
                 }
             }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     public static Bitmap rotateImage(String path, Bitmap source) throws IOException {
@@ -202,11 +202,68 @@ public class voteView extends AppCompatActivity {
                 matrix, true);
     }
 
-    /*to load img from gallery
+    //to load img from gallery
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         verifyStoragePermissions(this);
-        if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
+        if (requestCode == RESULT_LOAD_IMAGE) {
+            newImg(requestCode,resultCode,data);
+        }else if(requestCode == RESULT_LOAD_VOTE) {
+            try {
+                newVote(requestCode,resultCode,data);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void newVote(int requestCode, int resultCode, Intent data) throws IOException {
+        if (resultCode == RESULT_OK && null != data) {
+            if (data.getClipData() != null) {
+                String paths = "";
+                int cout = data.getClipData().getItemCount();
+                Toast.makeText(getApplicationContext(), "SIZE  " + cout,Toast.LENGTH_SHORT).show();
+                if(cout <= 4) {
+                    for (int i = 0; i < cout; i++) {
+                        // adding imageuri in array
+                        Uri selectedImage = data.getClipData().getItemAt(i).getUri();
+                        String[] filePathColumn = {MediaStore.Images.Media.DATA};
+                        Cursor cursor = getContentResolver().query(selectedImage,
+                                filePathColumn, null, null, null);
+                        cursor.moveToFirst();
+                        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                        picturePath = cursor.getString(columnIndex);
+                        paths = paths + picturePath + ":";
+                        //Toast.makeText(getApplicationContext(), "LETTO  " + paths,Toast.LENGTH_SHORT).show();
+                        cursor.close();
+                    }
+                    loadVoteImg(paths, FILE_VOTE);
+                    Intent voteView = new Intent(voteView.this, voteView.class);
+                    startActivity(voteView); // takes the user to the signup activity
+                }
+            }
+
+        }
+    }
+
+    private void loadVoteImg(String picPath, String FILE_NAME) throws IOException {
+        //Toast.makeText(getApplicationContext(), "LETTO  " + load(FILE_NAME),Toast.LENGTH_SHORT).show();
+        String t = load(FILE_NAME) + ";voteSrc:" + picPath;
+        FileOutputStream fos = null;
+        fos = openFileOutput(FILE_NAME, MODE_PRIVATE);
+        fos.write(t.getBytes());
+        //Toast.makeText(getApplicationContext(), "Scritto   " + t,Toast.LENGTH_SHORT).show();
+        if (fos != null) {
+            try {
+                fos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void newImg(int requestCode, int resultCode, Intent data){
+        if (resultCode == RESULT_OK && null != data) {
             Uri selectedImage = data.getData();
             String[] filePathColumn = {MediaStore.Images.Media.DATA};
             Cursor cursor = getContentResolver().query(selectedImage,
@@ -215,7 +272,7 @@ public class voteView extends AppCompatActivity {
             int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
             picturePath = cursor.getString(columnIndex);
             try {
-                changeProfileImg(picturePath,FILE_USERIMG);
+                changeProfileImg(picturePath, FILE_USERIMG);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -252,6 +309,8 @@ public class voteView extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
-    }*/
+    }
+
+
 
 }

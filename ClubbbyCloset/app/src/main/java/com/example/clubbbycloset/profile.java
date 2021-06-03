@@ -56,7 +56,7 @@ public class profile extends AppCompatActivity {
 
     ArrayList<Uri> mArrayUri;
 
-    ImageView bhome, bsearch, badd, bvote, bprofile, blogout, bprofileImg,topicImg1,topicImg2, topicImg3, topicImg4, topicImg5, topicImg6, topicImg7, topicImg8, vote1;
+    ImageView bhome, bsearch, badd, bvote, bprofile, blogout, bprofileImg,topicImg1,topicImg2, topicImg3, topicImg4, topicImg5, topicImg6, topicImg7, topicImg8, v1,v2,v3,v4,v5;
 
     TextView tvusername;
 
@@ -82,10 +82,16 @@ public class profile extends AppCompatActivity {
         topicImg6 = (ImageView) this.findViewById(R.id.topicimg6);
         topicImg7 = (ImageView) this.findViewById(R.id.topicimg7);
         topicImg8 = (ImageView) this.findViewById(R.id.topicimg8);
-        vote1 = (ImageView) this.findViewById(R.id.vote1);
+        v1 = (ImageView) this.findViewById(R.id.vote1);
+        v2 = (ImageView) this.findViewById(R.id.vote2);
+        v3 = (ImageView) this.findViewById(R.id.vote3);
+        v4 = (ImageView) this.findViewById(R.id.vote4);
+        v5 = (ImageView) this.findViewById(R.id.vote5);
+
         tvusername= (TextView)this.findViewById(R.id.username);
 
         ImageView[] imgs = {topicImg1,topicImg2, topicImg3, topicImg4, topicImg5, topicImg6, topicImg7, topicImg8};
+        ImageView[] votes = {v1,v2,v3,v4,v5};
 
         try {
             String[] t =load(FILE_USER).split(";");
@@ -111,15 +117,17 @@ public class profile extends AppCompatActivity {
         try {
             String[] t =load(FILE_VOTE).split(";");
             //Toast.makeText(getApplicationContext(), "Scritto   " + load(FILE_USER),Toast.LENGTH_SHORT).show();
-            for (int i = 0; i< t.length; i++){
+            int j = 0;
+            for (int i = t.length-1; i>-1; i--){
                 String[] s = t[i].split(":");
                 if(s[0].equals("voteSrc")){
-                    if(s.length > 1 ) {
+                    if(s.length > 2 &&  j<votes.length) {
                         //Toast.makeText(getApplicationContext(), "in profile img   " + s[1], Toast.LENGTH_SHORT).show();
                         Bitmap bm = BitmapFactory.decodeFile(s[(s.length-1)]);
                         Bitmap resized = Bitmap.createScaledBitmap(bm, 200, 200, false);
                         Bitmap conv_bm = getRoundedRectBitmap(rotateImage(s[(s.length-1)],resized), 200);
-                        vote1.setImageBitmap(conv_bm);
+                        votes[j].setImageBitmap(conv_bm);
+                        j++;
                     }
                 }
             }
@@ -186,7 +194,7 @@ public class profile extends AppCompatActivity {
         badd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PopupMenu popup = new PopupMenu(home.this, badd);
+                PopupMenu popup = new PopupMenu(profile.this, badd);
                 popup.getMenuInflater().inflate(R.menu.popup_menu, popup.getMenu());
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     public boolean onMenuItemClick(MenuItem item) {
@@ -206,14 +214,20 @@ public class profile extends AppCompatActivity {
             }
         });
 
-        vote1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent voteView = new Intent(profile.this, voteView.class);
-                startActivity(voteView); // takes the user to the signup activity
-            }
+        for(int i = 0; i<votes.length; i++){
+            int j=i+1;
+            votes[i].setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent voteView = new Intent(profile.this, voteView.class);
+                    voteView.putExtra("numb", Integer.toString(j));
+                    startActivity(voteView);
+                }
 
-        });
+            });
+        }
+
+
     }
 
     private void setPhotos(String FILE_NAME, ImageView[] imgs) {

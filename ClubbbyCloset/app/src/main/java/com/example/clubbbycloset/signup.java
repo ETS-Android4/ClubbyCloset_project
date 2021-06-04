@@ -27,6 +27,8 @@ public class signup extends AppCompatActivity {
     private static final String FILE_USER = "userdata.txt";
     private static final String FILE_USERIMG = "userimg.txt";
     private static final String FILE_USERVOTE ="uservote.txt";
+    private static final String FILE_USERVOTEDESCRIPTION ="uservotedescription.txt";
+
 
     Button b1;
     TextView b2;
@@ -51,7 +53,6 @@ public class signup extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Wrong Mail",Toast.LENGTH_SHORT).show();
 
                 }else if(ed3.getText().toString().equals( ed4.getText().toString()) ) {
-                    Resources res = getResources();
                     String[] email = ed2.getText().toString().split("@");
                     String psw = ed3.getText().toString();
                     username = email[0];
@@ -61,6 +62,7 @@ public class signup extends AppCompatActivity {
                         save(FILE_USER, "username:"+username+";password:"+psw+";profileImg");
                         save(FILE_USERIMG, "username:"+username+";imgSrc");
                         save(FILE_USERVOTE, "username:"+username);
+                        save(FILE_USERVOTEDESCRIPTION, "username:"+username);
 
                     } catch (IOException e) {
                         e.printStackTrace();

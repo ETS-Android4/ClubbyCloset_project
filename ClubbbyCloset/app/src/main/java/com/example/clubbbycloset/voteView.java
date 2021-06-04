@@ -72,23 +72,18 @@ public class voteView extends AppCompatActivity {
         edTime = (EditText) this.findViewById(R.id.time);
         bsave = (TextView) this.findViewById(R.id.save);
 
-        if(! numb.equals("0")){
-           edDesc.setEnabled(false);
-           edTime.setEnabled(false);
-           edLoc.setEnabled(false);
-           bsave.setClickable(false);
-           bsave.setVisibility(View.INVISIBLE);
-        }
-
         ImageView[] imgs = {f1, f2};
+        EditText[] descri = {edDesc,edLoc,edTime};
         setPhotosVote(FILE_USERVOTE, imgs, numb);
+        setDescriptionVote(FILE_USERVOTEDESCRIPTION, descri, numb);
 
         bsave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try{
-                    String toAdd = load(FILE_USERVOTEDESCRIPTION) + ";info:" + edDesc + ":" + edLoc + ":" + edTime +  ":";
-                    save(FILE_USERVOTEDESCRIPTION, toAdd);
+                    String toAdd = "info:" + edDesc.getText().toString() + ":" + edLoc.getText().toString() + ":" + edTime.getText().toString()+";";
+                    //Toast.makeText(getApplicationContext(), "TO ADD:   " + toAdd, Toast.LENGTH_SHORT).show();
+                    save(FILE_USERVOTEDESCRIPTION, load(FILE_USERVOTEDESCRIPTION) + toAdd);
                 }catch (IOException e) {
                      e.printStackTrace();
                 }
@@ -176,11 +171,12 @@ public class voteView extends AppCompatActivity {
                 }
             }
         }else {
-            String[] vs = load(FILE_NAME).split(";");
-            int j = vs.length - Integer.parseInt(numb);
-            //Toast.makeText(getApplicationContext(), "numero  J:  " + j, Toast.LENGTH_SHORT).show();
-            String[] res = vs[j].split(":");
+            String[] images = load(FILE_NAME).split(";");
+            int j = images.length - Integer.parseInt(numb);
+            //Toast.makeText(getApplicationContext(), "Description:  " + load(FILE_USERVOTEDESCRIPTION), Toast.LENGTH_SHORT).show();
+            String[] res = images[j].split(":");
             for (int i = 1; i < res.length; i++) {
+
                 if (i <= imgs.length) {
                     Bitmap bm = BitmapFactory.decodeFile(res[i]);
                     Bitmap rotatedBitmap = null;
@@ -191,6 +187,27 @@ public class voteView extends AppCompatActivity {
                     }
                     imgs[i - 1].setImageBitmap(rotatedBitmap);
                 }
+            }
+        }
+    }
+
+    private void setDescriptionVote(String FILE_NAME, EditText[] des, String numb) {
+        //Toast.makeText(getApplicationContext(), "numero in func " + numb, Toast.LENGTH_SHORT).show();
+        if(! numb.equals("0")){
+
+            edDesc.setEnabled(false);
+            edTime.setEnabled(false);
+            edLoc.setEnabled(false);
+            bsave.setClickable(false);
+            bsave.setVisibility(View.INVISIBLE);
+
+            String[] d = load(FILE_NAME).split(";");
+            int j = d.length - Integer.parseInt(numb);
+            Toast.makeText(getApplicationContext(), "Description:  " +d[j], Toast.LENGTH_SHORT).show();
+            String[] res = d[j].split(":");
+            for (int i = 1; i < res.length; i++) {
+                Toast.makeText(getApplicationContext(), "LETTO:  " + res[i], Toast.LENGTH_SHORT).show();
+                des[i-1].setText(res[i]);
             }
         }
     }

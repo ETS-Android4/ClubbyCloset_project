@@ -25,8 +25,8 @@ import android.widget.Toast;
 
 public class signup extends AppCompatActivity {
     private static final String FILE_USER = "userdata.txt";
-    private static final String FILE_IMG = "userimg.txt";
-    private static final String FILE_VOTE ="uservote.txt";
+    private static final String FILE_USERIMG = "userimg.txt";
+    private static final String FILE_USERVOTE ="uservote.txt";
 
     Button b1;
     TextView b2;
@@ -59,8 +59,8 @@ public class signup extends AppCompatActivity {
                             "Registered "+ username ,Toast.LENGTH_SHORT).show();
                     try {
                         save(FILE_USER, "username:"+username+";password:"+psw+";profileImg");
-                        save(FILE_IMG, "username:"+username+";imgSrc");
-                        save(FILE_VOTE, "username:"+username);
+                        save(FILE_USERIMG, "username:"+username+";imgSrc");
+                        save(FILE_USERVOTE, "username:"+username);
 
                     } catch (IOException e) {
                         e.printStackTrace();

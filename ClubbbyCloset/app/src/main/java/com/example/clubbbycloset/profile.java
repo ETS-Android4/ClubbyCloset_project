@@ -43,8 +43,8 @@ public class profile extends AppCompatActivity {
     private static int RESULT_LOAD_VOTE = 2;
     private static int RESULT_LOAD_IMAGE_PROFILE = 3;
     private static final String FILE_USER = "userdata.txt";
-    private static final String FILE_IMG = "userimg.txt";
-    private static final String FILE_VOTE ="uservote.txt";
+    private static final String FILE_USERIMG = "userimg.txt";
+    private static final String FILE_USERVOTE ="uservote.txt";
 
 
     private String picturePath = "";
@@ -115,7 +115,7 @@ public class profile extends AppCompatActivity {
             e.printStackTrace();
         }
         try {
-            String[] t =load(FILE_VOTE).split(";");
+            String[] t =load(FILE_USERVOTE).split(";");
             //Toast.makeText(getApplicationContext(), "Scritto   " + load(FILE_USER),Toast.LENGTH_SHORT).show();
             int j = 0;
             for (int i = t.length-1; i>-1; i--){
@@ -135,8 +135,7 @@ public class profile extends AppCompatActivity {
             e.printStackTrace();
         }
 
-
-        setPhotos(FILE_IMG, imgs);
+        setPhotos(FILE_USERIMG, imgs);
 
         bprofileImg.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -227,12 +226,10 @@ public class profile extends AppCompatActivity {
             });
         }
 
-
     }
 
     private void setPhotos(String FILE_NAME, ImageView[] imgs) {
         try {
-            //Toast.makeText(getApplicationContext(), "letto 22222  " + load(FILE_NAME).split(";")[1].split(":")[0],Toast.LENGTH_SHORT).show();
             String[] res = load(FILE_NAME).split(";")[1].split(":");
             for(int i =1 ; i<res.length; i++){
                 if(i<imgs.length) {
@@ -303,7 +300,22 @@ public class profile extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         verifyStoragePermissions(this);
-        if (requestCode == RESULT_LOAD_IMAGE_PROFILE && resultCode == RESULT_OK && null != data) {
+        if (requestCode == RESULT_LOAD_IMAGE_PROFILE ) {
+            newProfileImg(resultCode,data);
+        }
+        else  if (requestCode == RESULT_LOAD_IMAGE) {
+            newImg(requestCode,resultCode,data);
+        }else if(requestCode == RESULT_LOAD_VOTE) {
+            try {
+                newVote(requestCode,resultCode,data);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void newProfileImg(int resultCode, Intent data){
+        if (resultCode == RESULT_OK && null != data) {
             Uri selectedImage = data.getData();
             String[] filePathColumn = {MediaStore.Images.Media.DATA};
             Cursor cursor = getContentResolver().query(selectedImage,
@@ -328,7 +340,41 @@ public class profile extends AppCompatActivity {
             Bitmap conv_bm = getRoundedRectBitmap(resized, 200);
             bprofileImg.setImageBitmap(conv_bm);
         }
-        else if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
+
+    }
+
+    private void newVote(int requestCode, int resultCode, Intent data) throws IOException {
+        if (resultCode == RESULT_OK && null != data) {
+            if (data.getClipData() != null) {
+                String paths = "";
+                int cout = data.getClipData().getItemCount();
+                Toast.makeText(getApplicationContext(), "SIZE  " + cout,Toast.LENGTH_SHORT).show();
+                if(cout <= 4) {
+                    for (int i = 0; i < cout; i++) {
+                        // adding imageuri in array
+                        Uri selectedImage = data.getClipData().getItemAt(i).getUri();
+                        String[] filePathColumn = {MediaStore.Images.Media.DATA};
+                        Cursor cursor = getContentResolver().query(selectedImage,
+                                filePathColumn, null, null, null);
+                        cursor.moveToFirst();
+                        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                        picturePath = cursor.getString(columnIndex);
+                        paths = paths + picturePath + ":";
+                        //Toast.makeText(getApplicationContext(), "LETTO  " + paths,Toast.LENGTH_SHORT).show();
+                        cursor.close();
+                    }
+                    loadVoteImg(paths, FILE_USERVOTE);
+                    Intent voteView = new Intent(profile.this, voteView.class);
+                    voteView.putExtra("numb", "0");
+                    startActivity(voteView);
+                }
+            }
+
+        }
+    }
+
+    public void newImg(int requestCode, int resultCode, Intent data){
+        if (resultCode == RESULT_OK && null != data) {
             Uri selectedImage = data.getData();
             String[] filePathColumn = {MediaStore.Images.Media.DATA};
             Cursor cursor = getContentResolver().query(selectedImage,
@@ -337,13 +383,27 @@ public class profile extends AppCompatActivity {
             int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
             picturePath = cursor.getString(columnIndex);
             try {
-                changeProfileImg(picturePath,FILE_IMG);
+                changeProfileImg(picturePath, FILE_USERIMG);
             } catch (IOException e) {
                 e.printStackTrace();
             }
             cursor.close();
-            Intent profile = new Intent(profile.this, profile.class);
-            startActivity(profile); // takes the user to the signup activity
+        }
+    }
+
+    private void loadVoteImg(String picPath, String FILE_NAME) throws IOException {
+        //Toast.makeText(getApplicationContext(), "LETTO  " + load(FILE_NAME),Toast.LENGTH_SHORT).show();
+        String t = load(FILE_NAME) + ";voteSrc:" + picPath;
+        FileOutputStream fos = null;
+        fos = openFileOutput(FILE_NAME, MODE_PRIVATE);
+        fos.write(t.getBytes());
+        //Toast.makeText(getApplicationContext(), "Scritto   " + t,Toast.LENGTH_SHORT).show();
+        if (fos != null) {
+            try {
+                fos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 

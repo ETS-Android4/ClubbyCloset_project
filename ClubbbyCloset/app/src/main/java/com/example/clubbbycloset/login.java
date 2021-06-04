@@ -23,7 +23,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class login extends AppCompatActivity {
-    private static final String FILE_NAME = "userdata.txt";
+    private static final String FILE_USER = "userdata.txt";
     Button b1;
     ImageButton b2;
     EditText ed1,ed2;
@@ -86,7 +86,7 @@ public class login extends AppCompatActivity {
     public String load() {
         FileInputStream fis = null;
         try {
-            fis = openFileInput(FILE_NAME);
+            fis = openFileInput(FILE_USER);
             InputStreamReader isr = new InputStreamReader(fis);
             BufferedReader br = new BufferedReader(isr);
             StringBuilder sb = new StringBuilder();

@@ -25,15 +25,19 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Random;
 
 public class usersProfile extends AppCompatActivity {
-    private static final String FILE_USERS = "allUsersData.txt";
     ImageView bhome, bsearch, badd, bvote, bprofile, topicImg1,topicImg2, topicImg3, topicImg4, topicImg5, topicImg6, topicImg7, topicImg8;
     TextView name;
     ImageView profileImg;
 
+    private static final String FILE_ALLUSERS = "allUsersData.txt";
+
+    private static final String FILE_USERVOTE ="uservote.txt";
     private static int RESULT_LOAD_IMAGE = 1;
+    private static int RESULT_LOAD_VOTE = 2;
     private static final String FILE_USERIMG = "userimg.txt";
 
     private String picturePath = "";
@@ -42,7 +46,7 @@ public class usersProfile extends AppCompatActivity {
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
-
+    ArrayList<Uri> mArrayUri;
 
 
     @Override
@@ -107,10 +111,14 @@ public class usersProfile extends AppCompatActivity {
                 popup.getMenuInflater().inflate(R.menu.popup_menu, popup.getMenu());
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     public boolean onMenuItemClick(MenuItem item) {
-                        //Toast.makeText(usersProfile.this,"You Clicked : " + item.getTitle(), Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(home.this,"You Clicked : " + item.getTitle(), Toast.LENGTH_SHORT).show();
                         if (item.getTitle().equals("Add new img")){
                             Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                             startActivityForResult(i, RESULT_LOAD_IMAGE);
+                        } if (item.getTitle().equals("Add new vote")){
+                            Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                            i.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                            startActivityForResult(i, RESULT_LOAD_VOTE);
                         }
                         return true;
                     }
@@ -151,7 +159,7 @@ public class usersProfile extends AppCompatActivity {
 
     public void setProfileImg(String textView){
         profileImg=(ImageView)this.findViewById(R.id.profile_img);
-        String[] res = load(FILE_USERS).split(";");
+        String[] res = load(FILE_ALLUSERS).split(";");
         for(int i = 0 ; i<res.length; i++){
             if (res[i].split(":")[0].equals(textView)){
                 String img = res[i].split(":")[1];
@@ -163,7 +171,7 @@ public class usersProfile extends AppCompatActivity {
     }
 
     public void setPictures(String name){
-        String[] res = load(FILE_USERS).split(";");
+        String[] res = load(FILE_ALLUSERS).split(";");
         for(int i = 0 ; i<res.length; i++) {
             if (res[i].split(":")[0].equals(name)) {
                 String[] imgSrc = res[i].split(":")[2].split("/");
@@ -210,7 +218,65 @@ public class usersProfile extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         verifyStoragePermissions(this);
-        if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
+        if (requestCode == RESULT_LOAD_IMAGE) {
+            newImg(requestCode,resultCode,data);
+        }else if(requestCode == RESULT_LOAD_VOTE) {
+            try {
+                newVote(requestCode,resultCode,data);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void newVote(int requestCode, int resultCode, Intent data) throws IOException {
+        if (resultCode == RESULT_OK && null != data) {
+            if (data.getClipData() != null) {
+                String paths = "";
+                int cout = data.getClipData().getItemCount();
+                Toast.makeText(getApplicationContext(), "SIZE  " + cout,Toast.LENGTH_SHORT).show();
+                if(cout <= 4) {
+                    for (int i = 0; i < cout; i++) {
+                        // adding imageuri in array
+                        Uri selectedImage = data.getClipData().getItemAt(i).getUri();
+                        String[] filePathColumn = {MediaStore.Images.Media.DATA};
+                        Cursor cursor = getContentResolver().query(selectedImage,
+                                filePathColumn, null, null, null);
+                        cursor.moveToFirst();
+                        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                        picturePath = cursor.getString(columnIndex);
+                        paths = paths + picturePath + ":";
+                        //Toast.makeText(getApplicationContext(), "LETTO  " + paths,Toast.LENGTH_SHORT).show();
+                        cursor.close();
+                    }
+                    loadVoteImg(paths, FILE_USERVOTE);
+                    Intent voteView = new Intent(usersProfile.this, voteView.class);
+                    voteView.putExtra("numb", "0");
+                    startActivity(voteView);
+                }
+            }
+
+        }
+    }
+
+    private void loadVoteImg(String picPath, String FILE_NAME) throws IOException {
+        //Toast.makeText(getApplicationContext(), "LETTO  " + load(FILE_NAME),Toast.LENGTH_SHORT).show();
+        String t = load(FILE_NAME) + ";voteSrc:" + picPath;
+        FileOutputStream fos = null;
+        fos = openFileOutput(FILE_NAME, MODE_PRIVATE);
+        fos.write(t.getBytes());
+        //Toast.makeText(getApplicationContext(), "Scritto   " + t,Toast.LENGTH_SHORT).show();
+        if (fos != null) {
+            try {
+                fos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void newImg(int requestCode, int resultCode, Intent data){
+        if (resultCode == RESULT_OK && null != data) {
             Uri selectedImage = data.getData();
             String[] filePathColumn = {MediaStore.Images.Media.DATA};
             Cursor cursor = getContentResolver().query(selectedImage,
@@ -219,7 +285,7 @@ public class usersProfile extends AppCompatActivity {
             int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
             picturePath = cursor.getString(columnIndex);
             try {
-                changeProfileImg(picturePath,FILE_USERIMG);
+                changeProfileImg(picturePath, FILE_USERIMG);
             } catch (IOException e) {
                 e.printStackTrace();
             }

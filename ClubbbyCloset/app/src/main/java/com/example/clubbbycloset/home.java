@@ -32,9 +32,9 @@ import java.util.Random;
 public class home extends AppCompatActivity {
     ImageView bhome, bsearch, badd, bvote, bprofile;
     TextView tv1,tv2,tv3;
-    private static final String FILE_USERS = "allUsersData.txt";
+    private static final String FILE_ALLUSERS = "allUsersData.txt";
 
-    private static final String FILE_VOTE ="uservote.txt";
+    private static final String FILE_USERVOTE ="uservote.txt";
     private static int RESULT_LOAD_IMAGE = 1;
     private static int RESULT_LOAD_VOTE = 2;
     private static final String FILE_USERIMG = "userimg.txt";
@@ -52,7 +52,7 @@ public class home extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        String res = load(FILE_USERS);
+        String res = load(FILE_ALLUSERS);
         String[] l = res.split(";");
         String[] users =new String[l.length];
         mArrayUri = new ArrayList<Uri>();
@@ -228,9 +228,10 @@ public class home extends AppCompatActivity {
                         //Toast.makeText(getApplicationContext(), "LETTO  " + paths,Toast.LENGTH_SHORT).show();
                         cursor.close();
                     }
-                    loadVoteImg(paths, FILE_VOTE);
+                    loadVoteImg(paths, FILE_USERVOTE);
                     Intent voteView = new Intent(home.this, voteView.class);
-                    startActivity(voteView); // takes the user to the signup activity
+                    voteView.putExtra("numb", "0");
+                    startActivity(voteView);
                 }
             }
 

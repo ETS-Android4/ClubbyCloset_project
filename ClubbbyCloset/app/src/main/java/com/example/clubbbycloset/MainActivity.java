@@ -12,7 +12,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
-    private static final String USERS_FILE = "allUsersData.txt";
+    private static final String FILE_ALLUSERS = "allUsersData.txt";
     private String users = "laura.p:profilo1:img1/img12/img22/img3/img4/img5/img14/img15;" +
             "elisa.a:profilo2:img4/img14/img22/img12/img15/img11/img3/img22;" +
             "giorgidp:profilo2:img2/img22/img1/img13/img14/img15/img21/img15;" +
@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
             "giacomo96:profilo3:img23/img24/img25/img26/img23/img25/img24/img26;" +
             "angelo.maria:profilo3:img26/img25/img24/img23/img25/img26/img24/img23;";
 
-    private static final String TOPICS_FILE = "topics.txt";
+    private static final String FILE_TOPICS = "topics.txt";
     private String topics = "matrimonio/evento/occasione:img1/img11/img12/img13/img14/img15/img16;" +
             "sport in compagnia/sport/amici/corsa/passeggiata:img2/img21/img22/img23/img24/img25/img26;" +
             "aperitivo al mare/ape/amici/amiche/compagnia/appuntamento:img3/img31/img32/img33/img34/img35/img36;" +
@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
             "colloquio/lavoro/formale:img6/img61/img62/img63/img64/img65/img66;" +
             "gita fuori porta/sportivo/amici/viaggio:img7/img71/img72/img73/img74/img75/img76;" +
             "varie/cose:img8/img81/img82/img83/img84/img85/img86;";
-    private static final String IMG_FILE = "images.txt";
+    private static final String FILE_ALLIMGS = "images.txt";
     private String images="donna:img1/img11/img12/img13/img14/img15/img16img2/img21/img22;" +
             "uomo:img23/img24/img25/img26";
 
@@ -41,9 +41,9 @@ public class MainActivity extends AppCompatActivity {
         Button btnLogin = (Button) findViewById(R.id.btnlogin);
 
         try {
-            save(users, USERS_FILE);
-            save(topics, TOPICS_FILE);
-            save(images, IMG_FILE);
+            save(users, FILE_ALLUSERS);
+            save(topics, FILE_TOPICS);
+            save(images, FILE_ALLIMGS);
         } catch (IOException e) {
             e.printStackTrace();
         }

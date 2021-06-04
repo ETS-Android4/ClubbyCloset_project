@@ -30,13 +30,13 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 public class search extends AppCompatActivity {
-    private static final String FILE_TOPIC = "topics.txt";
+    private static final String FILE_TOPICS = "topics.txt";
     ImageView bhome, bsearch, badd, bvote, bprofile, topicImg1,  topicImg2,  topicImg3,  topicImg4,  topicImg5,  topicImg6,  topicImg7,  topicImg8;
     TextView t1,t2,t3,t4 ,t5, t6, t7, t8;
     EditText stopic;
 
 
-    private static final String FILE_VOTE ="uservote.txt";
+    private static final String FILE_USERVOTE ="uservote.txt";
     private static int RESULT_LOAD_IMAGE = 1;
     private static int RESULT_LOAD_VOTE = 2;
     private static final String FILE_USERIMG = "userimg.txt";
@@ -62,8 +62,8 @@ public class search extends AppCompatActivity {
 
         stopic = (EditText)this.findViewById(R.id.et_search);
 
-        String[] res = load(FILE_TOPIC).split(";");
-        String[] res2 = load(FILE_TOPIC).split(";");
+        String[] res = load(FILE_TOPICS).split(";");
+        String[] res2 = load(FILE_TOPICS).split(";");
         String[] imgSrc = res;
         String[] topic = res2;
 
@@ -201,7 +201,7 @@ public class search extends AppCompatActivity {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
 
                     String insert = String.valueOf(stopic.getText());
-                    String[] forSearch = load(FILE_TOPIC).split(";");
+                    String[] forSearch = load(FILE_TOPICS).split(";");
 
                     for( int i =0; i<forSearch.length; i++){
                         //Toast.makeText(getApplicationContext(), "ciclo " + forSearch[i] , Toast.LENGTH_SHORT).show();
@@ -336,7 +336,7 @@ public class search extends AppCompatActivity {
             if (data.getClipData() != null) {
                 String paths = "";
                 int cout = data.getClipData().getItemCount();
-                Toast.makeText(getApplicationContext(), "SIZE  " + cout,Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), "SIZE  " + cout,Toast.LENGTH_SHORT).show();
                 if(cout <= 4) {
                     for (int i = 0; i < cout; i++) {
                         // adding imageuri in array
@@ -351,9 +351,10 @@ public class search extends AppCompatActivity {
                         //Toast.makeText(getApplicationContext(), "LETTO  " + paths,Toast.LENGTH_SHORT).show();
                         cursor.close();
                     }
-                    loadVoteImg(paths, FILE_VOTE);
+                    loadVoteImg(paths, FILE_USERVOTE);
                     Intent voteView = new Intent(search.this, voteView.class);
-                    startActivity(voteView); // takes the user to the signup activity
+                    voteView.putExtra("numb", "0");
+                    startActivity(voteView);
                 }
             }
 

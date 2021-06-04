@@ -17,8 +17,10 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
@@ -31,8 +33,12 @@ import java.util.ArrayList;
 
 public class voteView extends AppCompatActivity {
     ImageView bhome, bsearch, badd, bvote, bprofile , f1, f2;
+    EditText edDesc, edLoc, edTime;
+    TextView bsave;
 
-    private static final String FILE_VOTE ="uservote.txt";
+    private static final String FILE_USERVOTE ="uservote.txt";
+    private static final String FILE_USERVOTEDESCRIPTION ="uservotedescription.txt";
+
     private static int RESULT_LOAD_IMAGE = 1;
     private static int RESULT_LOAD_VOTE = 2;
     private static final String FILE_USERIMG = "userimg.txt";
@@ -61,8 +67,35 @@ public class voteView extends AppCompatActivity {
         bprofile = (ImageView) this.findViewById(R.id.profile);
         f1= (ImageView) this.findViewById(R.id.foto1);
         f2= (ImageView) this.findViewById(R.id.foto2);
+        edDesc = (EditText) this.findViewById(R.id.description);
+        edLoc = (EditText) this.findViewById(R.id.location);
+        edTime = (EditText) this.findViewById(R.id.time);
+        bsave = (TextView) this.findViewById(R.id.save);
+
+        if(! numb.equals("0")){
+           edDesc.setEnabled(false);
+           edTime.setEnabled(false);
+           edLoc.setEnabled(false);
+           bsave.setClickable(false);
+           bsave.setVisibility(View.INVISIBLE);
+        }
+
         ImageView[] imgs = {f1, f2};
-        setPhotosVote(FILE_VOTE, imgs, numb);
+        setPhotosVote(FILE_USERVOTE, imgs, numb);
+
+        bsave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try{
+                    String toAdd = load(FILE_USERVOTEDESCRIPTION) + ";info:" + edDesc + ":" + edLoc + ":" + edTime +  ":";
+                    save(FILE_USERVOTEDESCRIPTION, toAdd);
+                }catch (IOException e) {
+                     e.printStackTrace();
+                }
+                Intent profile = new Intent(voteView.this, profile.class);
+                startActivity(profile);
+            }
+        });
 
         bhome.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,54 +155,44 @@ public class voteView extends AppCompatActivity {
 
     }
 
-    public String load(String FILE_NAME) {
-        FileInputStream fis = null;
-        try {
-            fis = openFileInput(FILE_NAME);
-            InputStreamReader isr = new InputStreamReader(fis);
-            BufferedReader br = new BufferedReader(isr);
-            StringBuilder sb = new StringBuilder();
-            String text;
-            while ((text = br.readLine()) != null) {
-                sb.append(text);
-            }
-            return sb.toString();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }finally {
-            if (fis != null) {
-                try {
-                    fis.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        return null;
-    }
 
     private void setPhotosVote(String FILE_NAME, ImageView[] imgs, String numb) {
         //Toast.makeText(getApplicationContext(), "numero in func " + numb, Toast.LENGTH_SHORT).show();
-        if(numb != "0") {
+        if (numb.equals("0")){
+            String[] vs = load(FILE_NAME).split(";");
+            int j = vs.length - 1;
+            //Toast.makeText(getApplicationContext(), "numero  J:  " + j, Toast.LENGTH_SHORT).show();
+            String[] res = vs[j].split(":");
+            for (int i = 1; i < res.length; i++) {
+                if (i <= imgs.length) {
+                    Bitmap bm = BitmapFactory.decodeFile(res[i]);
+                    Bitmap rotatedBitmap = null;
+                    try {
+                        rotatedBitmap = rotateImage(res[i], bm);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    imgs[i - 1].setImageBitmap(rotatedBitmap);
+                }
+            }
+        }else {
             String[] vs = load(FILE_NAME).split(";");
             int j = vs.length - Integer.parseInt(numb);
             //Toast.makeText(getApplicationContext(), "numero  J:  " + j, Toast.LENGTH_SHORT).show();
             String[] res = vs[j].split(":");
-                for (int i = 1; i < res.length; i++) {
-                    if (i <= imgs.length) {
-                        Bitmap bm = BitmapFactory.decodeFile(res[i]);
-                        Bitmap rotatedBitmap = null;
-                        try {
-                            rotatedBitmap = rotateImage(res[i], bm);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        imgs[i - 1].setImageBitmap(rotatedBitmap);
+            for (int i = 1; i < res.length; i++) {
+                if (i <= imgs.length) {
+                    Bitmap bm = BitmapFactory.decodeFile(res[i]);
+                    Bitmap rotatedBitmap = null;
+                    try {
+                        rotatedBitmap = rotateImage(res[i], bm);
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
+                    imgs[i - 1].setImageBitmap(rotatedBitmap);
                 }
             }
+        }
     }
 
     public static Bitmap rotateImage(String path, Bitmap source) throws IOException {
@@ -237,9 +260,10 @@ public class voteView extends AppCompatActivity {
                         //Toast.makeText(getApplicationContext(), "LETTO  " + paths,Toast.LENGTH_SHORT).show();
                         cursor.close();
                     }
-                    loadVoteImg(paths, FILE_VOTE);
+                    loadVoteImg(paths, FILE_USERVOTE);
                     Intent voteView = new Intent(voteView.this, voteView.class);
-                    startActivity(voteView); // takes the user to the signup activity
+                    voteView.putExtra("numb", "0");
+                    startActivity(voteView);
                 }
             }
 
@@ -311,6 +335,45 @@ public class voteView extends AppCompatActivity {
         }
     }
 
+    public String load(String FILE_NAME) {
+        FileInputStream fis = null;
+        try {
+            fis = openFileInput(FILE_NAME);
+            InputStreamReader isr = new InputStreamReader(fis);
+            BufferedReader br = new BufferedReader(isr);
+            StringBuilder sb = new StringBuilder();
+            String text;
+            while ((text = br.readLine()) != null) {
+                sb.append(text);
+            }
+            return sb.toString();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally {
+            if (fis != null) {
+                try {
+                    fis.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return null;
+    }
 
+    public void save(String FILE_NAME, String text) throws IOException {
+        FileOutputStream fos = null;
+        fos = openFileOutput(FILE_NAME, MODE_PRIVATE);
+        fos.write(text.getBytes());
+        if (fos != null) {
+            try {
+                fos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
 }

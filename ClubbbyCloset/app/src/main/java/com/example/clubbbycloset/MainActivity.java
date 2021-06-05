@@ -29,9 +29,10 @@ public class MainActivity extends AppCompatActivity {
             "colloquio/lavoro/formale:img6/img61/img62/img63/img64/img65/img66;" +
             "gita fuori porta/sportivo/amici/viaggio:img7/img71/img72/img73/img74/img75/img76;" +
             "varie/cose:img8/img81/img82/img83/img84/img85/img86;";
-    private static final String FILE_ALLIMGS = "images.txt";
-    private String images="donna:img1/img11/img12/img13/img14/img15/img16img2/img21/img22;" +
-            "uomo:img23/img24/img25/img26";
+    private  static final String FILE_ALLVOTE = "allVote.txt";
+    private String votes = "username:giudc;img:img11:img12;description:provasedcrizione:provalovation:provaorario;vote:0:0;;" +
+            "username:angelo.maria;img:img21:img22;description:provasedcrizione1:provalovation1:provaorario1;vote:0:0||";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             save(users, FILE_ALLUSERS);
             save(topics, FILE_TOPICS);
-            save(images, FILE_ALLIMGS);
+            save(votes, FILE_ALLVOTE);
         } catch (IOException e) {
             e.printStackTrace();
         }

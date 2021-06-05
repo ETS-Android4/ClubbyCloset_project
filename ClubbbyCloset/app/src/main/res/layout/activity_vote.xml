@@ -35,6 +35,7 @@
                         android:layout_height="wrap_content"
                         android:background="@color/purple">
                         <TextView
+                            android:id="@+id/username1"
                             android:layout_width="200dp"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
@@ -45,6 +46,7 @@
                             android:textSize="18dp"
                             android:background="@color/purple"
                             android:textColor="@color/ice"
+                            android:clickable="true"
                             />
                         <TextView
                             android:layout_width="wrap_content"
@@ -65,24 +67,25 @@
                         android:layout_height="wrap_content"
                         android:background="@color/white">
                         <ImageView
-                            android:id="@+id/foto1"
+                            android:id="@+id/left1"
                             android:layout_width="200dp"
-                            android:layout_height="400dp"
+                            android:layout_height="340dp"
                             android:clickable="true"
-                            android:src="@drawable/img11" />
+                             />
 
                         <ImageView
-                            android:id="@+id/foto2"
+                            android:id="@+id/right1"
                             android:layout_width="200dp"
-                            android:layout_height="400dp"
+                            android:layout_height="340dp"
                             android:clickable="true"
-                            android:src="@drawable/img12" />
+                            />
                     </TableRow>
                 </TableLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
                     <TextView
+                        android:id="@+id/descrizione1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/purple"
@@ -111,6 +114,7 @@
                         android:layout_height="wrap_content"
                         android:background="@color/purple">
                         <TextView
+                            android:id="@+id/username2"
                             android:layout_width="200dp"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
@@ -121,6 +125,7 @@
                             android:textSize="18dp"
                             android:background="@color/purple"
                             android:textColor="@color/ice"
+                            android:clickable="true"
                             />
                         <TextView
                             android:layout_width="wrap_content"
@@ -140,37 +145,30 @@
                         android:layout_height="wrap_content"
                         android:background="@color/white">
                         <ImageView
-                            android:id="@+id/foto3"
+                            android:id="@+id/left2"
                             android:layout_width="205dp"
-                            android:layout_height="400dp"
+                            android:layout_height="340dp"
                             android:clickable="true"
-                            android:src="@drawable/img14" />
+                           />
 
                         <ImageView
-                            android:id="@+id/foto4"
+                            android:id="@+id/right2"
                             android:layout_width="205dp"
-                            android:layout_height="400dp"
+                            android:layout_height="340dp"
                             android:clickable="true"
-                            android:src="@drawable/img15" />
+                            />
                     </TableRow>
                 </TableLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
                     <TextView
+                        android:id="@+id/descrizione2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/purple"
                         android:fontFamily="@font/heebo_medium"
                         android:text="Descrizione evento\ndescrizione evento\norario\nluogo"/>
-                    <ImageView
-                        android:id="@+id/comment2"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_marginTop="50dp"
-                        android:layout_marginLeft="230dp"
-                        app:srcCompat="@drawable/s0"
-                        android:clickable="true"/>
                 </LinearLayout>
             </LinearLayout>
 

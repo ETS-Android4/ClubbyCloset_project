@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
@@ -27,8 +28,10 @@ import java.util.ArrayList;
 
 
 public class vote extends AppCompatActivity {
-    ImageView bhome, bsearch, badd, bvote, bprofile;
+    ImageView bhome, bsearch, badd, bvote, bprofile, imgLeft1, imgRigth1, imgLeft2, imgRigth2;;
+    TextView username1, description1,  username2, description2;
 
+    private  static final String FILE_ALLVOTE = "allVote.txt";
     private static final String FILE_USERVOTE ="uservote.txt";
     private static int RESULT_LOAD_IMAGE = 1;
     private static int RESULT_LOAD_VOTE = 2;
@@ -42,6 +45,7 @@ public class vote extends AppCompatActivity {
 
     ArrayList<Uri> mArrayUri;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,6 +56,19 @@ public class vote extends AppCompatActivity {
         badd = (ImageView) this.findViewById(R.id.add);
         bvote = (ImageView) this.findViewById(R.id.vote);
         bprofile = (ImageView) this.findViewById(R.id.profile);
+        imgLeft1 = (ImageView) this.findViewById(R.id.left1);
+        imgRigth1 = (ImageView) this.findViewById(R.id.right1);
+        imgLeft2 = (ImageView) this.findViewById(R.id.left2);
+        imgRigth2 = (ImageView) this.findViewById(R.id.right2);
+        username1 = (TextView) this.findViewById(R.id.username1);
+        username2 = (TextView) this.findViewById(R.id.username2);
+        description1 = (TextView) this.findViewById(R.id.descrizione1);
+        description2 = (TextView) this.findViewById(R.id.descrizione2);
+
+        ImageView[] imgs = {imgLeft1,imgRigth1,imgLeft2,imgRigth2};
+        TextView[] text = {username1,description1,username2,description2};
+
+        setVote(FILE_ALLVOTE, imgs, text);
 
         bhome.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -109,7 +126,96 @@ public class vote extends AppCompatActivity {
             }
         });
 
+        username1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent profilo = new Intent(vote.this, usersProfile.class);
+                profilo.putExtra("user", username1.getText());
+                startActivity(profilo);
+            }
+        });
 
+        username2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent profilo = new Intent(vote.this, usersProfile.class);
+                profilo.putExtra("user", username2.getText());
+                startActivity(profilo);
+            }
+        });
+
+    }
+
+    private void setVote(String fileAllvote, ImageView[] imgs, TextView[] text) {
+        String[] res = load(fileAllvote).split(";;");
+        //
+        int j = 0;
+        for (int i = 0; i <res.length; i++){
+            String[] r = res[i].split(";");
+            String username = r[0].split(":")[1];
+            String[] imgSrc = r[1].split((":"));
+            String[] desc = r[2].split(":");
+            String[] vote = r[3].split(":");
+
+            int id = getResources().getIdentifier(imgSrc[1],"drawable", "com.example.clubbbycloset");
+            imgs[j].setBackgroundResource(id);
+            id = getResources().getIdentifier(imgSrc[2],"drawable", "com.example.clubbbycloset");
+            imgs[j+1].setBackgroundResource(id);
+
+            imgs[j].setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int vo = Integer.parseInt(vote[1]) + 4;
+
+                    String[] file = load(FILE_ALLVOTE).split(username);
+
+                    String toAdd = file[0] + username + ";" + r[1] + ";" + r[2] + ";"  + vote[0] + ":" + vo + ":" + vote[2] + ";;";
+                    if (file[1].split(";;").length >1)
+                        toAdd = toAdd + file[1].split(";;")[1];
+                    try {
+                        save(FILE_ALLVOTE, toAdd);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    Toast.makeText(getApplicationContext(), "Scritto "+toAdd, Toast.LENGTH_SHORT).show();
+                }
+            });
+            imgs[j+1].setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int vo = Integer.parseInt(vote[2]) + 1;
+                    String[] file = load(FILE_ALLVOTE).split(username);
+                    String toAdd = file[0] + username + ";" + r[1] + ";" + r[2] + ";"  + vote[0] + ":" + vote[1] + ":" + vo + ";;";
+                    if (file[1].split(";;").length >1)
+                        toAdd = toAdd + file[1].split(";;")[1];
+                    try {
+                        save(FILE_ALLVOTE, toAdd);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    Toast.makeText(getApplicationContext(), "Scritto "+toAdd, Toast.LENGTH_SHORT).show();
+                }
+            });
+            text[j].setText(username);
+            text[j+1].setText(desc[1] + "\n" + desc[1] + "\n" + desc[3] + "\n");
+
+            j= j+2;
+        }
+    }
+
+    public void save(String FILE_NAME, String text) throws IOException {
+        FileOutputStream fos = null;
+        fos = openFileOutput(FILE_NAME, MODE_PRIVATE);
+        fos.write(text.getBytes());
+        if (fos != null) {
+            try {
+                fos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public String load(String FILE_NAME) {

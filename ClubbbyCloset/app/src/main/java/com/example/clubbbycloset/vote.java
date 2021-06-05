@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -17,6 +18,8 @@ import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.github.mikephil.charting.charts.HorizontalBarChart;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -30,6 +33,7 @@ import java.util.ArrayList;
 public class vote extends AppCompatActivity {
     ImageView bhome, bsearch, badd, bvote, bprofile, imgLeft1, imgRigth1, imgLeft2, imgRigth2;;
     TextView username1, description1,  username2, description2;
+    HorizontalBarChart mBarChart;
 
     private  static final String FILE_ALLVOTE = "allVote.txt";
     private static final String FILE_USERVOTE ="uservote.txt";
@@ -67,6 +71,8 @@ public class vote extends AppCompatActivity {
 
         ImageView[] imgs = {imgLeft1,imgRigth1,imgLeft2,imgRigth2};
         TextView[] text = {username1,description1,username2,description2};
+
+        mBarChart = findViewById(R.id.id_horizontal_barchart);
 
         setVote(FILE_ALLVOTE, imgs, text);
 
@@ -146,6 +152,8 @@ public class vote extends AppCompatActivity {
 
     }
 
+
+
     private void setVote(String fileAllvote, ImageView[] imgs, TextView[] text) {
         String[] res = load(fileAllvote).split(";;");
         //
@@ -162,50 +170,63 @@ public class vote extends AppCompatActivity {
             id = getResources().getIdentifier(imgSrc[2],"drawable", "com.example.clubbbycloset");
             imgs[j+1].setBackgroundResource(id);
 
+            text[j].setText(username);
+            text[j+1].setText(desc[1] + "\n" + desc[1] + "\n" + desc[3] + "\n");
+
+            int finalJ = j;
+            int finalI = i;
             imgs[j].setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    int vo = Integer.parseInt(vote[1]) + 4;
-
-                    String[] file = load(FILE_ALLVOTE).split(username);
-
-                    String toAdd = file[0] + username + ";" + r[1] + ";" + r[2] + ";"  + vote[0] + ":" + vo + ":" + vote[2] + ";;";
-                    if (file[1].split(";;").length >1)
-                        toAdd = toAdd + file[1].split(";;")[1];
-                    try {
-                        save(FILE_ALLVOTE, toAdd);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                    Toast.makeText(getApplicationContext(), "Scritto "+toAdd, Toast.LENGTH_SHORT).show();
+                    saveVote(fileAllvote, finalI, finalJ);
                 }
             });
+
             imgs[j+1].setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    int vo = Integer.parseInt(vote[2]) + 1;
-                    String[] file = load(FILE_ALLVOTE).split(username);
-                    String toAdd = file[0] + username + ";" + r[1] + ";" + r[2] + ";"  + vote[0] + ":" + vote[1] + ":" + vo + ";;";
-                    if (file[1].split(";;").length >1)
-                        toAdd = toAdd + file[1].split(";;")[1];
-                    try {
-                        save(FILE_ALLVOTE, toAdd);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                    Toast.makeText(getApplicationContext(), "Scritto "+toAdd, Toast.LENGTH_SHORT).show();
+                    saveVote(fileAllvote, finalI, finalJ+1);
                 }
             });
-            text[j].setText(username);
-            text[j+1].setText(desc[1] + "\n" + desc[1] + "\n" + desc[3] + "\n");
 
             j= j+2;
         }
     }
 
+    public void saveVote(String FILE_NAME, int i, int j){
+        String[] res = load(FILE_NAME).split(";;");
+        String[] r = res[i].split(";");
+
+        String username = r[0].split(":")[1];
+        String[] vote = r[3].split(":");
+
+        String toAdd;
+
+        if (j%2 == 0) {
+            int vo = Integer.parseInt(vote[1]) + 1;
+            String[] file = load(FILE_NAME).split(username);
+            toAdd = file[0] + username + ";" + r[1] + ";" + r[2] + ";" + vote[0] + ":" + vo + ":" + vote[2] + ";;";
+            if (file[1].split(";;").length > 1){
+                toAdd = toAdd + file[1].split(";;")[1];
+            }
+        }else{
+            int vo = Integer.parseInt(vote[2]) + 1;
+            String[] file = load(FILE_NAME).split(username);
+            toAdd = file[0] + username + ";" + r[1] + ";" + r[2] + ";" + vote[0] + ":" + vote[1] + ":" + vo + ";;";
+            if (file[1].split(";;").length > 1){
+                toAdd = toAdd + file[1].split(";;")[1];
+            }
+        }
+
+        try{
+            save(FILE_ALLVOTE, toAdd);
+        } catch(IOException e){
+            e.printStackTrace();
+        }
+    }
+
     public void save(String FILE_NAME, String text) throws IOException {
+        Toast.makeText(getApplicationContext(), "IN SAVE " + text, Toast.LENGTH_SHORT).show();
         FileOutputStream fos = null;
         fos = openFileOutput(FILE_NAME, MODE_PRIVATE);
         fos.write(text.getBytes());

@@ -80,7 +80,16 @@
                             android:clickable="true"
                             />
                     </TableRow>
+                    <TableRow>
+                        <com.github.mikephil.charting.charts.HorizontalBarChart
+                            android:id="@+id/id_horizontal_barchart"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+                        </com.github.mikephil.charting.charts.HorizontalBarChart>
+                    </TableRow>
                 </TableLayout>
+
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">

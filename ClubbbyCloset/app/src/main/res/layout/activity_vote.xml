@@ -80,13 +80,38 @@
                             android:clickable="true"
                             />
                     </TableRow>
-                    <TableRow>
-                        <com.github.mikephil.charting.charts.HorizontalBarChart
-                            android:id="@+id/id_horizontal_barchart"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
-                        </com.github.mikephil.charting.charts.HorizontalBarChart>
-                    </TableRow>
+                    <LinearLayout>
+                        <LinearLayout
+                            android:id="@+id/leftbar1"
+                            android:layout_width="200dp"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:background="@color/litePurple"
+                            android:visibility="invisible">
+                            <TextView
+                                android:id="@+id/tvleft1"
+                                android:textSize="20dp"
+                                android:text="50%"
+                                android:textColor="@color/ice"
+                                android:layout_height="wrap_content"
+                                android:layout_width="wrap_content" />
+                        </LinearLayout>
+                        <LinearLayout
+                            android:id="@+id/rightbar1"
+                            android:layout_width="200dp"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:background="@color/litePurple"
+                            android:visibility="invisible">
+                            <TextView
+                                android:id="@+id/tvright1"
+                                android:textSize="20dp"
+                                android:text="50%"
+                                android:textColor="@color/ice"
+                                android:layout_height="wrap_content"
+                                android:layout_width="wrap_content"/>
+                        </LinearLayout>
+                    </LinearLayout>
                 </TableLayout>
 
 

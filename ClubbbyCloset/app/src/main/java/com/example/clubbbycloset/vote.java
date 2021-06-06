@@ -2,19 +2,23 @@ package com.example.clubbbycloset;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,8 +36,9 @@ import java.util.ArrayList;
 
 public class vote extends AppCompatActivity {
     ImageView bhome, bsearch, badd, bvote, bprofile, imgLeft1, imgRigth1, imgLeft2, imgRigth2;;
-    TextView username1, description1,  username2, description2;
-    HorizontalBarChart mBarChart;
+    TextView username1, description1,  username2, description2, vleft1,vright1;
+    LinearLayout lbar1, rbar1;
+
 
     private  static final String FILE_ALLVOTE = "allVote.txt";
     private static final String FILE_USERVOTE ="uservote.txt";
@@ -68,13 +73,18 @@ public class vote extends AppCompatActivity {
         username2 = (TextView) this.findViewById(R.id.username2);
         description1 = (TextView) this.findViewById(R.id.descrizione1);
         description2 = (TextView) this.findViewById(R.id.descrizione2);
+        vleft1= (TextView) this.findViewById(R.id.tvleft1);
+        vright1= (TextView) this.findViewById(R.id.tvright1);
+        lbar1 = (LinearLayout)this.findViewById(R.id.leftbar1);
+        rbar1 = (LinearLayout) this.findViewById(R.id.rightbar1);
 
         ImageView[] imgs = {imgLeft1,imgRigth1,imgLeft2,imgRigth2};
         TextView[] text = {username1,description1,username2,description2};
+        TextView[] vtxt = {vleft1,vright1};
+        LinearLayout[] vbars = {lbar1,rbar1};
 
-        mBarChart = findViewById(R.id.id_horizontal_barchart);
 
-        setVote(FILE_ALLVOTE, imgs, text);
+        setVote(FILE_ALLVOTE, imgs, text, vtxt, vbars);
 
         bhome.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -152,9 +162,7 @@ public class vote extends AppCompatActivity {
 
     }
 
-
-
-    private void setVote(String fileAllvote, ImageView[] imgs, TextView[] text) {
+    private void setVote(String fileAllvote, ImageView[] imgs, TextView[] text, TextView[] vtxt, LinearLayout[] vbars) {
         String[] res = load(fileAllvote).split(";;");
         //
         int j = 0;
@@ -179,6 +187,12 @@ public class vote extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     saveVote(fileAllvote, finalI, finalJ);
+
+                    String[] res = load(fileAllvote).split(";;");
+                    String[] r = res[finalI].split(";");
+                    String[] vote = r[3].split(":");
+                    int[] vot = {Integer.parseInt(vote[1]),Integer.parseInt(vote[2])};
+                    setVoteBar(vot[0], vot[1], vtxt,vbars, finalJ);
                 }
             });
 
@@ -186,11 +200,44 @@ public class vote extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     saveVote(fileAllvote, finalI, finalJ+1);
+
+                    String[] res = load(fileAllvote).split(";;");
+                    String[] r = res[finalI].split(";");
+                    String[] vote = r[3].split(":");
+                    int[] vot = {Integer.parseInt(vote[1]),Integer.parseInt(vote[2])};
+                    setVoteBar(vot[0], vot[1], vtxt,vbars, finalJ);
                 }
             });
 
             j= j+2;
         }
+    }
+
+    public void setVoteBar(int lvote, int rvote, TextView[] vtxt, LinearLayout[] vbars, int j){
+        int tot = lvote+rvote;
+        int l = (lvote*100)/tot;
+        int r = (rvote*100)/tot;
+        vtxt[j].setText(Integer.toString(l)+ "%");
+        vtxt[j+1].setText(Integer.toString(r)+ "%");
+        int w =((l*100)/400);
+        //Toast.makeText(vote.this,"w1: " + w + "l  " + l , Toast.LENGTH_SHORT).show();
+        LinearLayout.LayoutParams lp = new  LinearLayout.LayoutParams(w*50, LinearLayout.LayoutParams.WRAP_CONTENT);
+        vbars[j].setLayoutParams(lp);
+
+
+        w =((r*100)/400);
+        //Toast.makeText(vote.this,"W2: " + w + "r   "+ r, Toast.LENGTH_SHORT).show();
+        lp = new  LinearLayout.LayoutParams(w*50, LinearLayout.LayoutParams.WRAP_CONTENT);
+        vbars[j+1].setLayoutParams(lp);
+        if(l > 50 ){
+            vbars[j].setBackgroundResource(R.color.purple);
+            vbars[j+1].setBackgroundResource(R.color.litePurple);
+        }else{
+            vbars[j+1].setBackgroundResource(R.color.purple);
+            vbars[j].setBackgroundResource(R.color.litePurple);
+        }
+        vbars[j].setVisibility(View.VISIBLE);
+        vbars[j+1].setVisibility(View.VISIBLE);
     }
 
     public void saveVote(String FILE_NAME, int i, int j){
@@ -199,9 +246,8 @@ public class vote extends AppCompatActivity {
 
         String username = r[0].split(":")[1];
         String[] vote = r[3].split(":");
-
+        int[] v = null;
         String toAdd;
-
         if (j%2 == 0) {
             int vo = Integer.parseInt(vote[1]) + 1;
             String[] file = load(FILE_NAME).split(username);
@@ -219,6 +265,7 @@ public class vote extends AppCompatActivity {
         }
 
         try{
+            //Toast.makeText(vote.this,"ADD: " + toAdd , Toast.LENGTH_SHORT).show();
             save(FILE_ALLVOTE, toAdd);
         } catch(IOException e){
             e.printStackTrace();
@@ -226,7 +273,7 @@ public class vote extends AppCompatActivity {
     }
 
     public void save(String FILE_NAME, String text) throws IOException {
-        Toast.makeText(getApplicationContext(), "IN SAVE " + text, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getApplicationContext(), "IN SAVE " + text, Toast.LENGTH_SHORT).show();
         FileOutputStream fos = null;
         fos = openFileOutput(FILE_NAME, MODE_PRIVATE);
         fos.write(text.getBytes());

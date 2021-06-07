@@ -15,11 +15,13 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,10 +37,10 @@ import java.util.ArrayList;
 
 
 public class vote extends AppCompatActivity {
-    ImageView bhome, bsearch, badd, bvote, bprofile, imgLeft1, imgRigth1, imgLeft2, imgRigth2;;
-    TextView username1, description1,  username2, description2, vleft1,vright1;
-    LinearLayout lbar1, rbar1;
-
+    ImageView bhome, bsearch, badd, bvote, bprofile, imgLeft, imgRigth;
+    TextView tvusername, tvdescription, vleft, vright;
+    LinearLayout lbar,rbar;
+    LinearLayout scrollView;
 
     private  static final String FILE_ALLVOTE = "allVote.txt";
     private static final String FILE_USERVOTE ="uservote.txt";
@@ -52,7 +54,6 @@ public class vote extends AppCompatActivity {
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
-    ArrayList<Uri> mArrayUri;
 
 
     @Override
@@ -65,26 +66,10 @@ public class vote extends AppCompatActivity {
         badd = (ImageView) this.findViewById(R.id.add);
         bvote = (ImageView) this.findViewById(R.id.vote);
         bprofile = (ImageView) this.findViewById(R.id.profile);
-        imgLeft1 = (ImageView) this.findViewById(R.id.left1);
-        imgRigth1 = (ImageView) this.findViewById(R.id.right1);
-        imgLeft2 = (ImageView) this.findViewById(R.id.left2);
-        imgRigth2 = (ImageView) this.findViewById(R.id.right2);
-        username1 = (TextView) this.findViewById(R.id.username1);
-        username2 = (TextView) this.findViewById(R.id.username2);
-        description1 = (TextView) this.findViewById(R.id.descrizione1);
-        description2 = (TextView) this.findViewById(R.id.descrizione2);
-        vleft1= (TextView) this.findViewById(R.id.tvleft1);
-        vright1= (TextView) this.findViewById(R.id.tvright1);
-        lbar1 = (LinearLayout)this.findViewById(R.id.leftbar1);
-        rbar1 = (LinearLayout) this.findViewById(R.id.rightbar1);
 
-        ImageView[] imgs = {imgLeft1,imgRigth1,imgLeft2,imgRigth2};
-        TextView[] text = {username1,description1,username2,description2};
-        TextView[] vtxt = {vleft1,vright1};
-        LinearLayout[] vbars = {lbar1,rbar1};
+        scrollView = (LinearLayout) this.findViewById(R.id.scroll);
 
-
-        setVote(FILE_ALLVOTE, imgs, text, vtxt, vbars);
+        setLayout(FILE_ALLVOTE,scrollView);
 
         bhome.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -141,103 +126,107 @@ public class vote extends AppCompatActivity {
                 popup.show();//showing popup menu
             }
         });
-
-        username1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent profilo = new Intent(vote.this, usersProfile.class);
-                profilo.putExtra("user", username1.getText());
-                startActivity(profilo);
-            }
-        });
-
-        username2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent profilo = new Intent(vote.this, usersProfile.class);
-                profilo.putExtra("user", username2.getText());
-                startActivity(profilo);
-            }
-        });
-
     }
 
-    private void setVote(String fileAllvote, ImageView[] imgs, TextView[] text, TextView[] vtxt, LinearLayout[] vbars) {
+    private void setLayout(String fileAllvote, LinearLayout scrollView) {
         String[] res = load(fileAllvote).split(";;");
-        //
-        int j = 0;
-        for (int i = 0; i <res.length; i++){
+        LayoutInflater inflater = (LayoutInflater)getBaseContext() .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        for(int i=0;i<res.length;i++){
+
             String[] r = res[i].split(";");
             String username = r[0].split(":")[1];
             String[] imgSrc = r[1].split((":"));
             String[] desc = r[2].split(":");
             String[] vote = r[3].split(":");
 
+            View view = inflater.inflate(R.layout.vote_frame, null);
+
+            imgLeft = (ImageView) view.findViewById(R.id.left1);
+            imgRigth = (ImageView) view.findViewById(R.id.right1);
+
             int id = getResources().getIdentifier(imgSrc[1],"drawable", "com.example.clubbbycloset");
-            imgs[j].setBackgroundResource(id);
+            imgLeft.setBackgroundResource(id);
             id = getResources().getIdentifier(imgSrc[2],"drawable", "com.example.clubbbycloset");
-            imgs[j+1].setBackgroundResource(id);
+            imgRigth.setBackgroundResource(id);
 
-            text[j].setText(username);
-            text[j+1].setText(desc[1] + "\n" + desc[1] + "\n" + desc[3] + "\n");
+            tvusername = (TextView)view.findViewById(R.id.username1);
+            tvdescription = (TextView)view.findViewById(R.id.descrizione1);
+            tvusername.setText(username);
+            tvdescription.setText(desc[1] + "\n" + desc[1] + "\n" + desc[3] + "\n");
+            tvusername.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent profilo = new Intent(vote.this, usersProfile.class);
+                    profilo.putExtra("user", username);
+                    startActivity(profilo);
+                }
+            });
 
-            int finalJ = j;
+            lbar = (LinearLayout)view.findViewById(R.id.leftbar);
+            rbar = (LinearLayout) view.findViewById(R.id.rightbar);
+            vleft = (TextView)view.findViewById(R.id.tvleft);
+            vright = (TextView)view.findViewById(R.id.tvright);
+
+            TextView[] vtxt = {vleft,vright};
+
+            LinearLayout[] vbars = {lbar,rbar};
+
             int finalI = i;
-            imgs[j].setOnClickListener(new View.OnClickListener() {
+            imgLeft.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    saveVote(fileAllvote, finalI, finalJ);
+                    saveVote(fileAllvote, finalI, 0);
 
                     String[] res = load(fileAllvote).split(";;");
                     String[] r = res[finalI].split(";");
                     String[] vote = r[3].split(":");
                     int[] vot = {Integer.parseInt(vote[1]),Integer.parseInt(vote[2])};
-                    setVoteBar(vot[0], vot[1], vtxt,vbars, finalJ);
+                    setVoteBar(vot[0], vot[1], vtxt,vbars);
                 }
             });
-
-            imgs[j+1].setOnClickListener(new View.OnClickListener() {
+            imgRigth.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    saveVote(fileAllvote, finalI, finalJ+1);
+                    saveVote(fileAllvote, finalI, 1);
 
                     String[] res = load(fileAllvote).split(";;");
                     String[] r = res[finalI].split(";");
                     String[] vote = r[3].split(":");
                     int[] vot = {Integer.parseInt(vote[1]),Integer.parseInt(vote[2])};
-                    setVoteBar(vot[0], vot[1], vtxt,vbars, finalJ);
+                    setVoteBar(vot[0], vot[1], vtxt,vbars);
                 }
             });
 
-            j= j+2;
+            scrollView.addView(view);
         }
     }
 
-    public void setVoteBar(int lvote, int rvote, TextView[] vtxt, LinearLayout[] vbars, int j){
+    public void setVoteBar(int lvote, int rvote, TextView[] vtxt, LinearLayout[] vbars){
         int tot = lvote+rvote;
         int l = (lvote*100)/tot;
         int r = (rvote*100)/tot;
-        vtxt[j].setText(Integer.toString(l)+ "%");
-        vtxt[j+1].setText(Integer.toString(r)+ "%");
+        vtxt[0].setText(Integer.toString(l)+ "%");
+        vtxt[1].setText(Integer.toString(r)+ "%");
+
+        //Toast.makeText(vote.this,"vtxt len  " + vtxt[0].getText()  + "  " + vtxt[1].getText(), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(vote.this,"vbar len  " + vbars[0]  , Toast.LENGTH_SHORT).show();
         int w =((l*100)/400);
         //Toast.makeText(vote.this,"w1: " + w + "l  " + l , Toast.LENGTH_SHORT).show();
         LinearLayout.LayoutParams lp = new  LinearLayout.LayoutParams(w*50, LinearLayout.LayoutParams.WRAP_CONTENT);
-        vbars[j].setLayoutParams(lp);
-
-
+        vbars[0].setLayoutParams(lp);
         w =((r*100)/400);
         //Toast.makeText(vote.this,"W2: " + w + "r   "+ r, Toast.LENGTH_SHORT).show();
         lp = new  LinearLayout.LayoutParams(w*50, LinearLayout.LayoutParams.WRAP_CONTENT);
-        vbars[j+1].setLayoutParams(lp);
+        vbars[1].setLayoutParams(lp);
         if(l > 50 ){
-            vbars[j].setBackgroundResource(R.color.purple);
-            vbars[j+1].setBackgroundResource(R.color.litePurple);
+            vbars[0].setBackgroundResource(R.color.purple);
+            vbars[1].setBackgroundResource(R.color.litePurple);
         }else{
-            vbars[j+1].setBackgroundResource(R.color.purple);
-            vbars[j].setBackgroundResource(R.color.litePurple);
+            vbars[1].setBackgroundResource(R.color.purple);
+            vbars[0].setBackgroundResource(R.color.litePurple);
         }
-        vbars[j].setVisibility(View.VISIBLE);
-        vbars[j+1].setVisibility(View.VISIBLE);
+        vbars[0].setVisibility(View.VISIBLE);
+        vbars[1].setVisibility(View.VISIBLE);
     }
 
     public void saveVote(String FILE_NAME, int i, int j){
@@ -248,7 +237,7 @@ public class vote extends AppCompatActivity {
         String[] vote = r[3].split(":");
         int[] v = null;
         String toAdd;
-        if (j%2 == 0) {
+        if (j == 0) {
             int vo = Integer.parseInt(vote[1]) + 1;
             String[] file = load(FILE_NAME).split(username);
             toAdd = file[0] + username + ";" + r[1] + ";" + r[2] + ";" + vote[0] + ":" + vo + ":" + vote[2] + ";;";
@@ -265,7 +254,7 @@ public class vote extends AppCompatActivity {
         }
 
         try{
-            //Toast.makeText(vote.this,"ADD: " + toAdd , Toast.LENGTH_SHORT).show();
+            Toast.makeText(vote.this,"ADD: " + toAdd , Toast.LENGTH_SHORT).show();
             save(FILE_ALLVOTE, toAdd);
         } catch(IOException e){
             e.printStackTrace();

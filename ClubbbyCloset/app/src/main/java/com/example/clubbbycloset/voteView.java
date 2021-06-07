@@ -36,6 +36,8 @@ public class voteView extends AppCompatActivity {
     EditText edDesc, edLoc, edTime;
     TextView bsave, rv, lv;
 
+    private  static final String FILE_ALLVOTE = "allVote.txt";
+
     private static final String FILE_USERVOTE ="uservote.txt";
     private static final String FILE_USERVOTEDESCRIPTION ="uservotedescription.txt";
 
@@ -83,9 +85,15 @@ public class voteView extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 try{
-                    String toAdd = ";info:" + edDesc.getText().toString() + ":" + edLoc.getText().toString() + ":" + edTime.getText().toString()+"/0:0";
+                    String toAdd = ";description:" + edDesc.getText().toString() + ":" + edLoc.getText().toString() + ":" + edTime.getText().toString();
                     //Toast.makeText(getApplicationContext(), "TO ADD:   " + toAdd, Toast.LENGTH_SHORT).show();
-                    save(FILE_USERVOTEDESCRIPTION, load(FILE_USERVOTEDESCRIPTION) + toAdd);
+                    save(FILE_USERVOTEDESCRIPTION, load(FILE_USERVOTEDESCRIPTION) + toAdd + "/0:0");
+
+                    String[] res = load(FILE_USERVOTE).split(";");
+                    String toAddAllVote = load(FILE_ALLVOTE) + res[0] + ";img:" + res[res.length-1].split(":")[1] + ":" +  res[res.length-1].split(":")[2] +  toAdd + ";vote:0:0;;";
+                    Toast.makeText(getApplicationContext(), " TO ADDDDDDD :   " + toAddAllVote, Toast.LENGTH_SHORT).show();
+                    save(FILE_ALLVOTE , toAddAllVote);
+
                 }catch (IOException e) {
                      e.printStackTrace();
                 }
@@ -180,7 +188,6 @@ public class voteView extends AppCompatActivity {
 
     private void setDescriptionVote(String FILE_NAME, EditText[] des, String numb) {
         //Toast.makeText(getApplicationContext(), "numero in func " + numb, Toast.LENGTH_SHORT).show();
-
         if(! numb.equals("0")) {
 
             edDesc.setEnabled(false);
@@ -191,20 +198,16 @@ public class voteView extends AppCompatActivity {
 
             String[] d = load(FILE_NAME).split(";");
             int j = d.length - Integer.parseInt(numb);
-            Toast.makeText(getApplicationContext(), "Description:  " + d[j], Toast.LENGTH_SHORT).show();
-            Toast.makeText(getApplicationContext(), "Description length :  " + d.length, Toast.LENGTH_SHORT).show();
-                String[] r = d[j].split("/");
-                Toast.makeText(getApplicationContext(), "Info  " + r[0], Toast.LENGTH_SHORT).show();
-                Toast.makeText(getApplicationContext(), "result  " + r[1], Toast.LENGTH_SHORT).show();
-                String[] info = r[0].split(":");
-                String[] results = r[1].split(":");
-                for (int i = 1; i < info.length; i++) {
-                    //Toast.makeText(getApplicationContext(), "LETTO:  " + info[i], Toast.LENGTH_SHORT).show();
-                    des[i - 1].setText(info[i]);
-                }
-                Toast.makeText(getApplicationContext(), "VOTI:  " + r[1], Toast.LENGTH_SHORT).show();
-                lv.setText(results[0]);
-                rv.setText(results[1]);
+            //Toast.makeText(getApplicationContext(), "Description:  " + d[j], Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getApplicationContext(), "Description length :  " + d.length, Toast.LENGTH_SHORT).show();
+            String[] r = d[j].split("/");
+            String[] info = r[0].split(":");
+            String[] results = r[1].split(":");
+            for (int i = 1; i < info.length; i++) {
+                des[i - 1].setText(info[i]);
+            }
+            lv.setText(results[0]);
+            rv.setText(results[1]);
         }
     }
 

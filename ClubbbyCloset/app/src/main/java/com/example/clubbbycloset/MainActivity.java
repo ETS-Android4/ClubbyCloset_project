@@ -31,7 +31,9 @@ public class MainActivity extends AppCompatActivity {
             "varie/cose:img8/img81/img82/img83/img84/img85/img86;";
     private  static final String FILE_ALLVOTE = "allVote.txt";
     private String votes = "username:giudc;img:img11:img12;description:provasedcrizione:provalovation:provaorario;vote:0:0;;" +
-            "username:angelo.maria;img:img21:img22;description:provasedcrizione1:provalovation1:provaorario1;vote:0:0;;";
+            "username:angelo.maria;img:img24:img25;description:provasedcrizione1:provalovation1:provaorario1;vote:0:0;;" +
+            "username:elisa.a;img:img21:img22;description:provasedcrizione2:provalovation2:provaorario2;vote:0:0;;" +
+            "username:giacomo96;img:img26:img25;description:provasedcrizione3:provalovation3:provaorario3;vote:0:0;;";
 
 
     @Override

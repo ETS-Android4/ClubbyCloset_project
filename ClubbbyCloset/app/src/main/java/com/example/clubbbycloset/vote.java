@@ -10,8 +10,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.drawable.Drawable;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -144,15 +148,34 @@ public class vote extends AppCompatActivity {
             imgLeft = (ImageView) view.findViewById(R.id.left1);
             imgRigth = (ImageView) view.findViewById(R.id.right1);
 
-            int id = getResources().getIdentifier(imgSrc[1],"drawable", "com.example.clubbbycloset");
-            imgLeft.setBackgroundResource(id);
-            id = getResources().getIdentifier(imgSrc[2],"drawable", "com.example.clubbbycloset");
-            imgRigth.setBackgroundResource(id);
+            if(imgSrc[1].contains("storage")){
+                Bitmap bml = BitmapFactory.decodeFile(imgSrc[1]);
+                Bitmap bmr = BitmapFactory.decodeFile(imgSrc[2]);
+                Bitmap rotatedBitmap = null;
+                try {
+                    rotatedBitmap = rotateImage(imgSrc[1], bml);
+                    imgLeft.setImageBitmap(rotatedBitmap);
+                    rotatedBitmap = rotateImage(imgSrc[2], bmr);
+                    imgRigth.setImageBitmap(rotatedBitmap);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }else{
+                int id = getResources().getIdentifier(imgSrc[1],"drawable", "com.example.clubbbycloset");
+                imgLeft.setBackgroundResource(id);
+                id = getResources().getIdentifier(imgSrc[2],"drawable", "com.example.clubbbycloset");
+                imgRigth.setBackgroundResource(id);
+            }
 
             tvusername = (TextView)view.findViewById(R.id.username1);
             tvdescription = (TextView)view.findViewById(R.id.descrizione1);
             tvusername.setText(username);
-            tvdescription.setText(desc[1] + "\n" + desc[1] + "\n" + desc[3] + "\n");
+            String aux = "";
+            for (int z = 1; z < desc.length; z++) {
+                aux = aux + desc[z] + "\n";
+            }
+            tvdescription.setText(aux);
             tvusername.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -254,7 +277,7 @@ public class vote extends AppCompatActivity {
         }
 
         try{
-            Toast.makeText(vote.this,"ADD: " + toAdd , Toast.LENGTH_SHORT).show();
+            //Toast.makeText(vote.this,"ADD: " + toAdd , Toast.LENGTH_SHORT).show();
             save(FILE_ALLVOTE, toAdd);
         } catch(IOException e){
             e.printStackTrace();
@@ -410,6 +433,36 @@ public class vote extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
+    }
+
+    public static Bitmap rotateImage(String path, Bitmap source) throws IOException {
+        Float angle = null;
+        ExifInterface ei = new ExifInterface(path);
+        int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+                ExifInterface.ORIENTATION_UNDEFINED);
+
+        switch(orientation) {
+
+            case ExifInterface.ORIENTATION_ROTATE_90:
+                angle = Float.valueOf(90);
+                break;
+
+            case ExifInterface.ORIENTATION_ROTATE_180:
+                angle = Float.valueOf(180);
+                break;
+
+            case ExifInterface.ORIENTATION_ROTATE_270:
+                angle = Float.valueOf(270);
+                break;
+
+            case ExifInterface.ORIENTATION_NORMAL:
+            default:
+                angle = Float.valueOf(0);
+        }
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(),
+                matrix, true);
     }
 
 }

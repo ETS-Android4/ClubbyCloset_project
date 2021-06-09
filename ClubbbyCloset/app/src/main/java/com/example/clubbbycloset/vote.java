@@ -396,7 +396,10 @@ public class vote extends AppCompatActivity {
             int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
             picturePath = cursor.getString(columnIndex);
             try {
-                changeProfileImg(picturePath, FILE_USERIMG);
+                save(FILE_USERIMG, load(FILE_USERIMG) +"imgSrc:" +  picturePath + ";");
+                Intent imgVote = new Intent(vote.this, imgView.class);
+                imgVote.putExtra("numb", "0");
+                startActivity(imgVote);
             } catch (IOException e) {
                 e.printStackTrace();
             }

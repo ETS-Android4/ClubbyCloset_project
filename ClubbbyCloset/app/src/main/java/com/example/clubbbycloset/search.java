@@ -387,14 +387,16 @@ public class search extends AppCompatActivity {
             int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
             picturePath = cursor.getString(columnIndex);
             try {
-                changeProfileImg(picturePath, FILE_USERIMG);
+                save(FILE_USERIMG, load(FILE_USERIMG) +"imgSrc:" +  picturePath );
+                Intent imgVote = new Intent(search.this, imgView.class);
+                imgVote.putExtra("numb", "0");
+                startActivity(imgVote);
             } catch (IOException e) {
                 e.printStackTrace();
             }
             cursor.close();
         }
     }
-
     //to give the permission for load img
     public static void verifyStoragePermissions(Activity activity) {
         // Check if we have write permission
@@ -410,13 +412,10 @@ public class search extends AppCompatActivity {
         }
     }
 
-    public void changeProfileImg(String picPath, String FILE_NAME) throws IOException {
-        //Toast.makeText(getApplicationContext(), "LETTO  " + load(FILE_NAME),Toast.LENGTH_SHORT).show();
-        String t =load(FILE_NAME)+":"+picPath;
+    public void save(String FILE_NAME, String text) throws IOException {
         FileOutputStream fos = null;
         fos = openFileOutput(FILE_NAME, MODE_PRIVATE);
-        fos.write(t.getBytes());
-        //Toast.makeText(getApplicationContext(), "Scritto   " + t,Toast.LENGTH_SHORT).show();
+        fos.write(text.getBytes());
         if (fos != null) {
             try {
                 fos.close();
@@ -425,5 +424,6 @@ public class search extends AppCompatActivity {
             }
         }
     }
+
 
 }

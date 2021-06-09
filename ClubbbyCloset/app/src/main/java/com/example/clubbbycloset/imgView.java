@@ -31,12 +31,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-public class voteView extends AppCompatActivity {
-    ImageView bhome, bsearch, badd, bvote, bprofile , f1, f2;
-    EditText edDesc, edLoc, edTime;
-    TextView bsave, rv, lv;
-
-    private  static final String FILE_ALLVOTE = "allVote.txt";
+public class imgView extends AppCompatActivity {
+    ImageView bhome, bsearch, badd, bvote, bprofile, f;
+    EditText edDesc, edLoc, edTime, edLink;
+    TextView bsave;
 
     private static final String FILE_USERVOTE ="uservote.txt";
     private static final String FILE_USERVOTEDESCRIPTION ="uservotedescription.txt";
@@ -51,169 +49,128 @@ public class voteView extends AppCompatActivity {
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
-    ArrayList<Uri> mArrayUri;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_vote_view);
+        setContentView(R.layout.activity_img_view);
 
-        Bundle Extra = getIntent().getExtras();
-        String numb = Extra.getString("numb");
-        Toast.makeText(getApplicationContext(), "numero "+ numb , Toast.LENGTH_SHORT).show();
+            Bundle Extra = getIntent().getExtras();
+            String numb = Extra.getString("numb");
+            Toast.makeText(getApplicationContext(), "numero "+ numb , Toast.LENGTH_SHORT).show();
 
-        bhome = (ImageView) this.findViewById(R.id.home);
-        bsearch = (ImageView) this.findViewById(R.id.search);
-        badd = (ImageView) this.findViewById(R.id.add);
-        bvote = (ImageView) this.findViewById(R.id.vote);
-        bprofile = (ImageView) this.findViewById(R.id.profile);
-        f1= (ImageView) this.findViewById(R.id.foto1);
-        f2= (ImageView) this.findViewById(R.id.foto2);
-        edDesc = (EditText) this.findViewById(R.id.description);
-        edLoc = (EditText) this.findViewById(R.id.location);
-        edTime = (EditText) this.findViewById(R.id.time);
-        bsave = (TextView) this.findViewById(R.id.save);
-        rv = (TextView) this.findViewById(R.id.right_vote);
-        lv = (TextView) this.findViewById(R.id.left_vote);
+            bhome = (ImageView) this.findViewById(R.id.home);
+            bsearch = (ImageView) this.findViewById(R.id.search);
+            badd = (ImageView) this.findViewById(R.id.add);
+            bvote = (ImageView) this.findViewById(R.id.vote);
+            bprofile = (ImageView) this.findViewById(R.id.profile);
+            f= (ImageView) this.findViewById(R.id.foto);
+            edDesc = (EditText) this.findViewById(R.id.description);
+            edLoc = (EditText) this.findViewById(R.id.location);
+            edTime = (EditText) this.findViewById(R.id.time);
+            edLink = (EditText) this.findViewById(R.id.link);
+            bsave = (TextView) this.findViewById(R.id.save);
 
-        ImageView[] imgs = {f1, f2};
-        EditText[] descri = {edDesc,edLoc,edTime};
-        setPhotosVote(FILE_USERVOTE, imgs, numb);
-        setDescriptionVote(FILE_USERVOTEDESCRIPTION, descri, numb);
+            EditText[] descri = {edDesc,edLoc,edTime,edLink};
 
-        bsave.setOnClickListener(new View.OnClickListener() {
+            setLayout(FILE_USERIMG, f, descri, Integer.parseInt(numb));
+
+            bhome.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent home = new Intent(imgView.this, home.class);
+                    startActivity(home);
+                }
+            });
+
+            bsearch.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent search = new Intent(imgView.this, search.class);
+                    startActivity(search);
+                }
+            });
+
+            bprofile.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent profile = new Intent(imgView.this, profile.class);
+                    startActivity(profile);
+                }
+            });
+
+            bvote.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent vote = new Intent(imgView.this, vote.class);
+                    startActivity(vote); // takes the user to the signup activity
+                }
+
+            });
+
+            badd.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    PopupMenu popup = new PopupMenu(imgView.this, badd);
+                    popup.getMenuInflater().inflate(R.menu.popup_menu, popup.getMenu());
+                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        public boolean onMenuItemClick(MenuItem item) {
+                            //Toast.makeText(home.this,"You Clicked : " + item.getTitle(), Toast.LENGTH_SHORT).show();
+                            if (item.getTitle().equals("Add new img")){
+                                Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                                startActivityForResult(i, RESULT_LOAD_IMAGE);
+                            } if (item.getTitle().equals("Add new vote")){
+                                Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                                i.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                                startActivityForResult(i, RESULT_LOAD_VOTE);
+                            }
+                            return true;
+                        }
+                    });
+                    popup.show();//showing popup menu
+                }
+            });
+
+            bsave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try{
-                    String toAdd = ";description:" + edDesc.getText().toString() + ":" + edLoc.getText().toString() + ":" + edTime.getText().toString();
-                    //Toast.makeText(getApplicationContext(), "TO ADD:   " + toAdd, Toast.LENGTH_SHORT).show();
-                    save(FILE_USERVOTEDESCRIPTION, load(FILE_USERVOTEDESCRIPTION) + toAdd + "/0:0");
-
-                    String[] res = load(FILE_USERVOTE).split(";");
-                    String toAddAllVote = load(FILE_ALLVOTE) + res[0] + ";img:" + res[res.length-1].split(":")[1] + ":" +  res[res.length-1].split(":")[2] +  toAdd + ";vote:0:0;;";
-                    Toast.makeText(getApplicationContext(), " TO ADDDDDDD :   " + toAddAllVote, Toast.LENGTH_SHORT).show();
-                    save(FILE_ALLVOTE , toAddAllVote);
+                    String toAdd = ";description:" + edDesc.getText().toString() + ":" + edLoc.getText().toString() + ":" + edTime.getText().toString() + ":"+edLink.getText().toString()+";;";
+                    save(FILE_USERIMG, load(FILE_USERIMG) + toAdd);
+                    Toast.makeText(getApplicationContext(), "AFTER ADD:   " + load(FILE_USERIMG), Toast.LENGTH_SHORT).show();
 
                 }catch (IOException e) {
-                     e.printStackTrace();
-                }
-                Intent profile = new Intent(voteView.this, profile.class);
-                startActivity(profile);
-            }
-        });
-
-        bhome.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent home = new Intent(voteView.this, home.class);
-                startActivity(home);
-            }
-        });
-
-        bsearch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent search = new Intent(voteView.this, search.class);
-                startActivity(search);
-            }
-        });
-
-        bprofile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent profile = new Intent(voteView.this, profile.class);
-                startActivity(profile);
-            }
-        });
-
-        bvote.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent vote = new Intent(voteView.this, vote.class);
-                startActivity(vote); // takes the user to the signup activity
-            }
-
-        });
-
-        badd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                PopupMenu popup = new PopupMenu(voteView.this, badd);
-                popup.getMenuInflater().inflate(R.menu.popup_menu, popup.getMenu());
-                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    public boolean onMenuItemClick(MenuItem item) {
-                        //Toast.makeText(home.this,"You Clicked : " + item.getTitle(), Toast.LENGTH_SHORT).show();
-                        if (item.getTitle().equals("Add new img")){
-                            Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                            startActivityForResult(i, RESULT_LOAD_IMAGE);
-                        } if (item.getTitle().equals("Add new vote")){
-                            Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                            i.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-                            startActivityForResult(i, RESULT_LOAD_VOTE);
-                        }
-                        return true;
-                    }
-                });
-                popup.show();//showing popup menu
-            }
-        });
-
-    }
-
-
-    private void setPhotosVote(String FILE_NAME, ImageView[] imgs, String numb) {
-        //Toast.makeText(getApplicationContext(), "numero in func " + numb, Toast.LENGTH_SHORT).show();
-        String[] vs = load(FILE_NAME).split(";");
-        int j=0;
-        if (numb.equals("0")){
-            j = vs.length - 1;
-        }else {
-            j = vs.length - Integer.parseInt(numb);
-        }
-        //Toast.makeText(getApplicationContext(), "numero  J:  " + j, Toast.LENGTH_SHORT).show();
-        String[] res = vs[j].split(":");
-        for (int i = 1; i < res.length; i++) {
-            if (i <= imgs.length) {
-                Bitmap bm = BitmapFactory.decodeFile(res[i]);
-                Bitmap rotatedBitmap = null;
-                try {
-                    rotatedBitmap = rotateImage(res[i], bm);
-                } catch (IOException e) {
                     e.printStackTrace();
                 }
-                imgs[i - 1].setImageBitmap(rotatedBitmap);
+                Intent profile = new Intent(imgView.this, profile.class);
+                startActivity(profile);
             }
-        }
+        });
+
+
     }
 
-    private void setDescriptionVote(String FILE_NAME, EditText[] des, String numb) {
-        //Toast.makeText(getApplicationContext(), "numero in func " + numb, Toast.LENGTH_SHORT).show();
-        if(! numb.equals("0")) {
-
-            edDesc.setEnabled(false);
-            edTime.setEnabled(false);
-            edLoc.setEnabled(false);
-            bsave.setClickable(false);
-            bsave.setVisibility(View.INVISIBLE);
-            rv.setVisibility(View.VISIBLE);
-            lv.setVisibility(View.VISIBLE);
-
-            String[] d = load(FILE_NAME).split(";");
-            int j = d.length - Integer.parseInt(numb);
-            //Toast.makeText(getApplicationContext(), "Description:  " + d[j], Toast.LENGTH_SHORT).show();
-            //Toast.makeText(getApplicationContext(), "Description length :  " + d.length, Toast.LENGTH_SHORT).show();
-            String[] r = d[j].split("/");
-            String[] info = r[0].split(":");
-            String[] results = r[1].split(":");
-            for (int i = 1; i < info.length; i++) {
-                des[i - 1].setText(info[i]);
-            }
-            lv.setText(results[0]);
-            rv.setText(results[1]);
+    private void setLayout(String FILE_NAME, ImageView f, EditText[]desc, int numb) {
+        String[] ret = load(FILE_NAME).split(";;");
+        String imgSrc;
+        if(numb == 0 ){
+            imgSrc= ret[ret.length-1].split(";")[0].split(":")[1];
         }else{
-            rv.setVisibility(View.INVISIBLE);
-            lv.setVisibility(View.INVISIBLE);
+            imgSrc= ret[ret.length-numb].split(";")[0].split(":")[1];
+            String[] descSrc = ret[ret.length-numb].split(";")[1].split(":");
+            for (int i = 0 ; i<desc.length; i++){
+                desc[i].setEnabled(false);
+                desc[i].setText(descSrc[i+1]);
+            }
         }
+        Toast.makeText(getApplicationContext(), "IN FILE  " + imgSrc ,Toast.LENGTH_SHORT).show();
+        Bitmap bm = BitmapFactory.decodeFile(imgSrc);
+        Bitmap rotatedBitmap = null;
+        try {
+            rotatedBitmap = rotateImage(imgSrc, bm);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        f.setImageBitmap(rotatedBitmap);
     }
 
     public static Bitmap rotateImage(String path, Bitmap source) throws IOException {
@@ -266,7 +223,7 @@ public class voteView extends AppCompatActivity {
             if (data.getClipData() != null) {
                 String paths = "";
                 int cout = data.getClipData().getItemCount();
-                Toast.makeText(getApplicationContext(), "SIZE  " + cout,Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), "SIZE  " + cout,Toast.LENGTH_SHORT).show();
                 if(cout <= 4) {
                     for (int i = 0; i < cout; i++) {
                         // adding imageuri in array
@@ -282,7 +239,7 @@ public class voteView extends AppCompatActivity {
                         cursor.close();
                     }
                     saveVoteImg(paths, FILE_USERVOTE);
-                    Intent voteView = new Intent(voteView.this, voteView.class);
+                    Intent voteView = new Intent(imgView.this, voteView.class);
                     voteView.putExtra("numb", "0");
                     startActivity(voteView);
                 }
@@ -318,7 +275,7 @@ public class voteView extends AppCompatActivity {
             picturePath = cursor.getString(columnIndex);
             try {
                 save(FILE_USERIMG, load(FILE_USERIMG) +"imgSrc:" +  picturePath + ";");
-                Intent imgVote = new Intent(voteView.this, imgView.class);
+                Intent imgVote = new Intent(imgView.this, imgView.class);
                 imgVote.putExtra("numb", "0");
                 startActivity(imgVote);
             } catch (IOException e) {
@@ -388,16 +345,16 @@ public class voteView extends AppCompatActivity {
     }
 
     public void save(String FILE_NAME, String text) throws IOException {
-        FileOutputStream fos = null;
-        fos = openFileOutput(FILE_NAME, MODE_PRIVATE);
-        fos.write(text.getBytes());
-        if (fos != null) {
-            try {
-                fos.close();
-            } catch (IOException e) {
-                e.printStackTrace();
+            FileOutputStream fos = null;
+            fos = openFileOutput(FILE_NAME, MODE_PRIVATE);
+            fos.write(text.getBytes());
+            if (fos != null) {
+                try {
+                    fos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
-    }
 
 }

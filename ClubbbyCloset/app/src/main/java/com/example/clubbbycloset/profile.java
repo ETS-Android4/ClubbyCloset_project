@@ -383,7 +383,10 @@ public class profile extends AppCompatActivity {
             int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
             picturePath = cursor.getString(columnIndex);
             try {
-                changeProfileImg(picturePath, FILE_USERIMG);
+                save(FILE_USERIMG, load(FILE_USERIMG) +"imgSrc:" +  picturePath );
+                Intent imgVote = new Intent(profile.this, imgView.class);
+                imgVote.putExtra("numb", "0");
+                startActivity(imgVote);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -440,6 +443,20 @@ public class profile extends AppCompatActivity {
                     PERMISSIONS_STORAGE,
                     REQUEST_EXTERNAL_STORAGE
             );
+        }
+    }
+
+
+    public void save(String FILE_NAME, String text) throws IOException {
+        FileOutputStream fos = null;
+        fos = openFileOutput(FILE_NAME, MODE_PRIVATE);
+        fos.write(text.getBytes());
+        if (fos != null) {
+            try {
+                fos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 

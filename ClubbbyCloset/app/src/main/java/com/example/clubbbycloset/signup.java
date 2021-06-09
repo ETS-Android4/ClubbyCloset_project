@@ -60,7 +60,7 @@ public class signup extends AppCompatActivity {
                             "Registered "+ username ,Toast.LENGTH_SHORT).show();
                     try {
                         save(FILE_USER, "username:"+username+";password:"+psw+";profileImg");
-                        save(FILE_USERIMG, "username:"+username+";imgSrc");
+                        save(FILE_USERIMG, "username:"+username+";;");
                         save(FILE_USERVOTE, "username:"+username);
                         save(FILE_USERVOTEDESCRIPTION, "username:"+username);
 

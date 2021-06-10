@@ -244,6 +244,7 @@ public class search extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent profile = new Intent(search.this, profile.class);
+                profile.putExtra("type", "0");
                 startActivity(profile); // takes the user to the signup activity
             }
 

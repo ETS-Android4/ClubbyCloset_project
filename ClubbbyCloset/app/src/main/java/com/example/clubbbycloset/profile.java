@@ -64,12 +64,16 @@ public class profile extends AppCompatActivity {
 
     TextView tvusername;
     GridLayout gridLayout;
+    LinearLayout linearLayout, lf;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+
+        Bundle Extra = getIntent().getExtras();
+        String type = Extra.getString("type");
 
         bhome = (ImageView) this.findViewById(R.id.home);
         bsearch = (ImageView) this.findViewById(R.id.search);
@@ -84,9 +88,6 @@ public class profile extends AppCompatActivity {
         v3 = (ImageView) this.findViewById(R.id.vote3);
         v4 = (ImageView) this.findViewById(R.id.vote4);
         v5 = (ImageView) this.findViewById(R.id.vote5);
-
-        gridLayout = (GridLayout) this.findViewById(R.id.grid);
-        gridLayout.removeAllViews();
 
         tvusername= (TextView)this.findViewById(R.id.username);
 
@@ -134,7 +135,18 @@ public class profile extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        setPhotosLayout(FILE_USERIMG, gridLayout);
+        gridLayout = (GridLayout) this.findViewById(R.id.grid);
+        linearLayout = (LinearLayout) this.findViewById(R.id.linear);
+        if (type.equals("0")){
+            linearLayout.setVisibility(View.INVISIBLE);
+            gridLayout.setVisibility(View.VISIBLE);
+            gridLayout.removeAllViews();
+            setPhotosGridLayout(FILE_USERIMG, gridLayout);
+        }else{
+            linearLayout.setVisibility(View.VISIBLE);
+            gridLayout.setVisibility(View.INVISIBLE);
+            setPhotosLinearLayuout(FILE_USERIMG, linearLayout);
+        }
 
         bprofileImg.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -227,7 +239,7 @@ public class profile extends AppCompatActivity {
 
     }
 
-    private void setPhotosLayout(String FILE_NAME, GridLayout grid) {
+    private void setPhotosGridLayout(String FILE_NAME, GridLayout grid) {
         try {
             String[] res = load(FILE_NAME).split(";;");
             LayoutInflater inflater = (LayoutInflater)getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -263,6 +275,59 @@ public class profile extends AppCompatActivity {
 
                 buttonsForEveryRowAlreadyAddedInTheRow++;
                 columnIndex++;
+
+                newi.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent profile = new Intent(profile.this, profile.class);
+                        profile.putExtra("type", "1");
+                        startActivity(profile); // takes the user to the signup activity
+                    }
+
+                });
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setPhotosLinearLayuout(String FILE_NAME,  LinearLayout linearLayout) {
+        try {
+            String[] res = load(FILE_NAME).split(";;");
+            LayoutInflater inflater = (LayoutInflater)getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+            for(int i=1; i < res.length;i++) {
+                String imgSrc = res[i].split(";")[0].split(":")[1];
+                String descSrc[] = res[i].split(";")[1].split(":");
+                View lview = inflater.inflate(R.layout.img_desc_frame, null);
+
+                ImageView newi = (ImageView) lview.findViewById(R.id.foto);
+                Bitmap bm = BitmapFactory.decodeFile(imgSrc);
+                Bitmap rotatedBitmap = rotateImage(imgSrc, bm);
+                //Bitmap resized = Bitmap.createScaledBitmap(rotatedBitmap, 550, 600, false);
+                newi.setImageBitmap(rotatedBitmap);
+
+                TextView description = (TextView)lview.findViewById(R.id.description);
+                description.setText(descSrc[1]);
+                TextView location = (TextView)lview.findViewById(R.id.location);
+                location.setText(descSrc[2]);
+                TextView time = (TextView)lview.findViewById(R.id.time);
+                time.setText(descSrc[3]);
+                TextView link = (TextView)lview.findViewById(R.id.link);
+                link.setText(descSrc[4]);
+
+                newi.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent profile = new Intent(profile.this, profile.class);
+                        profile.putExtra("type", "0");
+                        startActivity(profile); // takes the user to the signup activity
+                    }
+
+                });
+
+                linearLayout.addView(lview);
             }
 
         } catch (IOException e) {

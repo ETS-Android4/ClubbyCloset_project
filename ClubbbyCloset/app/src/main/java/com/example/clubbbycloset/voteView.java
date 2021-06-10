@@ -122,6 +122,7 @@ public class voteView extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent profile = new Intent(voteView.this, profile.class);
+                profile.putExtra("type", "0");
                 startActivity(profile);
             }
         });

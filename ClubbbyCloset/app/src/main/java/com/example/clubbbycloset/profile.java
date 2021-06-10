@@ -6,6 +6,7 @@ import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -21,9 +22,12 @@ import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.GridLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -56,9 +60,10 @@ public class profile extends AppCompatActivity {
 
     ArrayList<Uri> mArrayUri;
 
-    ImageView bhome, bsearch, badd, bvote, bprofile, blogout, bprofileImg,topicImg1,topicImg2, topicImg3, topicImg4, topicImg5, topicImg6, topicImg7, topicImg8, v1,v2,v3,v4,v5;
+    ImageView bhome, bsearch, badd, bvote, bprofile, blogout, bprofileImg, v1,v2,v3,v4,v5;
 
     TextView tvusername;
+    GridLayout gridLayout;
 
 
     @Override
@@ -74,24 +79,18 @@ public class profile extends AppCompatActivity {
         blogout = (ImageView)this.findViewById(R.id.logout);
         bprofileImg = (ImageView)this.findViewById(R.id.profile_img);
 
-        topicImg1 = (ImageView) this.findViewById(R.id.topicimg1);
-        topicImg2 = (ImageView) this.findViewById(R.id.topicimg2);
-        topicImg3 = (ImageView) this.findViewById(R.id.topicimg3);
-        topicImg4 = (ImageView) this.findViewById(R.id.topicimg4);
-        topicImg5 = (ImageView) this.findViewById(R.id.topicimg5);
-        topicImg6 = (ImageView) this.findViewById(R.id.topicimg6);
-        topicImg7 = (ImageView) this.findViewById(R.id.topicimg7);
-        topicImg8 = (ImageView) this.findViewById(R.id.topicimg8);
         v1 = (ImageView) this.findViewById(R.id.vote1);
         v2 = (ImageView) this.findViewById(R.id.vote2);
         v3 = (ImageView) this.findViewById(R.id.vote3);
         v4 = (ImageView) this.findViewById(R.id.vote4);
         v5 = (ImageView) this.findViewById(R.id.vote5);
 
+        gridLayout = (GridLayout) this.findViewById(R.id.grid);
+        gridLayout.removeAllViews();
+
         tvusername= (TextView)this.findViewById(R.id.username);
 
-        ImageView[] imgs = {topicImg1,topicImg2, topicImg3, topicImg4, topicImg5, topicImg6, topicImg7, topicImg8};
-        ImageView[] votes = {v1,v2,v3,v4,v5};
+       ImageView[] votes = {v1,v2,v3,v4,v5};
 
         try {
             String[] t =load(FILE_USER).split(";");
@@ -135,7 +134,7 @@ public class profile extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        setPhotos(FILE_USERIMG, imgs);
+        setPhotosLayout(FILE_USERIMG, gridLayout);
 
         bprofileImg.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -228,15 +227,42 @@ public class profile extends AppCompatActivity {
 
     }
 
-    private void setPhotos(String FILE_NAME, ImageView[] imgs) {
+    private void setPhotosLayout(String FILE_NAME, GridLayout grid) {
         try {
-            String[] res = load(FILE_NAME).split(";")[1].split(":");
-            for(int i =1 ; i<res.length; i++){
-                if(i<imgs.length) {
-                    Bitmap bm = BitmapFactory.decodeFile(res[i]);
-                    Bitmap rotatedBitmap = rotateImage(res[i], bm);
-                    imgs[i-1].setImageBitmap(rotatedBitmap);
+            String[] res = load(FILE_NAME).split(";;");
+            LayoutInflater inflater = (LayoutInflater)getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+            int buttons= res.length;//the number of bottons i have to put in GridLayout
+            int buttonsForEveryRow = 2; // buttons i can put inside every single row
+            int buttonsForEveryRowAlreadyAddedInTheRow =0; // count the buttons added in a single rows
+            int columnIndex=0; //cols index to which i add the button
+            int rowIndex=0; //row index to which i add the button
+            for(int i=1; i < buttons;i++) {
+                String imgSrc = res[i].split(";")[0].split(":")[1];
+                View view = inflater.inflate(R.layout.img_frame, null);
+                ImageView newi = (ImageView) view.findViewById(R.id.newImg);
+
+                Bitmap bm = BitmapFactory.decodeFile(imgSrc);
+                Bitmap rotatedBitmap = rotateImage(imgSrc, bm);
+                Bitmap resized = Bitmap.createScaledBitmap(rotatedBitmap, 550, 600, false);
+                newi.setImageBitmap(resized);
+
+                /*if numeroBottoniPerRigaInseriti equals numeroBottoniPerRiga i have to put the other buttons in a new row*/
+                if (buttonsForEveryRowAlreadyAddedInTheRow == buttonsForEveryRow) {
+                    rowIndex++; //here i increase the row index
+                    buttonsForEveryRowAlreadyAddedInTheRow = 0;
+                    columnIndex = 0;
                 }
+
+                GridLayout.Spec row = GridLayout.spec(rowIndex, 1);
+                GridLayout.Spec colspan = GridLayout.spec(columnIndex, 1);
+                GridLayout.LayoutParams gridLayoutParam = new GridLayout.LayoutParams(row, colspan);
+                LinearLayout f = (LinearLayout) view.findViewById(R.id.frame);
+                f.removeAllViews();
+                grid.addView(newi, gridLayoutParam);
+
+                buttonsForEveryRowAlreadyAddedInTheRow++;
+                columnIndex++;
             }
 
         } catch (IOException e) {
@@ -445,7 +471,6 @@ public class profile extends AppCompatActivity {
             );
         }
     }
-
 
     public void save(String FILE_NAME, String text) throws IOException {
         FileOutputStream fos = null;

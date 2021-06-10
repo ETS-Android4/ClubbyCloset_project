@@ -134,7 +134,7 @@ public class vote extends AppCompatActivity {
 
     private void setLayout(String fileAllvote, LinearLayout scrollView) {
         String[] res = load(fileAllvote).split(";;");
-        LayoutInflater inflater = (LayoutInflater)getBaseContext() .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater)getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         for(int i=0;i<res.length;i++){
 
             String[] r = res[i].split(";");

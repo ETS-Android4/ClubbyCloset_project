@@ -6,15 +6,22 @@ import androidx.core.app.ActivityCompat;
 import android.Manifest;
 import android.app.Activity;
 import android.content.ClipData;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,7 +38,7 @@ import java.util.Random;
 
 public class home extends AppCompatActivity {
     ImageView bhome, bsearch, badd, bvote, bprofile;
-    TextView tv1,tv2,tv3;
+    LinearLayout scroll;
     private static final String FILE_ALLUSERS = "allUsersData.txt";
 
     private static final String FILE_USERVOTE ="uservote.txt";
@@ -45,67 +52,20 @@ public class home extends AppCompatActivity {
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
-    ArrayList<Uri> mArrayUri;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        String res = load(FILE_ALLUSERS);
-        String[] l = res.split(";");
-        String[] users =new String[l.length];
-        mArrayUri = new ArrayList<Uri>();
+        scroll = (LinearLayout) this.findViewById(R.id.homeScroll);
+        setHomeLayout(FILE_ALLUSERS,scroll);
 
-        for(int i = 0; i<l.length; i++){
-            users[i] = l[i].split(":")[0];
-            //Toast.makeText(getApplicationContext(), users[i], Toast.LENGTH_SHORT).show();
-        }
 
         bhome = (ImageView) this.findViewById(R.id.home);
         bsearch = (ImageView) this.findViewById(R.id.search);
         badd = (ImageView) this.findViewById(R.id.add);
         bvote = (ImageView) this.findViewById(R.id.vote);
         bprofile = (ImageView) this.findViewById(R.id.profile);
-
-        tv1 = (TextView)this.findViewById(R.id.home1);
-        tv1.setText(users[new Random().nextInt(l.length)]);
-
-        tv2 = (TextView)this.findViewById(R.id.home2);
-        tv2.setText(users[new Random().nextInt(l.length)]);
-
-        tv3 = (TextView)this.findViewById(R.id.home3);
-        tv3.setText(users[new Random().nextInt(l.length)]);
-
-        tv1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Intent profilo = new Intent(home.this, usersProfile.class);
-                profilo.putExtra("user", tv1.getText());
-                startActivity(profilo);
-            }
-        });
-
-        tv2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Intent profilo = new Intent(home.this, usersProfile.class);
-                profilo.putExtra("user", tv2.getText());
-                startActivity(profilo);
-            }
-        });
-
-        tv3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Intent profilo = new Intent(home.this, usersProfile.class);
-                profilo.putExtra("user", tv3.getText());
-                startActivity(profilo);
-            }
-        });
 
         bhome.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -166,35 +126,122 @@ public class home extends AppCompatActivity {
 
     }
 
-    public String load(String FILE_NAME) {
-        FileInputStream fis = null;
-        try {
-            fis = openFileInput(FILE_NAME);
-            InputStreamReader isr = new InputStreamReader(fis);
-            BufferedReader br = new BufferedReader(isr);
-            StringBuilder sb = new StringBuilder();
-            String text;
-            while ((text = br.readLine()) != null) {
-                sb.append(text);
-            }
-            return sb.toString();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }finally {
-            if (fis != null) {
+    private void setHomeLayout(String fileAllusers, LinearLayout scroll) {
+        String[] res = load(fileAllusers).split(";;");
+        Integer n = new Random().nextInt(res.length);
+
+        LayoutInflater inflater = (LayoutInflater) getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        for (int i = 0; i < n; i++) {
+            Integer j = new Random().nextInt(res.length);
+            String[] r = res[j].split(";");
+            String username = r[0].split(":")[0];
+            String imgSrc = r[1].split(":")[1];
+            String[] desc = r[2].split(":");
+
+            View view = inflater.inflate(R.layout.img_desc_frame, null);
+
+            ImageView img = (ImageView) view.findViewById(R.id.foto);
+
+            if(imgSrc.contains("storage")){
+                Bitmap bml = BitmapFactory.decodeFile(imgSrc);
+                Bitmap rotatedBitmap = null;
                 try {
-                    fis.close();
+                    rotatedBitmap = rotateImage(imgSrc, bml);
+                    img.setImageBitmap(rotatedBitmap);
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+
+            }else{
+                int id = getResources().getIdentifier(imgSrc,"drawable", "com.example.clubbbycloset");
+                img.setBackgroundResource(id);
             }
+
+
+            TextView description = (TextView)view.findViewById(R.id.description);
+            description.setText(desc[1]);
+            TextView location = (TextView)view.findViewById(R.id.location);
+            location.setText(desc[2]);
+            TextView time = (TextView)view.findViewById(R.id.time);
+            time.setText(desc[3]);
+            TextView link = (TextView)view.findViewById(R.id.link);
+            link.setText(desc[4]);
+
+            TextView user = (TextView)view.findViewById(R.id.username);
+            user.setText(username);
+            user.setVisibility(View.VISIBLE);
+            user.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent profilo = new Intent(home.this, usersProfile.class);
+                    profilo.putExtra("user", r[0].split(":")[1]);
+                    startActivity(profilo);
+                }
+            });
+            scroll.addView(view);
         }
-        return null;
     }
 
-    //to load img from gallery
+    public static Bitmap rotateImage(String path, Bitmap source) throws IOException {
+        Float angle = null;
+        ExifInterface ei = new ExifInterface(path);
+        int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+                ExifInterface.ORIENTATION_UNDEFINED);
+
+        switch(orientation) {
+
+            case ExifInterface.ORIENTATION_ROTATE_90:
+                angle = Float.valueOf(90);
+                break;
+
+            case ExifInterface.ORIENTATION_ROTATE_180:
+                angle = Float.valueOf(180);
+                break;
+
+            case ExifInterface.ORIENTATION_ROTATE_270:
+                angle = Float.valueOf(270);
+                break;
+
+            case ExifInterface.ORIENTATION_NORMAL:
+            default:
+                angle = Float.valueOf(0);
+        }
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(),
+                matrix, true);
+    }
+
+    public String load(String FILE_NAME) {
+            FileInputStream fis = null;
+            try {
+                fis = openFileInput(FILE_NAME);
+                InputStreamReader isr = new InputStreamReader(fis);
+                BufferedReader br = new BufferedReader(isr);
+                StringBuilder sb = new StringBuilder();
+                String text;
+                while ((text = br.readLine()) != null) {
+                    sb.append(text);
+                }
+                return sb.toString();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }finally {
+                if (fis != null) {
+                    try {
+                        fis.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            return null;
+        }
+
+        //to load img from gallery
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         verifyStoragePermissions(this);

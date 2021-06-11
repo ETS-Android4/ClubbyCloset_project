@@ -13,12 +13,35 @@ import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
     private static final String FILE_ALLUSERS = "allUsersData.txt";
-    private String users = "laura.p:profilo1:img1/img12/img22/img3/img4/img5/img14/img15;" +
-            "elisa.a:profilo2:img4/img14/img22/img12/img15/img11/img3/img22;" +
-            "giorgidp:profilo2:img2/img22/img1/img13/img14/img15/img21/img15;" +
-            "giudc:profilo1:img3/img12/img22/img3/img4/img5/img14/img15;" +
-            "giacomo96:profilo3:img23/img24/img25/img26/img23/img25/img24/img26;" +
-            "angelo.maria:profilo3:img26/img25/img24/img23/img25/img26/img24/img23;";
+    private String users = "laura.p:profilo1;imgSrc:img1;descrizione:provadescri:provalocation:provaora:provalink;;" +
+            "laura.p:profilo1;imgSrc:img12;descrizione:provadescri:provalocation:provaora:provalink;;" +
+            "laura.p:profilo1;imgSrc:img22;descrizione:provadescri:provalocation:provaora:provalink;;" +
+            "laura.p:profilo1;imgSrc:img3;descrizione:provadescri:provalocation:provaora:provalink;;" +
+            "laura.p:profilo1;imgSrc:img4;descrizione:provadescri:provalocation:provaora:provalink;;" +
+            "elisa.a:profilo2;imgSrc:img4;descrizione:provadescri1:provalocation1:provaora1:provalink1;;" +
+            "elisa.a:profilo2;imgSrc:img14;descrizione:provadescri1:provalocation1:provaora1:provalink1;;" +
+            "elisa.a:profilo2;imgSrc:img22;descrizione:provadescri1:provalocation1:provaora1:provalink1;;" +
+            "elisa.a:profilo2;imgSrc:img12;descrizione:provadescri1:provalocation1:provaora1:provalink1;;" +
+            "elisa.a:profilo2;imgSrc:img15;descrizione:provadescri1:provalocation1:provaora1:provalink1;;" +
+            "giorgidp:profilo2;imgSrc:img2;descrizione:provadescri2:provalocation2:provaora2:provalink2;;" +
+            "giorgidp:profilo2;imgSrc:img22;descrizione:provadescri2:provalocation2:provaora2:provalink2;;" +
+            "giorgidp:profilo2;imgSrc:img1;descrizione:provadescri2:provalocation2:provaora2:provalink2;;" +
+            "giorgidp:profilo2;imgSrc:img13;descrizione:provadescri2:provalocation2:provaora2:provalink2;;" +
+            "giudc:profilo1;imgSrc:img3;descrizione:provadescri3:provalocation3:provaora3:provalink3;;" +
+            "giudc:profilo1;imgSrc:img12;descrizione:provadescri3:provalocation3:provaora3:provalink3;;" +
+            "giudc:profilo1;imgSrc:img22;descrizione:provadescri3:provalocation3:provaora3:provalink3;;" +
+            "giudc:profilo1;imgSrc:img4;descrizione:provadescri3:provalocation3:provaora3:provalink3;;" +
+            "giudc:profilo1;imgSrc:img15;descrizione:provadescri3:provalocation3:provaora3:provalink3;;" +
+            "giacomo96:profilo3;imgSrc:img23;descrizione:provadescri4:provalocation4:provaora4:provalink4;;" +
+            "giacomo96:profilo3;imgSrc:img24;descrizione:provadescri4:provalocation4:provaora4:provalink4;;" +
+            "giacomo96:profilo3;imgSrc:img25;descrizione:provadescri4:provalocation4:provaora4:provalink4;;" +
+            "giacomo96:profilo3;imgSrc:img26;descrizione:provadescri4:provalocation4:provaora4:provalink4;;" +
+            "giacomo96:profilo3;imgSrc:img23;descrizione:provadescri4:provalocation4:provaora4:provalink4;;" +
+            "angelo.maria:profilo3;imgSrc:img26;descrizione:provadescri4:provalocation4:provaora4:provalink4;;" +
+            "angelo.maria:profilo3;imgSrc:img25;descrizione:provadescri4:provalocation4:provaora4:provalink4;;" +
+            "angelo.maria:profilo3;imgSrc:img23;descrizione:provadescri4:provalocation4:provaora4:provalink4;;" +
+            "angelo.maria:profilo3;imgSrc:img24;descrizione:provadescri4:provalocation4:provaora4:provalink4;;" +
+            "angelo.maria:profilo3;imgSrc:img23;descrizione:provadescri4:provalocation4:provaora4:provalink4;;";
 
     private static final String FILE_TOPICS = "topics.txt";
     private String topics = "matrimonio/evento/occasione:img1/img11/img12/img13/img14/img15/img16;" +

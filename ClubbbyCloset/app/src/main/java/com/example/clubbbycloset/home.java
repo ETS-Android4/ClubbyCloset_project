@@ -175,7 +175,8 @@ public class home extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     Intent profilo = new Intent(home.this, usersProfile.class);
-                    profilo.putExtra("user", r[0].split(":")[1]);
+                    profilo.putExtra("user", r[0].split(":")[0]);
+                    profilo.putExtra("type", "0");
                     startActivity(profilo);
                 }
             });

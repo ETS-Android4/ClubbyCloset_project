@@ -6,15 +6,28 @@ import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.GridLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,12 +42,13 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class usersProfile extends AppCompatActivity {
-    ImageView bhome, bsearch, badd, bvote, bprofile, topicImg1,topicImg2, topicImg3, topicImg4, topicImg5, topicImg6, topicImg7, topicImg8;
+    ImageView bhome, bsearch, badd, bvote, bprofile, profileImg;
     TextView name;
-    ImageView profileImg;
+    LinearLayout linearLayout, hScroll;
+    GridLayout gridLayout;
 
     private static final String FILE_ALLUSERS = "allUsersData.txt";
-
+    private  static final String FILE_ALLVOTE = "allVote.txt";
     private static final String FILE_USERVOTE ="uservote.txt";
     private static int RESULT_LOAD_IMAGE = 1;
     private static int RESULT_LOAD_VOTE = 2;
@@ -46,9 +60,6 @@ public class usersProfile extends AppCompatActivity {
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
-    ArrayList<Uri> mArrayUri;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,20 +67,13 @@ public class usersProfile extends AppCompatActivity {
 
         Bundle Extra = getIntent().getExtras();
         String textView = Extra.getString("user");
-        //Toast.makeText(getApplicationContext(), "Nome "+textView, Toast.LENGTH_SHORT).show();
+        String type = Extra.getString("type");
 
         bhome = (ImageView) this.findViewById(R.id.home);
         bsearch = (ImageView) this.findViewById(R.id.search);
         badd = (ImageView) this.findViewById(R.id.add);
         bvote = (ImageView) this.findViewById(R.id.vote);
         bprofile = (ImageView) this.findViewById(R.id.profile);
-
-        name = (TextView)this.findViewById(R.id.username);
-        name.setText(textView);
-
-        setProfileImg(textView);
-
-        setPictures(textView);
 
         bhome.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,7 +82,6 @@ public class usersProfile extends AppCompatActivity {
                 startActivity(home);
             }
         });
-
         bsearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -86,7 +89,6 @@ public class usersProfile extends AppCompatActivity {
                 startActivity(search);
             }
         });
-
         bprofile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -95,7 +97,6 @@ public class usersProfile extends AppCompatActivity {
                 startActivity(profile);
             }
         });
-
         bvote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -104,7 +105,6 @@ public class usersProfile extends AppCompatActivity {
             }
 
         });
-
         badd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -128,6 +128,43 @@ public class usersProfile extends AppCompatActivity {
             }
         });
 
+
+        name = (TextView)this.findViewById(R.id.username);
+        name.setText(textView);
+
+        String[] res = load(FILE_ALLUSERS).split(";;");
+        String pimg = null ;
+        for(int i = 0 ; i<res.length; i++){
+            String[] p= res[i].split(";")[0].split(":");
+            if (p[0].equals(textView)){
+                pimg = p[1];
+                setProfileImg(pimg);
+            }
+        }
+
+        gridLayout = (GridLayout) this.findViewById(R.id.grid);
+        linearLayout = (LinearLayout) this.findViewById(R.id.linear);
+        if (type.equals("0")){
+            linearLayout.setVisibility(View.INVISIBLE);
+            gridLayout.setVisibility(View.VISIBLE);
+            gridLayout.removeAllViews();
+            try {
+                setPhotosGridLayout(res, gridLayout, textView);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }else{
+            linearLayout.setVisibility(View.VISIBLE);
+            gridLayout.setVisibility(View.INVISIBLE);
+            setPhotosLinearLayuout(res, linearLayout, textView);
+        }
+
+        try {
+            hScroll = (LinearLayout) this.findViewById(R.id.horizScroll);
+            setVoteBar(FILE_ALLVOTE, hScroll, textView);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public String load(String FILE_NAME) {
@@ -158,61 +195,157 @@ public class usersProfile extends AppCompatActivity {
         return null;
     }
 
-    public void setProfileImg(String textView){
+    public void setProfileImg(String img){
         profileImg=(ImageView)this.findViewById(R.id.profile_img);
-        String[] res = load(FILE_ALLUSERS).split(";");
-        for(int i = 0 ; i<res.length; i++){
-            if (res[i].split(":")[0].equals(textView)){
-                String img = res[i].split(":")[1];
-                //Toast.makeText(getApplicationContext(), "img src" + img, Toast.LENGTH_SHORT).show();
-                int id = getResources().getIdentifier(img,"drawable", "com.example.clubbbycloset");
-                profileImg.setBackgroundResource(id);
-            }
-        }
+        int id = getResources().getIdentifier(img,"drawable", "com.example.clubbbycloset");
+        profileImg.setBackgroundResource(id);
     }
 
-    public void setPictures(String name){
-        String[] res = load(FILE_ALLUSERS).split(";");
-        for(int i = 0 ; i<res.length; i++) {
-            if (res[i].split(":")[0].equals(name)) {
-                String[] imgSrc = res[i].split(":")[2].split("/");
-
-                if (imgSrc.length >= 8) {
-                    //Toast.makeText(getApplicationContext(), "imags" + imgSrc[0] + "topics " + topic[0], Toast.LENGTH_SHORT).show();
-                    topicImg1 = (ImageView) this.findViewById(R.id.topicimg1);
-                    int id = getResources().getIdentifier(imgSrc[0], "drawable", "com.example.clubbbycloset");
-                    topicImg1.setBackgroundResource(id);
-
-                    topicImg2 = (ImageView) this.findViewById(R.id.topicimg2);
-                    id = getResources().getIdentifier(imgSrc[1], "drawable", "com.example.clubbbycloset");
-                    topicImg2.setBackgroundResource(id);
-
-                    topicImg3 = (ImageView) this.findViewById(R.id.topicimg3);
-                    id = getResources().getIdentifier(imgSrc[2], "drawable", "com.example.clubbbycloset");
-                    topicImg3.setBackgroundResource(id);
-
-                    topicImg4 = (ImageView) this.findViewById(R.id.topicimg4);
-                    id = getResources().getIdentifier(imgSrc[3], "drawable", "com.example.clubbbycloset");
-                    topicImg4.setBackgroundResource(id);
-
-                    topicImg5 = (ImageView) this.findViewById(R.id.topicimg5);
-                    id = getResources().getIdentifier(imgSrc[4], "drawable", "com.example.clubbbycloset");
-                    topicImg5.setBackgroundResource(id);
-
-                    topicImg6 = (ImageView) this.findViewById(R.id.topicimg6);
-                    id = getResources().getIdentifier(imgSrc[5], "drawable", "com.example.clubbbycloset");
-                    topicImg6.setBackgroundResource(id);
-
-                    topicImg7 = (ImageView) this.findViewById(R.id.topicimg7);
-                    id = getResources().getIdentifier(imgSrc[6], "drawable", "com.example.clubbbycloset");
-                    topicImg7.setBackgroundResource(id);
-
-                    topicImg8 = (ImageView) this.findViewById(R.id.topicimg8);
-                    id = getResources().getIdentifier(imgSrc[7], "drawable", "com.example.clubbbycloset");
-                    topicImg8.setBackgroundResource(id);
+    private void setVoteBar(String fileUservote, LinearLayout hScroll, String username) throws IOException {
+        String[] t =load(fileUservote).split(";;");
+        for (int i = t.length-1; i>-1; i--) {
+            if (t[i].split(";")[0].split(":")[1].equals(username)) {
+                ImageView vimg = new ImageView(this);
+                String[] s = t[i].split(";")[1].split(":");
+                if (s.length > 2) {
+                    int id = getResources().getIdentifier(s[(s.length - 1)], "drawable", "com.example.clubbbycloset");
+                    Bitmap bm = BitmapFactory.decodeResource(getResources(), id);
+                    Bitmap resized = Bitmap.createScaledBitmap(bm, 200, 200, false);
+                    Bitmap conv_bm = getRoundedRectBitmap(resized, 200);
+                    vimg.setImageBitmap(conv_bm);
                 }
+
+                int finalI = t.length - i;
+                vimg.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent voteView = new Intent(usersProfile.this, voteView.class);
+                        voteView.putExtra("numb", Integer.toString(finalI));
+                        startActivity(voteView);
+                    }
+
+                });
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                lp.setMargins(5, 2, 5, 2);
+                vimg.setLayoutParams(lp);
+                hScroll.addView(vimg);
             }
         }
+
+    }
+
+    public static Bitmap getRoundedRectBitmap(Bitmap bitmap, int pixels) {
+        Bitmap result = null;
+        try {
+            result = Bitmap.createBitmap(200, 200, Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(result);
+
+            int color = 0xff424242;
+            Paint paint = new Paint();
+            Rect rect = new Rect(0, 0, 200, 200);
+            paint.setAntiAlias(true);
+            canvas.drawARGB(0, 0, 0, 0);
+            paint.setColor(color);
+            canvas.drawCircle(100, 100, 100, paint);
+            paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+            canvas.drawBitmap(bitmap, rect, rect, paint);
+
+        } catch (NullPointerException e) {
+        } catch (OutOfMemoryError o) {
+        }
+        return result;
+    }
+
+    private void setPhotosGridLayout(String[] res, GridLayout grid, String username) throws IOException {
+            LayoutInflater inflater = (LayoutInflater)getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+            int buttons= res.length;//the number of bottons i have to put in GridLayout
+            int buttonsForEveryRow = 2; // buttons i can put inside every single row
+            int buttonsForEveryRowAlreadyAddedInTheRow =0; // count the buttons added in a single rows
+            int columnIndex=0; //cols index to which i add the button
+            int rowIndex=0; //row index to which i add the button
+            for(int i=0; i < buttons;i++) {
+                if (res[i].split(";")[0].split(":")[0].equals(username)) {
+                    String imgSrc = res[i].split(";")[1].split(":")[1];
+                    View view = inflater.inflate(R.layout.img_frame, null);
+                    ImageView newi = (ImageView) view.findViewById(R.id.newImg);
+
+                    int id = getResources().getIdentifier(imgSrc, "drawable", "com.example.clubbbycloset");
+                    Bitmap bm = BitmapFactory.decodeResource(getResources(), id);
+                    Bitmap resized = Bitmap.createScaledBitmap(bm, 550, 600, false);
+                    newi.setImageBitmap(resized);
+
+                    /*if numeroBottoniPerRigaInseriti equals numeroBottoniPerRiga i have to put the other buttons in a new row*/
+                    if (buttonsForEveryRowAlreadyAddedInTheRow == buttonsForEveryRow) {
+                        rowIndex++; //here i increase the row index
+                        buttonsForEveryRowAlreadyAddedInTheRow = 0;
+                        columnIndex = 0;
+                    }
+
+                    GridLayout.Spec row = GridLayout.spec(rowIndex, 1);
+                    GridLayout.Spec colspan = GridLayout.spec(columnIndex, 1);
+                    GridLayout.LayoutParams gridLayoutParam = new GridLayout.LayoutParams(row, colspan);
+                    LinearLayout f = (LinearLayout) view.findViewById(R.id.frame);
+                    f.removeAllViews();
+                    grid.addView(newi, gridLayoutParam);
+
+                    buttonsForEveryRowAlreadyAddedInTheRow++;
+                    columnIndex++;
+
+                    newi.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent profile = new Intent(usersProfile.this, usersProfile.class);
+                            profile.putExtra("user", username);
+                            profile.putExtra("type", "1");
+                            startActivity(profile); // takes the user to the signup activity
+                        }
+
+                    });
+                }
+            }
+    }
+
+    private void setPhotosLinearLayuout(String[] res,  LinearLayout linearLayout, String username) {
+
+            LayoutInflater inflater = (LayoutInflater)getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+            for(int i=1; i < res.length;i++) {
+                if (res[i].split(";")[0].split(":")[0].equals(username)) {
+                    String imgSrc = res[i].split(";")[1].split(":")[1];
+                    String descSrc[] = res[i].split(";")[2].split(":");
+                    View lview = inflater.inflate(R.layout.img_desc_frame, null);
+
+                    ImageView newi = (ImageView) lview.findViewById(R.id.foto);
+
+                    int id = getResources().getIdentifier(imgSrc, "drawable", "com.example.clubbbycloset");
+                    Bitmap bm = BitmapFactory.decodeResource(getResources(), id);
+                    newi.setImageBitmap(bm);
+
+                    TextView description = (TextView) lview.findViewById(R.id.description);
+                    description.setText(descSrc[1]);
+                    TextView location = (TextView) lview.findViewById(R.id.location);
+                    location.setText(descSrc[2]);
+                    TextView time = (TextView) lview.findViewById(R.id.time);
+                    time.setText(descSrc[3]);
+                    TextView link = (TextView) lview.findViewById(R.id.link);
+                    link.setText(descSrc[4]);
+
+                    newi.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent profile = new Intent(usersProfile.this, usersProfile.class);
+                            profile.putExtra("type", "0");
+                            profile.putExtra("user", username);
+                            startActivity(profile); // takes the user to the signup activity
+                        }
+
+                    });
+
+                    linearLayout.addView(lview);
+                }
+            }
+
     }
 
     //to load img from gallery

@@ -215,12 +215,16 @@ public class usersProfile extends AppCompatActivity {
                     vimg.setImageBitmap(conv_bm);
                 }
 
-                int finalI = t.length - i;
+                int finalI = i;
                 vimg.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Intent voteView = new Intent(usersProfile.this, voteView.class);
-                        voteView.putExtra("numb", Integer.toString(finalI));
+                        voteView.putExtra("numb", "1");
+                        voteView.putExtra("imgSrc", t[finalI].split(";")[1]);
+                        voteView.putExtra("descrSrc", t[finalI].split(";")[2]);
+                        voteView.putExtra("votes", t[finalI].split(";")[3]);
+
                         startActivity(voteView);
                     }
 

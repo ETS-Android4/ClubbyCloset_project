@@ -49,7 +49,7 @@ public class profile extends AppCompatActivity {
     private static final String FILE_USER = "userdata.txt";
     private static final String FILE_USERIMG = "userimg.txt";
     private static final String FILE_USERVOTE ="uservote.txt";
-
+    private  static final String FILE_ALLVOTE = "allVote.txt";
 
     private String picturePath = "";
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
@@ -82,7 +82,7 @@ public class profile extends AppCompatActivity {
         bprofileImg = (ImageView)this.findViewById(R.id.profile_img);
 
         tvusername= (TextView)this.findViewById(R.id.username);
-
+        String name =null;
         try {
             String[] t =load(FILE_USER).split(";");
             //Toast.makeText(getApplicationContext(), "Scritto   " + load(FILE_USER),Toast.LENGTH_SHORT).show();
@@ -90,6 +90,7 @@ public class profile extends AppCompatActivity {
                 String[] s = t[i].split(":");
                 if (s[0].equals("username")){
                     tvusername.setText(s[1]);
+                    name = s[1];
                 }
                 if(s[0].equals("profileImg")){
                     if(s.length > 1 ) {
@@ -120,7 +121,7 @@ public class profile extends AppCompatActivity {
 
         hScroll = (LinearLayout) this.findViewById(R.id.horizScroll);
         try {
-            setVoteBar(FILE_USERVOTE, hScroll);
+            setVoteBar(FILE_ALLVOTE, hScroll, name);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -203,33 +204,39 @@ public class profile extends AppCompatActivity {
 
     }
 
-    private void setVoteBar(String fileUservote, LinearLayout hScroll) throws IOException {
-        String[] t =load(FILE_USERVOTE).split(";");
-        for (int i = t.length-1; i>-1; i--){
-            ImageView vimg = new ImageView(this);
-            String[] s = t[i].split(":");
-            if(s[0].equals("voteSrc") &&s.length > 2 ){
+    private void setVoteBar(String fileUservote, LinearLayout hScroll, String username) throws IOException {
+        String[] t =load(fileUservote).split(";;");
+        for (int i = t.length-1; i>-1; i--) {
+            if (t[i].split(";")[0].split(":")[1].equals(username)) {
+                ImageView vimg = new ImageView(this);
+                String[] s = t[i].split(";")[1].split(":");
+                if (s.length > 2) {
                     //Toast.makeText(getApplicationContext(), "in profile img   " + s[1], Toast.LENGTH_SHORT).show();
-                    Bitmap bm = BitmapFactory.decodeFile(s[(s.length-1)]);
+                    Bitmap bm = BitmapFactory.decodeFile(s[(s.length - 1)]);
                     Bitmap resized = Bitmap.createScaledBitmap(bm, 200, 200, false);
-                    Bitmap conv_bm = getRoundedRectBitmap(rotateImage(s[(s.length-1)],resized), 200);
+                    Bitmap conv_bm = getRoundedRectBitmap(rotateImage(s[(s.length - 1)], resized), 200);
                     vimg.setImageBitmap(conv_bm);
-            }
-
-            int finalI = t.length - i;
-            vimg.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent voteView = new Intent(profile.this, voteView.class);
-                    voteView.putExtra("numb", Integer.toString(finalI));
-                    startActivity(voteView);
                 }
 
-            });
-            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            lp.setMargins(5, 2, 5, 2);
-            vimg.setLayoutParams(lp);
-            hScroll.addView(vimg);
+                int finalI = i;
+                vimg.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent voteView = new Intent(profile.this, voteView.class);
+                        voteView.putExtra("numb", "1");
+                        voteView.putExtra("imgSrc", t[finalI].split(";")[1]);
+                        voteView.putExtra("descrSrc", t[finalI].split(";")[2]);
+                        voteView.putExtra("votes", t[finalI].split(";")[3]);
+
+                        startActivity(voteView);
+                    }
+
+                });
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                lp.setMargins(5, 2, 5, 2);
+                vimg.setLayoutParams(lp);
+                hScroll.addView(vimg);
+            }
         }
 
     }

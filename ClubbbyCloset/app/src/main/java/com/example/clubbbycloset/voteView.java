@@ -51,16 +51,12 @@ public class voteView extends AppCompatActivity {
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
-    ArrayList<Uri> mArrayUri;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vote_view);
 
         Bundle Extra = getIntent().getExtras();
-        String numb = Extra.getString("numb");
-        Toast.makeText(getApplicationContext(), "numero "+ numb , Toast.LENGTH_SHORT).show();
 
         bhome = (ImageView) this.findViewById(R.id.home);
         bsearch = (ImageView) this.findViewById(R.id.search);
@@ -78,8 +74,24 @@ public class voteView extends AppCompatActivity {
 
         ImageView[] imgs = {f1, f2};
         EditText[] descri = {edDesc,edLoc,edTime};
-        setPhotosVote(FILE_USERVOTE, imgs, numb);
-        setDescriptionVote(FILE_USERVOTEDESCRIPTION, descri, numb);
+
+        String numb = Extra.getString("numb");
+        String imgSrc;
+        String descSrc;
+        String votes;
+        if (numb.equals("1")){
+            imgSrc = Extra.getString("imgSrc");
+            descSrc = Extra.getString("descrSrc");
+            votes = Extra.getString("votes");
+            Toast.makeText(getApplicationContext(), "Scritto "+ imgSrc, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Scritto "+descSrc, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Scritto "+votes, Toast.LENGTH_SHORT).show();
+
+            setVoteLayout(imgSrc,descSrc, votes, imgs, descri);
+        }else {
+            setPhotosVote(FILE_USERVOTE, imgs);
+        }
+        //setDescriptionVote(FILE_USERVOTEDESCRIPTION, descri, numb);
 
         bsave.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,11 +99,11 @@ public class voteView extends AppCompatActivity {
                 try{
                     String toAdd = ";description:" + edDesc.getText().toString() + ":" + edLoc.getText().toString() + ":" + edTime.getText().toString();
                     //Toast.makeText(getApplicationContext(), "TO ADD:   " + toAdd, Toast.LENGTH_SHORT).show();
-                    save(FILE_USERVOTEDESCRIPTION, load(FILE_USERVOTEDESCRIPTION) + toAdd + "/0:0");
+                    //save(FILE_USERVOTEDESCRIPTION, load(FILE_USERVOTEDESCRIPTION) + toAdd + "/0:0");
 
                     String[] res = load(FILE_USERVOTE).split(";");
                     String toAddAllVote = load(FILE_ALLVOTE) + res[0] + ";img:" + res[res.length-1].split(":")[1] + ":" +  res[res.length-1].split(":")[2] +  toAdd + ";vote:0:0;;";
-                    Toast.makeText(getApplicationContext(), " TO ADDDDDDD :   " + toAddAllVote, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getApplicationContext(), " TO ADDDDDDD :   " + toAddAllVote, Toast.LENGTH_SHORT).show();
                     save(FILE_ALLVOTE , toAddAllVote);
 
                 }catch (IOException e) {
@@ -162,16 +174,12 @@ public class voteView extends AppCompatActivity {
     }
 
 
-    private void setPhotosVote(String FILE_NAME, ImageView[] imgs, String numb) {
+    private void setPhotosVote(String FILE_NAME, ImageView[] imgs) {
+        rv.setVisibility(View.INVISIBLE);
+        lv.setVisibility(View.INVISIBLE);
         //Toast.makeText(getApplicationContext(), "numero in func " + numb, Toast.LENGTH_SHORT).show();
         String[] vs = load(FILE_NAME).split(";");
-        int j=0;
-        if (numb.equals("0")){
-            j = vs.length - 1;
-        }else {
-            j = vs.length - Integer.parseInt(numb);
-        }
-        //Toast.makeText(getApplicationContext(), "numero  J:  " + j, Toast.LENGTH_SHORT).show();
+        int j = vs.length - 1;
         String[] res = vs[j].split(":");
         for (int i = 1; i < res.length; i++) {
             if (i <= imgs.length) {
@@ -185,36 +193,43 @@ public class voteView extends AppCompatActivity {
                 imgs[i - 1].setImageBitmap(rotatedBitmap);
             }
         }
+
     }
 
-    private void setDescriptionVote(String FILE_NAME, EditText[] des, String numb) {
-        //Toast.makeText(getApplicationContext(), "numero in func " + numb, Toast.LENGTH_SHORT).show();
-        if(! numb.equals("0")) {
+    private void setVoteLayout(String imgSrc, String descSrc, String votes, ImageView[]imgs, EditText[] des) {
 
-            edDesc.setEnabled(false);
-            edTime.setEnabled(false);
-            edLoc.setEnabled(false);
-            bsave.setClickable(false);
-            bsave.setVisibility(View.INVISIBLE);
-            rv.setVisibility(View.VISIBLE);
-            lv.setVisibility(View.VISIBLE);
+        edDesc.setEnabled(false);
+        edTime.setEnabled(false);
+        edLoc.setEnabled(false);
+        bsave.setClickable(false);
+        bsave.setVisibility(View.INVISIBLE);
+        rv.setVisibility(View.VISIBLE);
+        lv.setVisibility(View.VISIBLE);
 
-            String[] d = load(FILE_NAME).split(";");
-            int j = d.length - Integer.parseInt(numb);
-            //Toast.makeText(getApplicationContext(), "Description:  " + d[j], Toast.LENGTH_SHORT).show();
-            //Toast.makeText(getApplicationContext(), "Description length :  " + d.length, Toast.LENGTH_SHORT).show();
-            String[] r = d[j].split("/");
-            String[] info = r[0].split(":");
-            String[] results = r[1].split(":");
-            for (int i = 1; i < info.length; i++) {
-                des[i - 1].setText(info[i]);
-            }
-            lv.setText(results[0]);
-            rv.setText(results[1]);
-        }else{
-            rv.setVisibility(View.INVISIBLE);
-            lv.setVisibility(View.INVISIBLE);
+        for (int i = 1; i < descSrc.split(":").length; i++) {
+            des[i - 1].setText(descSrc.split(":")[i]);
         }
+        lv.setText(votes.split(":")[1]);
+        rv.setText(votes.split(":")[2]);
+        for (int i =1; i< imgSrc.split(":").length; i++) {
+            Bitmap bm;
+            if(imgSrc.contains("storage")){
+                bm = BitmapFactory.decodeFile(imgSrc.split(":")[i]);
+                Bitmap rotatedBitmap = null;
+                try {
+                    rotatedBitmap = rotateImage(imgSrc.split(":")[i], bm);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                imgs[i - 1].setImageBitmap(rotatedBitmap);
+            }else{
+                int id = getResources().getIdentifier(imgSrc.split(":")[i], "drawable", "com.example.clubbbycloset");
+                bm = BitmapFactory.decodeResource(getResources(), id);
+                imgs[i - 1].setImageBitmap(bm);
+            }
+
+        }
+
     }
 
     public static Bitmap rotateImage(String path, Bitmap source) throws IOException {

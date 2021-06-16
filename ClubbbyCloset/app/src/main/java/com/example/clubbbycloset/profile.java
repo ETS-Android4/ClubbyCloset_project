@@ -58,13 +58,11 @@ public class profile extends AppCompatActivity {
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
 
-    ArrayList<Uri> mArrayUri;
-
     ImageView bhome, bsearch, badd, bvote, bprofile, blogout, bprofileImg, v1,v2,v3,v4,v5;
 
     TextView tvusername;
     GridLayout gridLayout;
-    LinearLayout linearLayout, lf;
+    LinearLayout linearLayout, hScroll;
 
 
     @Override
@@ -83,11 +81,11 @@ public class profile extends AppCompatActivity {
         blogout = (ImageView)this.findViewById(R.id.logout);
         bprofileImg = (ImageView)this.findViewById(R.id.profile_img);
 
-        v1 = (ImageView) this.findViewById(R.id.vote1);
+        /*v1 = (ImageView) this.findViewById(R.id.vote1);
         v2 = (ImageView) this.findViewById(R.id.vote2);
         v3 = (ImageView) this.findViewById(R.id.vote3);
         v4 = (ImageView) this.findViewById(R.id.vote4);
-        v5 = (ImageView) this.findViewById(R.id.vote5);
+        v5 = (ImageView) this.findViewById(R.id.vote5);*/
 
         tvusername= (TextView)this.findViewById(R.id.username);
 
@@ -114,7 +112,7 @@ public class profile extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        try {
+        /*try {
             String[] t =load(FILE_USERVOTE).split(";");
             //Toast.makeText(getApplicationContext(), "Scritto   " + load(FILE_USER),Toast.LENGTH_SHORT).show();
             int j = 0;
@@ -133,7 +131,7 @@ public class profile extends AppCompatActivity {
             }
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
 
         gridLayout = (GridLayout) this.findViewById(R.id.grid);
         linearLayout = (LinearLayout) this.findViewById(R.id.linear);
@@ -146,6 +144,13 @@ public class profile extends AppCompatActivity {
             linearLayout.setVisibility(View.VISIBLE);
             gridLayout.setVisibility(View.INVISIBLE);
             setPhotosLinearLayuout(FILE_USERIMG, linearLayout);
+        }
+
+        hScroll = (LinearLayout) this.findViewById(R.id.horizScroll);
+        try {
+            setVoteBar(FILE_USERVOTE, hScroll);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
         bprofileImg.setOnClickListener(new View.OnClickListener() {
@@ -224,7 +229,7 @@ public class profile extends AppCompatActivity {
             }
         });
 
-        for(int i = 0; i<votes.length; i++){
+        /*for(int i = 0; i<votes.length; i++){
             int j=i+1;
             votes[i].setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -235,6 +240,37 @@ public class profile extends AppCompatActivity {
                 }
 
             });
+        }*/
+
+    }
+
+    private void setVoteBar(String fileUservote, LinearLayout hScroll) throws IOException {
+        String[] t =load(FILE_USERVOTE).split(";");
+        for (int i = t.length-1; i>-1; i--){
+            ImageView vimg = new ImageView(this);
+            String[] s = t[i].split(":");
+            if(s[0].equals("voteSrc") &&s.length > 2 ){
+                    //Toast.makeText(getApplicationContext(), "in profile img   " + s[1], Toast.LENGTH_SHORT).show();
+                    Bitmap bm = BitmapFactory.decodeFile(s[(s.length-1)]);
+                    Bitmap resized = Bitmap.createScaledBitmap(bm, 200, 200, false);
+                    Bitmap conv_bm = getRoundedRectBitmap(rotateImage(s[(s.length-1)],resized), 200);
+                    vimg.setImageBitmap(conv_bm);
+            }
+
+            int finalI = t.length - i;
+            vimg.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent voteView = new Intent(profile.this, voteView.class);
+                    voteView.putExtra("numb", Integer.toString(finalI));
+                    startActivity(voteView);
+                }
+
+            });
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            lp.setMargins(5, 2, 5, 2);
+            vimg.setLayoutParams(lp);
+            hScroll.addView(vimg);
         }
 
     }

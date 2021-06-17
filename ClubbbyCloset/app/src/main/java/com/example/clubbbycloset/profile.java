@@ -50,8 +50,10 @@ public class profile extends AppCompatActivity {
     private static final String FILE_USERIMG = "userimg.txt";
     private static final String FILE_USERVOTE ="uservote.txt";
     private  static final String FILE_ALLVOTE = "allVote.txt";
+    private static final String FILE_ALLUSERS = "allUsersData.txt";
 
     public static String id;
+    public static String imgId;
 
     private String picturePath = "";
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
@@ -95,6 +97,7 @@ public class profile extends AppCompatActivity {
                     tvusername.setText(id);
                     name = id;
                     if(s[2].split(":").length > 1 ) {
+                        imgId = s[2].split(":")[1];
                         //Toast.makeText(getApplicationContext(), "in profile img   " + s[1], Toast.LENGTH_SHORT).show();
                         Bitmap bm = BitmapFactory.decodeFile(s[2].split(":")[1]);
                         Bitmap resized = Bitmap.createScaledBitmap(bm, 200, 200, false);
@@ -113,11 +116,12 @@ public class profile extends AppCompatActivity {
             linearLayout.setVisibility(View.INVISIBLE);
             gridLayout.setVisibility(View.VISIBLE);
             gridLayout.removeAllViews();
-            setPhotosGridLayout(FILE_USERIMG, gridLayout);
+            setPhotosGridLayout(FILE_ALLUSERS, gridLayout);
+            //setPhotosGridLayout(FILE_USERIMG, gridLayout);
         }else{
             linearLayout.setVisibility(View.VISIBLE);
             gridLayout.setVisibility(View.INVISIBLE);
-            setPhotosLinearLayuout(FILE_USERIMG, linearLayout);
+            setPhotosLinearLayuout(FILE_ALLUSERS, linearLayout);
         }
 
         hScroll = (LinearLayout) this.findViewById(R.id.horizScroll);
@@ -257,43 +261,45 @@ public class profile extends AppCompatActivity {
             int buttonsForEveryRowAlreadyAddedInTheRow =0; // count the buttons added in a single rows
             int columnIndex=0; //cols index to which i add the button
             int rowIndex=0; //row index to which i add the button
-            for(int i=1; i < buttons;i++) {
-                String imgSrc = res[i].split(";")[0].split(":")[1];
-                View view = inflater.inflate(R.layout.img_frame, null);
-                ImageView newi = (ImageView) view.findViewById(R.id.newImg);
+            for(int i=0; i < buttons;i++) {
+                if (res[i].split(";")[0].split(":")[0].equals(id)) {
+                    String imgSrc = res[i].split(";")[1].split(":")[1];
+                    View view = inflater.inflate(R.layout.img_frame, null);
+                    ImageView newi = (ImageView) view.findViewById(R.id.newImg);
 
-                Bitmap bm = BitmapFactory.decodeFile(imgSrc);
-                Bitmap rotatedBitmap = rotateImage(imgSrc, bm);
-                Bitmap resized = Bitmap.createScaledBitmap(rotatedBitmap, 550, 600, false);
-                newi.setImageBitmap(resized);
+                    Bitmap bm = BitmapFactory.decodeFile(imgSrc);
+                    Bitmap rotatedBitmap = rotateImage(imgSrc, bm);
+                    Bitmap resized = Bitmap.createScaledBitmap(rotatedBitmap, 550, 600, false);
+                    newi.setImageBitmap(resized);
 
-                /*if numeroBottoniPerRigaInseriti equals numeroBottoniPerRiga i have to put the other buttons in a new row*/
-                if (buttonsForEveryRowAlreadyAddedInTheRow == buttonsForEveryRow) {
-                    rowIndex++; //here i increase the row index
-                    buttonsForEveryRowAlreadyAddedInTheRow = 0;
-                    columnIndex = 0;
-                }
-
-                GridLayout.Spec row = GridLayout.spec(rowIndex, 1);
-                GridLayout.Spec colspan = GridLayout.spec(columnIndex, 1);
-                GridLayout.LayoutParams gridLayoutParam = new GridLayout.LayoutParams(row, colspan);
-                LinearLayout f = (LinearLayout) view.findViewById(R.id.frame);
-                f.removeAllViews();
-                grid.addView(newi, gridLayoutParam);
-
-                buttonsForEveryRowAlreadyAddedInTheRow++;
-                columnIndex++;
-
-                newi.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent profile = new Intent(profile.this, profile.class);
-                        profile.putExtra("type", "1");
-                        profile.putExtra("idProfile", id);
-                        startActivity(profile); // takes the user to the signup activity
+                    /*if numeroBottoniPerRigaInseriti equals numeroBottoniPerRiga i have to put the other buttons in a new row*/
+                    if (buttonsForEveryRowAlreadyAddedInTheRow == buttonsForEveryRow) {
+                        rowIndex++; //here i increase the row index
+                        buttonsForEveryRowAlreadyAddedInTheRow = 0;
+                        columnIndex = 0;
                     }
 
-                });
+                    GridLayout.Spec row = GridLayout.spec(rowIndex, 1);
+                    GridLayout.Spec colspan = GridLayout.spec(columnIndex, 1);
+                    GridLayout.LayoutParams gridLayoutParam = new GridLayout.LayoutParams(row, colspan);
+                    LinearLayout f = (LinearLayout) view.findViewById(R.id.frame);
+                    f.removeAllViews();
+                    grid.addView(newi, gridLayoutParam);
+
+                    buttonsForEveryRowAlreadyAddedInTheRow++;
+                    columnIndex++;
+
+                    newi.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent profile = new Intent(profile.this, profile.class);
+                            profile.putExtra("type", "1");
+                            profile.putExtra("idProfile", id);
+                            startActivity(profile); // takes the user to the signup activity
+                        }
+
+                    });
+                }
             }
 
         } catch (IOException e) {
@@ -306,40 +312,42 @@ public class profile extends AppCompatActivity {
             String[] res = load(FILE_NAME).split(";;");
             LayoutInflater inflater = (LayoutInflater)getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-            for(int i=1; i < res.length;i++) {
-                String imgSrc = res[i].split(";")[0].split(":")[1];
-                String descSrc[] = res[i].split(";")[1].split(":");
-                View lview = inflater.inflate(R.layout.img_desc_frame, null);
+            for(int i=0; i < res.length;i++) {
 
-                ImageView newi = (ImageView) lview.findViewById(R.id.foto);
-                Bitmap bm = BitmapFactory.decodeFile(imgSrc);
-                Bitmap rotatedBitmap = rotateImage(imgSrc, bm);
-                //Bitmap resized = Bitmap.createScaledBitmap(rotatedBitmap, 550, 600, false);
-                newi.setImageBitmap(rotatedBitmap);
+                if (res[i].split(";")[0].split(":")[0].equals(id)) {
+                    String imgSrc = res[i].split(";")[1].split(":")[1];
+                    String descSrc[] = res[i].split(";")[2].split(":");
+                    View lview = inflater.inflate(R.layout.img_desc_frame, null);
 
-                TextView description = (TextView)lview.findViewById(R.id.description);
-                description.setText(descSrc[1]);
-                TextView location = (TextView)lview.findViewById(R.id.location);
-                location.setText(descSrc[2]);
-                TextView time = (TextView)lview.findViewById(R.id.time);
-                time.setText(descSrc[3]);
-                TextView link = (TextView)lview.findViewById(R.id.link);
-                link.setText(descSrc[4]);
+                    ImageView newi = (ImageView) lview.findViewById(R.id.foto);
+                    Bitmap bm = BitmapFactory.decodeFile(imgSrc);
+                    Bitmap rotatedBitmap = rotateImage(imgSrc, bm);
+                    //Bitmap resized = Bitmap.createScaledBitmap(rotatedBitmap, 550, 600, false);
+                    newi.setImageBitmap(rotatedBitmap);
 
-                newi.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent profile = new Intent(profile.this, profile.class);
-                        profile.putExtra("type", "0");
-                        profile.putExtra("idProfile", id);
-                        startActivity(profile); // takes the user to the signup activity
-                    }
+                    TextView description = (TextView) lview.findViewById(R.id.description);
+                    description.setText(descSrc[1]);
+                    TextView location = (TextView) lview.findViewById(R.id.location);
+                    location.setText(descSrc[2]);
+                    TextView time = (TextView) lview.findViewById(R.id.time);
+                    time.setText(descSrc[3]);
+                    TextView link = (TextView) lview.findViewById(R.id.link);
+                    link.setText(descSrc[4]);
 
-                });
+                    newi.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent profile = new Intent(profile.this, profile.class);
+                            profile.putExtra("type", "0");
+                            profile.putExtra("idProfile", id);
+                            startActivity(profile); // takes the user to the signup activity
+                        }
 
-                linearLayout.addView(lview);
+                    });
+
+                    linearLayout.addView(lview);
+                }
             }
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -424,6 +432,7 @@ public class profile extends AppCompatActivity {
             cursor.moveToFirst();
             int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
             picturePath = cursor.getString(columnIndex);
+            imgId = picturePath;
             try {
                 changeProfileImg(picturePath,FILE_USER);
             } catch (IOException e) {
@@ -449,7 +458,6 @@ public class profile extends AppCompatActivity {
             if (data.getClipData() != null) {
                 String paths = "";
                 int cout = data.getClipData().getItemCount();
-                Toast.makeText(getApplicationContext(), "SIZE  " + cout,Toast.LENGTH_SHORT).show();
                 if(cout <= 4) {
                     for (int i = 0; i < cout; i++) {
                         // adding imageuri in array
@@ -485,7 +493,8 @@ public class profile extends AppCompatActivity {
             int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
             picturePath = cursor.getString(columnIndex);
             try {
-                save(FILE_USERIMG, load(FILE_USERIMG) +"imgSrc:" +  picturePath );
+                //save(FILE_USERIMG, load(FILE_USERIMG) +"imgSrc:" +  picturePath );
+                save(FILE_ALLUSERS, load(FILE_ALLUSERS) + id + ":" + imgId + ";imgSrc:" +  picturePath );
                 Intent imgVote = new Intent(profile.this, imgView.class);
                 imgVote.putExtra("numb", "0");
                 imgVote.putExtra("idProfile", id);

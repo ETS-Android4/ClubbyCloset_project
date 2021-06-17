@@ -39,7 +39,7 @@ public class imgView extends AppCompatActivity {
     public static String id;
 
     private static final String FILE_USERVOTE ="uservote.txt";
-    private static final String FILE_USERVOTEDESCRIPTION ="uservotedescription.txt";
+    private static final String FILE_ALLUSERS = "allUsersData.txt";
 
     private static int RESULT_LOAD_IMAGE = 1;
     private static int RESULT_LOAD_VOTE = 2;
@@ -74,7 +74,7 @@ public class imgView extends AppCompatActivity {
 
             EditText[] descri = {edDesc,edLoc,edTime,edLink};
 
-            setLayout(FILE_USERIMG, f, descri, Integer.parseInt(numb));
+            setLayout(FILE_ALLUSERS, f, descri, Integer.parseInt(numb));
 
             bhome.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -141,8 +141,9 @@ public class imgView extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 try{
-                    String toAdd = ";description:" + edDesc.getText().toString() + ":" + edLoc.getText().toString() + ":" + edTime.getText().toString() + ":"+edLink.getText().toString()+";;";
-                    save(FILE_USERIMG, load(FILE_USERIMG) + toAdd);
+                    String toAdd = ";descrizione:" + edDesc.getText().toString() + ":" + edLoc.getText().toString() + ":" + edTime.getText().toString() + ":"+edLink.getText().toString()+";;";
+                    //save(FILE_USERIMG, load(FILE_USERIMG) + toAdd);
+                    save(FILE_ALLUSERS, load(FILE_ALLUSERS) + toAdd);
                     //Toast.makeText(getApplicationContext(), "AFTER ADD:   " + load(FILE_USERIMG), Toast.LENGTH_SHORT).show();
 
                 }catch (IOException e) {
@@ -162,16 +163,16 @@ public class imgView extends AppCompatActivity {
         String[] ret = load(FILE_NAME).split(";;");
         String imgSrc;
         if(numb == 0 ){
-            imgSrc= ret[ret.length-1].split(";")[0].split(":")[1];
+            imgSrc= ret[ret.length-1].split(";")[1].split(":")[1];
         }else{
-            imgSrc= ret[ret.length-numb].split(";")[0].split(":")[1];
-            String[] descSrc = ret[ret.length-numb].split(";")[1].split(":");
+            imgSrc= ret[ret.length-numb].split(";")[1].split(":")[1];
+            String[] descSrc = ret[ret.length-numb].split(";")[2].split(":");
             for (int i = 0 ; i<desc.length; i++){
                 desc[i].setEnabled(false);
                 desc[i].setText(descSrc[i+1]);
             }
         }
-        Toast.makeText(getApplicationContext(), "IN FILE  " + imgSrc ,Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getApplicationContext(), "IN FILE  " + imgSrc ,Toast.LENGTH_SHORT).show();
         Bitmap bm = BitmapFactory.decodeFile(imgSrc);
         Bitmap rotatedBitmap = null;
         try {
@@ -296,7 +297,6 @@ public class imgView extends AppCompatActivity {
         }
     }
 
-    //to give the permission for load img
     public static void verifyStoragePermissions(Activity activity) {
         // Check if we have write permission
         int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
@@ -308,22 +308,6 @@ public class imgView extends AppCompatActivity {
                     PERMISSIONS_STORAGE,
                     REQUEST_EXTERNAL_STORAGE
             );
-        }
-    }
-
-    public void changeProfileImg(String picPath, String FILE_NAME) throws IOException {
-        //Toast.makeText(getApplicationContext(), "LETTO  " + load(FILE_NAME),Toast.LENGTH_SHORT).show();
-        String t =load(FILE_NAME)+":"+picPath;
-        FileOutputStream fos = null;
-        fos = openFileOutput(FILE_NAME, MODE_PRIVATE);
-        fos.write(t.getBytes());
-        //Toast.makeText(getApplicationContext(), "Scritto   " + t,Toast.LENGTH_SHORT).show();
-        if (fos != null) {
-            try {
-                fos.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
     }
 

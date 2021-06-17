@@ -85,9 +85,6 @@ public class voteView extends AppCompatActivity {
             imgSrc = Extra.getString("imgSrc");
             descSrc = Extra.getString("descrSrc");
             votes = Extra.getString("votes");
-            Toast.makeText(getApplicationContext(), "Scritto "+ imgSrc, Toast.LENGTH_SHORT).show();
-            Toast.makeText(getApplicationContext(), "Scritto "+descSrc, Toast.LENGTH_SHORT).show();
-            Toast.makeText(getApplicationContext(), "Scritto "+votes, Toast.LENGTH_SHORT).show();
 
             setVoteLayout(imgSrc,descSrc, votes, imgs, descri);
         }else {
@@ -100,12 +97,10 @@ public class voteView extends AppCompatActivity {
             public void onClick(View v) {
                 try{
                     String toAdd = ";description:" + edDesc.getText().toString() + ":" + edLoc.getText().toString() + ":" + edTime.getText().toString();
-                    //Toast.makeText(getApplicationContext(), "TO ADD:   " + toAdd, Toast.LENGTH_SHORT).show();
                     //save(FILE_USERVOTEDESCRIPTION, load(FILE_USERVOTEDESCRIPTION) + toAdd + "/0:0");
 
                     String[] res = load(FILE_USERVOTE).split(";");
                     String toAddAllVote = load(FILE_ALLVOTE) + res[0] + ";img:" + res[res.length-1].split(":")[1] + ":" +  res[res.length-1].split(":")[2] +  toAdd + ";vote:0:0;;";
-                    //Toast.makeText(getApplicationContext(), " TO ADDDDDDD :   " + toAddAllVote, Toast.LENGTH_SHORT).show();
                     save(FILE_ALLVOTE , toAddAllVote);
 
                 }catch (IOException e) {
@@ -289,7 +284,7 @@ public class voteView extends AppCompatActivity {
             if (data.getClipData() != null) {
                 String paths = "";
                 int cout = data.getClipData().getItemCount();
-                Toast.makeText(getApplicationContext(), "SIZE  " + cout,Toast.LENGTH_SHORT).show();
+
                 if(cout <= 4) {
                     for (int i = 0; i < cout; i++) {
                         // adding imageuri in array

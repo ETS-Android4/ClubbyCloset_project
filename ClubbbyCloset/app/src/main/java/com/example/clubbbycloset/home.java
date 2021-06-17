@@ -79,7 +79,6 @@ public class home extends AppCompatActivity {
                 startActivity(home);
             }
         });
-
         bsearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -88,7 +87,6 @@ public class home extends AppCompatActivity {
                 startActivity(search);
             }
         });
-
         bprofile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -98,7 +96,6 @@ public class home extends AppCompatActivity {
                 startActivity(profile);
             }
         });
-
         bvote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -108,7 +105,6 @@ public class home extends AppCompatActivity {
             }
 
         });
-
         badd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -142,54 +138,58 @@ public class home extends AppCompatActivity {
         for (int i = 0; i < n; i++) {
             Integer j = new Random().nextInt(res.length);
             String[] r = res[j].split(";");
-            String username = r[0].split(":")[0];
-            String imgSrc = r[1].split(":")[1];
-            String[] desc = r[2].split(":");
+            if (r.length == 3) {
+                String username = r[0].split(":")[0];
+                String imgSrc = r[1].split(":")[1];
+                String[] desc = r[2].split(":");
 
-            View view = inflater.inflate(R.layout.img_desc_frame, null);
+                View view = inflater.inflate(R.layout.img_desc_frame, null);
 
-            ImageView img = (ImageView) view.findViewById(R.id.foto);
+                ImageView img = (ImageView) view.findViewById(R.id.foto);
 
-            if(imgSrc.contains("storage")){
-                Bitmap bml = BitmapFactory.decodeFile(imgSrc);
-                Bitmap rotatedBitmap = null;
-                try {
-                    rotatedBitmap = rotateImage(imgSrc, bml);
-                    img.setImageBitmap(rotatedBitmap);
+                if (imgSrc.contains("storage")) {
+                    Bitmap bml = BitmapFactory.decodeFile(imgSrc);
+                    Bitmap rotatedBitmap = null;
+                    try {
+                        rotatedBitmap = rotateImage(imgSrc, bml);
+                        img.setImageBitmap(rotatedBitmap);
 
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                } else {
+                    int id = getResources().getIdentifier(imgSrc, "drawable", "com.example.clubbbycloset");
+                    //Bitmap bm = BitmapFactory.decodeResource(getResources(), id);
+                    //img.setImageBitmap(bm);
+                    img.setImageResource(id);
                 }
 
-            }else{
-                int id = getResources().getIdentifier(imgSrc,"drawable", "com.example.clubbbycloset");
-                img.setBackgroundResource(id);
+
+                TextView description = (TextView) view.findViewById(R.id.description);
+                description.setText(desc[1]);
+                TextView location = (TextView) view.findViewById(R.id.location);
+                location.setText(desc[2]);
+                TextView time = (TextView) view.findViewById(R.id.time);
+                time.setText(desc[3]);
+                TextView link = (TextView) view.findViewById(R.id.link);
+                link.setText(desc[4]);
+
+                TextView user = (TextView) view.findViewById(R.id.username);
+                user.setText(username);
+                user.setVisibility(View.VISIBLE);
+                user.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent profilo = new Intent(home.this, usersProfile.class);
+                        profilo.putExtra("user", r[0].split(":")[0]);
+                        profilo.putExtra("type", "0");
+                        profilo.putExtra("idProfile", id);
+                        startActivity(profilo);
+                    }
+                });
+                scroll.addView(view);
             }
-
-
-            TextView description = (TextView)view.findViewById(R.id.description);
-            description.setText(desc[1]);
-            TextView location = (TextView)view.findViewById(R.id.location);
-            location.setText(desc[2]);
-            TextView time = (TextView)view.findViewById(R.id.time);
-            time.setText(desc[3]);
-            TextView link = (TextView)view.findViewById(R.id.link);
-            link.setText(desc[4]);
-
-            TextView user = (TextView)view.findViewById(R.id.username);
-            user.setText(username);
-            user.setVisibility(View.VISIBLE);
-            user.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent profilo = new Intent(home.this, usersProfile.class);
-                    profilo.putExtra("user", r[0].split(":")[0]);
-                    profilo.putExtra("type", "0");
-                    profilo.putExtra("idProfile", id);
-                    startActivity(profilo);
-                }
-            });
-            scroll.addView(view);
         }
     }
 
@@ -271,7 +271,6 @@ public class home extends AppCompatActivity {
             if (data.getClipData() != null) {
                 String paths = "";
                 int cout = data.getClipData().getItemCount();
-                Toast.makeText(getApplicationContext(), "SIZE  " + cout,Toast.LENGTH_SHORT).show();
                 if(cout <= 4) {
                     for (int i = 0; i < cout; i++) {
                         // adding imageuri in array

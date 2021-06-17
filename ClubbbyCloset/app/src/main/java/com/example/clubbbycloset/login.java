@@ -55,10 +55,9 @@ public class login extends AppCompatActivity {
                             Intent home = new Intent(login.this, home.class);
                             home.putExtra("idProfile", name);
                             startActivity(home); // takes the user to the signup activity
-                        } else {
-                            Toast.makeText(getApplicationContext(), "WrongCredentials", Toast.LENGTH_SHORT).show();
                         }
                     }
+                    Toast.makeText(getApplicationContext(), "WrongCredentials", Toast.LENGTH_SHORT).show();
                 }else {
                     Toast.makeText(getApplicationContext(), "No Valid account please SIGN UP", Toast.LENGTH_SHORT).show();
                 }

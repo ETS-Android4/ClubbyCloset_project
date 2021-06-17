@@ -134,7 +134,6 @@ public class usersProfile extends AppCompatActivity {
             }
         });
 
-
         name = (TextView)this.findViewById(R.id.username);
         name.setText(textView);
 
@@ -361,7 +360,6 @@ public class usersProfile extends AppCompatActivity {
 
     }
 
-    //to load img from gallery
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         verifyStoragePermissions(this);
@@ -445,7 +443,6 @@ public class usersProfile extends AppCompatActivity {
         }
     }
 
-    //to give the permission for load img
     public static void verifyStoragePermissions(Activity activity) {
         // Check if we have write permission
         int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
@@ -459,6 +456,7 @@ public class usersProfile extends AppCompatActivity {
             );
         }
     }
+
     public void save(String FILE_NAME, String text) throws IOException {
         FileOutputStream fos = null;
         fos = openFileOutput(FILE_NAME, MODE_PRIVATE);

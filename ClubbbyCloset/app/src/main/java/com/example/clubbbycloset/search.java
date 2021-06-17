@@ -35,6 +35,7 @@ public class search extends AppCompatActivity {
     TextView t1,t2,t3,t4 ,t5, t6, t7, t8;
     EditText stopic;
 
+    public static String id;
 
     private static final String FILE_USERVOTE ="uservote.txt";
     private static int RESULT_LOAD_IMAGE = 1;
@@ -47,12 +48,13 @@ public class search extends AppCompatActivity {
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
-    ArrayList<Uri> mArrayUri;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
+
+        Bundle Extra = getIntent().getExtras();
+        id = Extra.getString("idProfile");
 
         bhome = (ImageView) this.findViewById(R.id.home);
         bsearch = (ImageView) this.findViewById(R.id.search);
@@ -68,13 +70,10 @@ public class search extends AppCompatActivity {
         String[] topic = res2;
 
         for( int i =0; i<res.length ; i++){
-            //Toast.makeText(getApplicationContext(), "ciclo " + res[i] , Toast.LENGTH_SHORT).show();
             String[] item = res[i].split(":");
             String[] item2=  res2[i].split(":");
-            //Toast.makeText(getApplicationContext(), "item[topic, img] " + item[0].split("/")[0] + "\n " + item2[1].split("/")[0] , Toast.LENGTH_SHORT).show();
             topic[i] = item[0].split("/")[0];
             imgSrc[i] = item2[1].split("/")[0];
-            //Toast.makeText(getApplicationContext(), "dopo split\n img" + imgSrc[i] + " \ntopic " + topic[i], Toast.LENGTH_SHORT).show();
         }
 
         if (res.length >=8){
@@ -226,6 +225,7 @@ public class search extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent home = new Intent(search.this, home.class);
+                home.putExtra("idProfile", id);
                 startActivity(home); // takes the user to the signup activity
             }
 
@@ -235,6 +235,7 @@ public class search extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent search = new Intent(search.this, search.class);
+                search.putExtra("idProfile", id);
                 startActivity(search); // takes the user to the signup activity
             }
 
@@ -245,6 +246,7 @@ public class search extends AppCompatActivity {
             public void onClick(View v) {
                 Intent profile = new Intent(search.this, profile.class);
                 profile.putExtra("type", "0");
+                profile.putExtra("idProfile", id);
                 startActivity(profile); // takes the user to the signup activity
             }
 
@@ -254,6 +256,7 @@ public class search extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent vote = new Intent(search.this, vote.class);
+                vote.putExtra("idProfile", id);
                 startActivity(vote); // takes the user to the signup activity
             }
 
@@ -314,6 +317,7 @@ public class search extends AppCompatActivity {
 
     public void switchActivity(CharSequence topic){
         Intent profilo = new Intent(search.this, searchResults.class);
+        profilo.putExtra("idProfile", id);
         profilo.putExtra("categorie", topic);
         startActivity(profilo);
     }
@@ -354,6 +358,7 @@ public class search extends AppCompatActivity {
                     }
                     loadVoteImg(paths, FILE_USERVOTE);
                     Intent voteView = new Intent(search.this, voteView.class);
+                    voteView.putExtra("idProfile", id);
                     voteView.putExtra("numb", "0");
                     startActivity(voteView);
                 }
@@ -390,6 +395,7 @@ public class search extends AppCompatActivity {
             try {
                 save(FILE_USERIMG, load(FILE_USERIMG) +"imgSrc:" +  picturePath );
                 Intent imgVote = new Intent(search.this, imgView.class);
+                imgVote.putExtra("idProfile", id);
                 imgVote.putExtra("numb", "0");
                 startActivity(imgVote);
             } catch (IOException e) {

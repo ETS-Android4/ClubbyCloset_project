@@ -35,6 +35,7 @@ public class voteView extends AppCompatActivity {
     ImageView bhome, bsearch, badd, bvote, bprofile , f1, f2;
     EditText edDesc, edLoc, edTime;
     TextView bsave, rv, lv;
+    public static String id;
 
     private  static final String FILE_ALLVOTE = "allVote.txt";
 
@@ -57,6 +58,7 @@ public class voteView extends AppCompatActivity {
         setContentView(R.layout.activity_vote_view);
 
         Bundle Extra = getIntent().getExtras();
+        id = Extra.getString("idProfile");
 
         bhome = (ImageView) this.findViewById(R.id.home);
         bsearch = (ImageView) this.findViewById(R.id.search);
@@ -110,6 +112,7 @@ public class voteView extends AppCompatActivity {
                      e.printStackTrace();
                 }
                 Intent profile = new Intent(voteView.this, profile.class);
+                profile.putExtra("idProfile", id);
                 startActivity(profile);
             }
         });
@@ -118,6 +121,7 @@ public class voteView extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent home = new Intent(voteView.this, home.class);
+                home.putExtra("idProfile", id);
                 startActivity(home);
             }
         });
@@ -126,6 +130,7 @@ public class voteView extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent search = new Intent(voteView.this, search.class);
+                search.putExtra("idProfile", id);
                 startActivity(search);
             }
         });
@@ -135,6 +140,7 @@ public class voteView extends AppCompatActivity {
             public void onClick(View v) {
                 Intent profile = new Intent(voteView.this, profile.class);
                 profile.putExtra("type", "0");
+                profile.putExtra("idProfile", id);
                 startActivity(profile);
             }
         });
@@ -143,6 +149,7 @@ public class voteView extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent vote = new Intent(voteView.this, vote.class);
+                vote.putExtra("idProfile", id);
                 startActivity(vote); // takes the user to the signup activity
             }
 

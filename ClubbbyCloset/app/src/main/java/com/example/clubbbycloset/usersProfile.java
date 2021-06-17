@@ -46,6 +46,7 @@ public class usersProfile extends AppCompatActivity {
     TextView name;
     LinearLayout linearLayout, hScroll;
     GridLayout gridLayout;
+    public static String id;
 
     private static final String FILE_ALLUSERS = "allUsersData.txt";
     private  static final String FILE_ALLVOTE = "allVote.txt";
@@ -68,6 +69,7 @@ public class usersProfile extends AppCompatActivity {
         Bundle Extra = getIntent().getExtras();
         String textView = Extra.getString("user");
         String type = Extra.getString("type");
+        id = Extra.getString("idProfile");
 
         bhome = (ImageView) this.findViewById(R.id.home);
         bsearch = (ImageView) this.findViewById(R.id.search);
@@ -79,6 +81,7 @@ public class usersProfile extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent home = new Intent(usersProfile.this, home.class);
+                home.putExtra("idProfile", id);
                 startActivity(home);
             }
         });
@@ -86,6 +89,7 @@ public class usersProfile extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent search = new Intent(usersProfile.this, search.class);
+                search.putExtra("idProfile", id);
                 startActivity(search);
             }
         });
@@ -94,6 +98,7 @@ public class usersProfile extends AppCompatActivity {
             public void onClick(View v) {
                 Intent profile = new Intent(usersProfile.this, profile.class);
                 profile.putExtra("type", "0");
+                profile.putExtra("idProfile", id);
                 startActivity(profile);
             }
         });
@@ -101,6 +106,7 @@ public class usersProfile extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent vote = new Intent(usersProfile.this, vote.class);
+                vote.putExtra("idProfile", id);
                 startActivity(vote); // takes the user to the signup activity
             }
 
@@ -224,6 +230,7 @@ public class usersProfile extends AppCompatActivity {
                         voteView.putExtra("imgSrc", t[finalI].split(";")[1]);
                         voteView.putExtra("descrSrc", t[finalI].split(";")[2]);
                         voteView.putExtra("votes", t[finalI].split(";")[3]);
+                        voteView.putExtra("idProfile", id);
 
                         startActivity(voteView);
                     }
@@ -302,6 +309,7 @@ public class usersProfile extends AppCompatActivity {
                             Intent profile = new Intent(usersProfile.this, usersProfile.class);
                             profile.putExtra("user", username);
                             profile.putExtra("type", "1");
+                            profile.putExtra("idProfile", id);
                             startActivity(profile); // takes the user to the signup activity
                         }
 
@@ -341,6 +349,7 @@ public class usersProfile extends AppCompatActivity {
                             Intent profile = new Intent(usersProfile.this, usersProfile.class);
                             profile.putExtra("type", "0");
                             profile.putExtra("user", username);
+                            profile.putExtra("idProfile", id);
                             startActivity(profile); // takes the user to the signup activity
                         }
 
@@ -390,6 +399,7 @@ public class usersProfile extends AppCompatActivity {
                     loadVoteImg(paths, FILE_USERVOTE);
                     Intent voteView = new Intent(usersProfile.this, voteView.class);
                     voteView.putExtra("numb", "0");
+                    voteView.putExtra("idProfile", id);
                     startActivity(voteView);
                 }
             }
@@ -426,6 +436,7 @@ public class usersProfile extends AppCompatActivity {
                 save(FILE_USERIMG, load(FILE_USERIMG) +"imgSrc:" +  picturePath + ";");
                 Intent imgVote = new Intent(usersProfile.this, imgView.class);
                 imgVote.putExtra("numb", "0");
+                imgVote.putExtra("idProfile", id);
                 startActivity(imgVote);
             } catch (IOException e) {
                 e.printStackTrace();

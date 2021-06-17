@@ -39,6 +39,7 @@ import java.util.Random;
 public class home extends AppCompatActivity {
     ImageView bhome, bsearch, badd, bvote, bprofile;
     LinearLayout scroll;
+    public static String id;
     private static final String FILE_ALLUSERS = "allUsersData.txt";
 
     private static final String FILE_USERVOTE ="uservote.txt";
@@ -57,6 +58,9 @@ public class home extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        Bundle Extra = getIntent().getExtras();
+        id = Extra.getString("idProfile");
+
         scroll = (LinearLayout) this.findViewById(R.id.homeScroll);
         setHomeLayout(FILE_ALLUSERS,scroll);
 
@@ -71,6 +75,7 @@ public class home extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent home = new Intent(home.this, home.class);
+                home.putExtra("idProfile", id);
                 startActivity(home);
             }
         });
@@ -79,6 +84,7 @@ public class home extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent search = new Intent(home.this, search.class);
+                search.putExtra("idProfile", id);
                 startActivity(search);
             }
         });
@@ -88,6 +94,7 @@ public class home extends AppCompatActivity {
             public void onClick(View v) {
                 Intent profile = new Intent(home.this, profile.class);
                 profile.putExtra("type", "0");
+                profile.putExtra("idProfile", id);
                 startActivity(profile);
             }
         });
@@ -96,6 +103,7 @@ public class home extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent vote = new Intent(home.this, vote.class);
+                vote.putExtra("idProfile", id);
                 startActivity(vote); // takes the user to the signup activity
             }
 
@@ -177,6 +185,7 @@ public class home extends AppCompatActivity {
                     Intent profilo = new Intent(home.this, usersProfile.class);
                     profilo.putExtra("user", r[0].split(":")[0]);
                     profilo.putExtra("type", "0");
+                    profilo.putExtra("idProfile", id);
                     startActivity(profilo);
                 }
             });
@@ -280,6 +289,7 @@ public class home extends AppCompatActivity {
                     loadVoteImg(paths, FILE_USERVOTE);
                     Intent voteView = new Intent(home.this, voteView.class);
                     voteView.putExtra("numb", "0");
+                    voteView.putExtra("idProfile", id);
                     startActivity(voteView);
                 }
             }
@@ -316,6 +326,7 @@ public class home extends AppCompatActivity {
                 save(FILE_USERIMG, load(FILE_USERIMG) +"imgSrc:" +  picturePath );
                 Intent imgVote = new Intent(home.this, imgView.class);
                 imgVote.putExtra("numb", "0");
+                imgVote.putExtra("idProfile", id);
                 startActivity(imgVote);
             } catch (IOException e) {
                 e.printStackTrace();

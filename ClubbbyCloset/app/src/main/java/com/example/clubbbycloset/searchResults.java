@@ -32,6 +32,7 @@ public class searchResults extends AppCompatActivity {
     TextView tv1,tv2,tv3,tv4,tvTitolo;
     private static final String FILE_ALLUSERS = "allUsersData.txt";
     private static final String FILE_TOPICS = "topics.txt";
+    public static String id;
 
     private static final String FILE_USERVOTE ="uservote.txt";
     private static int RESULT_LOAD_IMAGE = 1;
@@ -44,12 +45,14 @@ public class searchResults extends AppCompatActivity {
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
-    ArrayList<Uri> mArrayUri;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_results);
+
+        Bundle Extra = getIntent().getExtras();
+        String topic = Extra.getString("categorie");
+        id = Extra.getString("idProfile");
 
         String[] l = load(FILE_ALLUSERS).split(";");
         String[] users =new String[l.length];
@@ -58,10 +61,6 @@ public class searchResults extends AppCompatActivity {
             users[i] = l[i].split(":")[0];
             //Toast.makeText(getApplicationContext(), users[i], Toast.LENGTH_SHORT).show();
         }
-
-        Bundle Extra = getIntent().getExtras();
-        String topic = Extra.getString("categorie");
-        //Toast.makeText(getApplicationContext(), "Nome "+topic, Toast.LENGTH_SHORT).show();
 
         String[] res = load(FILE_TOPICS).split(";");
 
@@ -117,6 +116,7 @@ public class searchResults extends AppCompatActivity {
 
                 Intent profilo = new Intent(searchResults.this, usersProfile.class);
                 profilo.putExtra("user", tv1.getText());
+                profilo.putExtra("idProfile", id);
                 startActivity(profilo);
             }
         });
@@ -127,6 +127,7 @@ public class searchResults extends AppCompatActivity {
 
                 Intent profilo = new Intent(searchResults.this, usersProfile.class);
                 profilo.putExtra("user", tv2.getText());
+                profilo.putExtra("idProfile", id);
                 startActivity(profilo);
             }
         });
@@ -137,6 +138,7 @@ public class searchResults extends AppCompatActivity {
 
                 Intent profilo = new Intent(searchResults.this, usersProfile.class);
                 profilo.putExtra("user", tv3.getText());
+                profilo.putExtra("idProfile", id);
                 startActivity(profilo);
             }
         });
@@ -147,6 +149,7 @@ public class searchResults extends AppCompatActivity {
 
                 Intent profilo = new Intent(searchResults.this, usersProfile.class);
                 profilo.putExtra("user", tv4.getText());
+                profilo.putExtra("idProfile", id);
                 startActivity(profilo);
             }
         });
@@ -155,6 +158,7 @@ public class searchResults extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent home = new Intent(searchResults.this, home.class);
+                home.putExtra("idProfile", id);
                 startActivity(home);
             }
         });
@@ -163,6 +167,7 @@ public class searchResults extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent search = new Intent(searchResults.this, search.class);
+                search.putExtra("idProfile", id);
                 startActivity(search);
             }
         });
@@ -172,6 +177,7 @@ public class searchResults extends AppCompatActivity {
             public void onClick(View v) {
                 Intent profile = new Intent(searchResults.this, profile.class);
                 profile.putExtra("type", "0");
+                profile.putExtra("idProfile", id);
                 startActivity(profile);
             }
         });
@@ -180,6 +186,7 @@ public class searchResults extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent vote = new Intent(searchResults.this, vote.class);
+                vote.putExtra("idProfile", id);
                 startActivity(vote); // takes the user to the signup activity
             }
 
@@ -274,6 +281,7 @@ public class searchResults extends AppCompatActivity {
                     }
                     loadVoteImg(paths, FILE_USERVOTE);
                     Intent voteView = new Intent(searchResults.this, voteView.class);
+                    voteView.putExtra("idProfile", id);
                     voteView.putExtra("numb", "0");
                     startActivity(voteView);
                 }
@@ -310,6 +318,7 @@ public class searchResults extends AppCompatActivity {
             try {
                 save(FILE_USERIMG, load(FILE_USERIMG) +"imgSrc:" +  picturePath );
                 Intent imgVote = new Intent(searchResults.this, imgView.class);
+                imgVote.putExtra("idProfile", id);
                 imgVote.putExtra("numb", "0");
                 startActivity(imgVote);
             } catch (IOException e) {

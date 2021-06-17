@@ -8,8 +8,12 @@ import android.view.View;
 import android.content.Intent;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 
 public class MainActivity extends AppCompatActivity {
     private static final String FILE_ALLUSERS = "allUsersData.txt";
@@ -70,9 +74,10 @@ public class MainActivity extends AppCompatActivity {
         Button btnLogin = (Button) findViewById(R.id.btnlogin);
 
         try {
-            save(users, FILE_ALLUSERS);
-            save(topics, FILE_TOPICS);
-            save(votes, FILE_ALLVOTE);
+
+            saveFile(users, FILE_ALLUSERS);
+            saveFile(topics, FILE_TOPICS);
+            saveFile(votes, FILE_ALLVOTE);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -97,6 +102,14 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public void saveFile(String txt,String FILE_NAME) throws IOException {
+        String res = load(FILE_NAME);
+        if (res == null){
+            save(txt, FILE_NAME);
+        }else {
+            save(res,FILE_NAME);
+        }
+    }
     public void save(String text, String FILE_NAME) throws IOException {
         FileOutputStream fos = null;
         fos = openFileOutput(FILE_NAME, MODE_PRIVATE);
@@ -109,6 +122,34 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
+    }
+
+    public String load(String FILE_NAME) {
+        FileInputStream fis = null;
+        try {
+            fis = openFileInput(FILE_NAME);
+            InputStreamReader isr = new InputStreamReader(fis);
+            BufferedReader br = new BufferedReader(isr);
+            StringBuilder sb = new StringBuilder();
+            String text;
+            while ((text = br.readLine()) != null) {
+                sb.append(text);
+            }
+            return sb.toString();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally {
+            if (fis != null) {
+                try {
+                    fis.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return null;
     }
 
 

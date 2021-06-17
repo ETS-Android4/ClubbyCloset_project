@@ -47,24 +47,17 @@ public class login extends AppCompatActivity {
                 String psw= null;
 
                 if (ret!=null){
-                    int i = 0;
-                    String[] t = ret.split(";");
-                    while (t.length > i ){
-                        String[] s = t[i].split(":");
-                        if (s[0].equals("username")){
-                            name = s[1];
-                            //Toast.makeText(getApplicationContext(), name,Toast.LENGTH_SHORT).show();
-                        }else if (s[0].equals("password")){
-                            psw = s[1];
-                            //Toast.makeText(getApplicationContext(), psw,Toast.LENGTH_SHORT).show();
+                    String[] t = ret.split(";;");
+                    for(int i =0; i<t.length; i++) {
+                        name = t[i].split(";")[0].split(":")[1];
+                        psw = t[i].split(";")[1].split(":")[1];
+                        if (name.equals(ed1.getText().toString()) && psw.equals(ed2.getText().toString())) {
+                            Intent home = new Intent(login.this, home.class);
+                            home.putExtra("idProfile", name);
+                            startActivity(home); // takes the user to the signup activity
+                        } else {
+                            Toast.makeText(getApplicationContext(), "WrongCredentials", Toast.LENGTH_SHORT).show();
                         }
-                        i++;
-                    }
-                    if(name.equals(ed1.getText().toString()) && psw.equals(ed2.getText().toString())) {
-                        Intent home = new Intent(login.this, home.class);
-                        startActivity(home); // takes the user to the signup activity
-                    }else {
-                        Toast.makeText(getApplicationContext(), "WrongCredentials",Toast.LENGTH_SHORT).show();
                     }
                 }else {
                     Toast.makeText(getApplicationContext(), "No Valid account please SIGN UP", Toast.LENGTH_SHORT).show();

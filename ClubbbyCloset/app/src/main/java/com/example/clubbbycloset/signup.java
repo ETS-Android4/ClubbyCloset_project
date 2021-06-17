@@ -29,7 +29,6 @@ public class signup extends AppCompatActivity {
     private static final String FILE_USERVOTE ="uservote.txt";
     private static final String FILE_USERVOTEDESCRIPTION ="uservotedescription.txt";
 
-
     Button b1;
     TextView b2;
     EditText ed2,ed3,ed4;
@@ -59,7 +58,7 @@ public class signup extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(),
                             "Registered "+ username ,Toast.LENGTH_SHORT).show();
                     try {
-                        save(FILE_USER, "username:"+username+";password:"+psw+";profileImg");
+                        saveFile(FILE_USER, "username:"+username+";password:"+psw+";profileImg");
                         save(FILE_USERIMG, "username:"+username+";;");
                         save(FILE_USERVOTE, "username:"+username);
                         save(FILE_USERVOTEDESCRIPTION, "username:"+username);
@@ -68,6 +67,7 @@ public class signup extends AppCompatActivity {
                         e.printStackTrace();
                     }
                     Intent login = new Intent(signup.this, home.class);
+                    login.putExtra("idProfile", username);
                     startActivity(login); // takes the user to the signup activity
 
                 }else{
@@ -85,7 +85,42 @@ public class signup extends AppCompatActivity {
         });
     }
 
+    public void saveFile(String FILE_NAME, String txt) throws IOException {
+        String res = load(FILE_NAME);
+        if (res == null){
+            save(FILE_NAME, txt);
+        }else {
+            save(FILE_NAME, res+txt);
+        }
+    }
 
+    public String load(String FILE_NAME) {
+        FileInputStream fis = null;
+        try {
+            fis = openFileInput(FILE_NAME);
+            InputStreamReader isr = new InputStreamReader(fis);
+            BufferedReader br = new BufferedReader(isr);
+            StringBuilder sb = new StringBuilder();
+            String text;
+            while ((text = br.readLine()) != null) {
+                sb.append(text);
+            }
+            return sb.toString();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally {
+            if (fis != null) {
+                try {
+                    fis.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return null;
+    }
 
     public void save(String FILE_NAME, String text) throws IOException {
         FileOutputStream fos = null;

@@ -36,6 +36,8 @@ public class imgView extends AppCompatActivity {
     EditText edDesc, edLoc, edTime, edLink;
     TextView bsave;
 
+    public static String id;
+
     private static final String FILE_USERVOTE ="uservote.txt";
     private static final String FILE_USERVOTEDESCRIPTION ="uservotedescription.txt";
 
@@ -56,7 +58,7 @@ public class imgView extends AppCompatActivity {
 
             Bundle Extra = getIntent().getExtras();
             String numb = Extra.getString("numb");
-            Toast.makeText(getApplicationContext(), "numero "+ numb , Toast.LENGTH_SHORT).show();
+            id = Extra.getString("idProfile");
 
             bhome = (ImageView) this.findViewById(R.id.home);
             bsearch = (ImageView) this.findViewById(R.id.search);
@@ -78,6 +80,7 @@ public class imgView extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     Intent home = new Intent(imgView.this, home.class);
+                    home.putExtra("idProfile", id);
                     startActivity(home);
                 }
             });
@@ -86,6 +89,7 @@ public class imgView extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     Intent search = new Intent(imgView.this, search.class);
+                    search.putExtra("idProfile", id);
                     startActivity(search);
                 }
             });
@@ -95,6 +99,7 @@ public class imgView extends AppCompatActivity {
                 public void onClick(View v) {
                     Intent profile = new Intent(imgView.this, profile.class);
                     profile.putExtra("type", "0");
+                    profile.putExtra("idProfile", id);
                     startActivity(profile);
                 }
             });
@@ -103,6 +108,7 @@ public class imgView extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     Intent vote = new Intent(imgView.this, vote.class);
+                    vote.putExtra("idProfile", id);
                     startActivity(vote); // takes the user to the signup activity
                 }
 
@@ -137,12 +143,14 @@ public class imgView extends AppCompatActivity {
                 try{
                     String toAdd = ";description:" + edDesc.getText().toString() + ":" + edLoc.getText().toString() + ":" + edTime.getText().toString() + ":"+edLink.getText().toString()+";;";
                     save(FILE_USERIMG, load(FILE_USERIMG) + toAdd);
-                    Toast.makeText(getApplicationContext(), "AFTER ADD:   " + load(FILE_USERIMG), Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getApplicationContext(), "AFTER ADD:   " + load(FILE_USERIMG), Toast.LENGTH_SHORT).show();
 
                 }catch (IOException e) {
                     e.printStackTrace();
                 }
                 Intent profile = new Intent(imgView.this, profile.class);
+                profile.putExtra("idProfile", id);
+                profile.putExtra("type", "0");
                 startActivity(profile);
             }
         });
@@ -241,6 +249,7 @@ public class imgView extends AppCompatActivity {
                     }
                     saveVoteImg(paths, FILE_USERVOTE);
                     Intent voteView = new Intent(imgView.this, voteView.class);
+                    voteView.putExtra("type", "0");
                     voteView.putExtra("numb", "0");
                     startActivity(voteView);
                 }
@@ -277,6 +286,7 @@ public class imgView extends AppCompatActivity {
             try {
                 save(FILE_USERIMG, load(FILE_USERIMG) +"imgSrc:" +  picturePath + ";");
                 Intent imgVote = new Intent(imgView.this, imgView.class);
+                imgVote.putExtra("type", "0");
                 imgVote.putExtra("numb", "0");
                 startActivity(imgVote);
             } catch (IOException e) {

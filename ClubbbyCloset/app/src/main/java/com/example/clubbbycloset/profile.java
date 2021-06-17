@@ -51,6 +51,8 @@ public class profile extends AppCompatActivity {
     private static final String FILE_USERVOTE ="uservote.txt";
     private  static final String FILE_ALLVOTE = "allVote.txt";
 
+    public static String id;
+
     private String picturePath = "";
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     private static String[] PERMISSIONS_STORAGE = {
@@ -72,6 +74,7 @@ public class profile extends AppCompatActivity {
 
         Bundle Extra = getIntent().getExtras();
         String type = Extra.getString("type");
+        id = Extra.getString("idProfile");
 
         bhome = (ImageView) this.findViewById(R.id.home);
         bsearch = (ImageView) this.findViewById(R.id.search);
@@ -84,20 +87,18 @@ public class profile extends AppCompatActivity {
         tvusername= (TextView)this.findViewById(R.id.username);
         String name =null;
         try {
-            String[] t =load(FILE_USER).split(";");
+            String[] t =load(FILE_USER).split(";;");
             //Toast.makeText(getApplicationContext(), "Scritto   " + load(FILE_USER),Toast.LENGTH_SHORT).show();
             for (int i = 0; i< t.length; i++){
-                String[] s = t[i].split(":");
-                if (s[0].equals("username")){
-                    tvusername.setText(s[1]);
-                    name = s[1];
-                }
-                if(s[0].equals("profileImg")){
-                    if(s.length > 1 ) {
+                String[] s = t[i].split(";");
+                if (s[0].split(":")[1].equals(id)){
+                    tvusername.setText(id);
+                    name = id;
+                    if(s[2].split(":").length > 1 ) {
                         //Toast.makeText(getApplicationContext(), "in profile img   " + s[1], Toast.LENGTH_SHORT).show();
-                        Bitmap bm = BitmapFactory.decodeFile(s[(s.length-1)]);
+                        Bitmap bm = BitmapFactory.decodeFile(s[2].split(":")[1]);
                         Bitmap resized = Bitmap.createScaledBitmap(bm, 200, 200, false);
-                        Bitmap conv_bm = getRoundedRectBitmap(rotateImage(s[(s.length-1)],resized), 200);
+                        Bitmap conv_bm = getRoundedRectBitmap(rotateImage(s[2].split(":")[1],resized), 200);
                         bprofileImg.setImageBitmap(conv_bm);
                     }
                 }
@@ -138,6 +139,7 @@ public class profile extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent home = new Intent(profile.this, home.class);
+                home.putExtra("idProfile", id);
                 startActivity(home); // takes the user to the signup activity
             }
 
@@ -147,6 +149,7 @@ public class profile extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent search = new Intent(profile.this, search.class);
+                search.putExtra("idProfile", id);
                 startActivity(search); // takes the user to the signup activity
             }
 
@@ -156,6 +159,7 @@ public class profile extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent profile = new Intent(profile.this, profile.class);
+                profile.putExtra("idProfile", id);
                 startActivity(profile); // takes the user to the signup activity
             }
 
@@ -165,6 +169,7 @@ public class profile extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent vote = new Intent(profile.this, vote.class);
+                vote.putExtra("idProfile", id);
                 startActivity(vote); // takes the user to the signup activity
             }
 
@@ -227,6 +232,7 @@ public class profile extends AppCompatActivity {
                         voteView.putExtra("imgSrc", t[finalI].split(";")[1]);
                         voteView.putExtra("descrSrc", t[finalI].split(";")[2]);
                         voteView.putExtra("votes", t[finalI].split(";")[3]);
+                        voteView.putExtra("idProfile", id);
 
                         startActivity(voteView);
                     }
@@ -283,6 +289,7 @@ public class profile extends AppCompatActivity {
                     public void onClick(View v) {
                         Intent profile = new Intent(profile.this, profile.class);
                         profile.putExtra("type", "1");
+                        profile.putExtra("idProfile", id);
                         startActivity(profile); // takes the user to the signup activity
                     }
 
@@ -324,6 +331,7 @@ public class profile extends AppCompatActivity {
                     public void onClick(View v) {
                         Intent profile = new Intent(profile.this, profile.class);
                         profile.putExtra("type", "0");
+                        profile.putExtra("idProfile", id);
                         startActivity(profile); // takes the user to the signup activity
                     }
 
@@ -459,6 +467,7 @@ public class profile extends AppCompatActivity {
                     loadVoteImg(paths, FILE_USERVOTE);
                     Intent voteView = new Intent(profile.this, voteView.class);
                     voteView.putExtra("numb", "0");
+                    voteView.putExtra("idProfile", id);
                     startActivity(voteView);
                 }
             }
@@ -479,6 +488,7 @@ public class profile extends AppCompatActivity {
                 save(FILE_USERIMG, load(FILE_USERIMG) +"imgSrc:" +  picturePath );
                 Intent imgVote = new Intent(profile.this, imgView.class);
                 imgVote.putExtra("numb", "0");
+                imgVote.putExtra("idProfile", id);
                 startActivity(imgVote);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -553,7 +563,7 @@ public class profile extends AppCompatActivity {
     }
 
     public void changeProfileImg(String picPath, String FILE_NAME) throws IOException {
-        String t =load(FILE_NAME)+":"+picPath;
+        String t =load(FILE_NAME)+":"+picPath+";;";
         FileOutputStream fos = null;
         fos = openFileOutput(FILE_NAME, MODE_PRIVATE);
         fos.write(t.getBytes());

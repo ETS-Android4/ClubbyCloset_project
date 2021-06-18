@@ -52,7 +52,7 @@ public class profile extends AppCompatActivity {
     private static final String FILE_ALLUSERS = "allUsersData.txt";
 
     public static String id;
-    public static String imgId;
+    private static String imgId;
 
     private String picturePath = "";
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
@@ -89,14 +89,12 @@ public class profile extends AppCompatActivity {
         String name =null;
         try {
             String[] t =load(FILE_USER).split(";;");
-            //Toast.makeText(getApplicationContext(), "Scritto   " + load(FILE_USER),Toast.LENGTH_SHORT).show();
             for (int i = 0; i< t.length; i++){
                 String[] s = t[i].split(";");
                 if (s[0].split(":")[1].equals(id)){
                     tvusername.setText(id);
                     name = id;
-                    if(s[2].split(":").length > 1 ) {
-                        imgId = s[2].split(":")[1];
+                    if(!s[2].split(":")[1].equals("imgSrc")) {
                         //Toast.makeText(getApplicationContext(), "in profile img   " + s[1], Toast.LENGTH_SHORT).show();
                         Bitmap bm = BitmapFactory.decodeFile(s[2].split(":")[1]);
                         Bitmap resized = Bitmap.createScaledBitmap(bm, 200, 200, false);
@@ -109,9 +107,8 @@ public class profile extends AppCompatActivity {
             e.printStackTrace();
         }
 
-
-
         linearLayout = (LinearLayout) this.findViewById(R.id.linear);
+        gridLayout = (GridLayout) this.findViewById((R.id.grid));
         if (type.equals("0")){
             linearLayout.setVisibility(View.INVISIBLE);
             gridLayout.setVisibility(View.VISIBLE);
@@ -432,7 +429,6 @@ public class profile extends AppCompatActivity {
             cursor.moveToFirst();
             int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
             picturePath = cursor.getString(columnIndex);
-            imgId = picturePath;
             try {
                 changeProfileImg(picturePath,FILE_USER);
             } catch (IOException e) {
@@ -572,10 +568,20 @@ public class profile extends AppCompatActivity {
     }
 
     public void changeProfileImg(String picPath, String FILE_NAME) throws IOException {
-        String t =load(FILE_NAME)+":"+picPath+";;";
+        String[] t =load(FILE_NAME).split(";;");
+        String toAdd ="";
+        for (int i = 0; i<t.length; i++){
+            if(t[i].split(";")[0].split(":")[1].equals(id)){
+                imgId = picPath;
+               toAdd =  toAdd + t[i].split(";")[0] + ";" +t[i].split(";")[1] + ";" + t[i].split(";")[2].split(":")[0] + ":" + picPath + ";;";
+            }else{
+                toAdd = toAdd + t[i] + ";;";
+            }
+        }
+        Toast.makeText(getApplicationContext(), "to addd " + toAdd,Toast.LENGTH_SHORT).show();
         FileOutputStream fos = null;
         fos = openFileOutput(FILE_NAME, MODE_PRIVATE);
-        fos.write(t.getBytes());
+        fos.write(toAdd.getBytes());
         //Toast.makeText(getApplicationContext(), "Scritto   " + t,Toast.LENGTH_SHORT).show();
         if (fos != null) {
             try {
@@ -584,5 +590,6 @@ public class profile extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
+
     }
 }

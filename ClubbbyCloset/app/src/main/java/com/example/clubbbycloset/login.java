@@ -45,19 +45,22 @@ public class login extends AppCompatActivity {
                 String ret = load();
                 String name= null;
                 String psw= null;
-
+                int ok = -1;
                 if (ret!=null){
                     String[] t = ret.split(";;");
                     for(int i =0; i<t.length; i++) {
                         name = t[i].split(";")[0].split(":")[1];
                         psw = t[i].split(";")[1].split(":")[1];
                         if (name.equals(ed1.getText().toString()) && psw.equals(ed2.getText().toString())) {
+                            ok = 1;
                             Intent home = new Intent(login.this, home.class);
                             home.putExtra("idProfile", name);
                             startActivity(home); // takes the user to the signup activity
                         }
                     }
-                    Toast.makeText(getApplicationContext(), "WrongCredentials", Toast.LENGTH_SHORT).show();
+                    if(ok < 1) {
+                        Toast.makeText(getApplicationContext(), "WrongCredentials", Toast.LENGTH_SHORT).show();
+                    }
                 }else {
                     Toast.makeText(getApplicationContext(), "No Valid account please SIGN UP", Toast.LENGTH_SHORT).show();
                 }

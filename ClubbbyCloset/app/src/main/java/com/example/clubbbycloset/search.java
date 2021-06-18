@@ -5,18 +5,24 @@ import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.GridLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,9 +37,10 @@ import java.util.ArrayList;
 
 public class search extends AppCompatActivity {
     private static final String FILE_TOPICS = "topics.txt";
-    ImageView bhome, bsearch, badd, bvote, bprofile, topicImg1,  topicImg2,  topicImg3,  topicImg4,  topicImg5,  topicImg6,  topicImg7,  topicImg8;
-    TextView t1,t2,t3,t4 ,t5, t6, t7, t8;
+    ImageView bhome, bsearch, badd, bvote, bprofile;
     EditText stopic;
+
+    GridLayout gridLayout;
 
     public static String id;
 
@@ -64,135 +71,9 @@ public class search extends AppCompatActivity {
 
         stopic = (EditText)this.findViewById(R.id.et_search);
 
-        String[] res = load(FILE_TOPICS).split(";");
-        String[] res2 = load(FILE_TOPICS).split(";");
-        String[] imgSrc = res;
-        String[] topic = res2;
-
-        for( int i =0; i<res.length ; i++){
-            String[] item = res[i].split(":");
-            String[] item2=  res2[i].split(":");
-            topic[i] = item[0].split("/")[0];
-            imgSrc[i] = item2[1].split("/")[0];
-        }
-
-        if (res.length >=8){
-            //Toast.makeText(getApplicationContext(), "imags" + imgSrc[0] + "topics " + topic[0], Toast.LENGTH_SHORT).show();
-            topicImg1 = (ImageView) this.findViewById(R.id.topicimg1);
-            int id = getResources().getIdentifier(imgSrc[0],"drawable", "com.example.clubbbycloset");
-            topicImg1.setBackgroundResource(id);
-
-            topicImg2 = (ImageView) this.findViewById(R.id.topicimg2);
-            id = getResources().getIdentifier(imgSrc[1],"drawable", "com.example.clubbbycloset");
-            topicImg2.setBackgroundResource(id);
-
-            topicImg3 = (ImageView) this.findViewById(R.id.topicimg3);
-            id = getResources().getIdentifier(imgSrc[2],"drawable", "com.example.clubbbycloset");
-            topicImg3.setBackgroundResource(id);
-
-            topicImg4 = (ImageView) this.findViewById(R.id.topicimg4);
-            id = getResources().getIdentifier(imgSrc[3],"drawable", "com.example.clubbbycloset");
-            topicImg4.setBackgroundResource(id);
-
-            topicImg5 = (ImageView) this.findViewById(R.id.topicimg5);
-            id = getResources().getIdentifier(imgSrc[4],"drawable", "com.example.clubbbycloset");
-            topicImg5.setBackgroundResource(id);
-
-            topicImg6 = (ImageView) this.findViewById(R.id.topicimg6);
-            id = getResources().getIdentifier(imgSrc[5],"drawable", "com.example.clubbbycloset");
-            topicImg6.setBackgroundResource(id);
-
-            topicImg7 = (ImageView) this.findViewById(R.id.topicimg7);
-            id = getResources().getIdentifier(imgSrc[6],"drawable", "com.example.clubbbycloset");
-            topicImg7.setBackgroundResource(id);
-
-            topicImg8 = (ImageView) this.findViewById(R.id.topicimg8);
-            id = getResources().getIdentifier(imgSrc[7],"drawable", "com.example.clubbbycloset");
-            topicImg8.setBackgroundResource(id);
-
-            t1 = (TextView)this.findViewById(R.id.t1);
-            t1.setText(topic[0]);
-            t2 = (TextView)this.findViewById(R.id.t2);
-            t2.setText(topic[1]);
-            t3 = (TextView)this.findViewById(R.id.t3);
-            t3.setText(topic[2]);
-            t4 = (TextView)this.findViewById(R.id.t4);
-            t4.setText(topic[3]);
-            t5 = (TextView)this.findViewById(R.id.t5);
-            t5.setText(topic[4]);
-            t6 = (TextView)this.findViewById(R.id.t6);
-            t6.setText(topic[5]);
-            t7 = (TextView)this.findViewById(R.id.t7);
-            t7.setText(topic[6]);
-            t8 = (TextView)this.findViewById(R.id.t8);
-            t8.setText(topic[7]);
-
-            topicImg1.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    switchActivity(t1.getText());
-                }
-
-            });
-
-            topicImg2.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    switchActivity(t2.getText());
-                }
-
-            });
-
-            topicImg3.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    switchActivity(t4.getText());
-                }
-
-            });
-
-            topicImg4.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    switchActivity(t4.getText());
-                }
-
-            });
-
-            topicImg5.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    switchActivity(t5.getText());
-                }
-
-            });
-
-            topicImg6.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    switchActivity(t6.getText());
-                }
-
-            });
-
-            topicImg7.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    switchActivity(t7.getText());
-                }
-
-            });
-
-            topicImg8.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    switchActivity(t8.getText());
-                }
-
-            });
-
-
-        }
+        gridLayout = (GridLayout) this.findViewById(R.id.grid);
+        gridLayout.removeAllViews();
+        setGridSearchLayout(FILE_TOPICS, gridLayout);
 
         stopic.setOnEditorActionListener(new EditText.OnEditorActionListener() {
             @Override
@@ -200,19 +81,14 @@ public class search extends AppCompatActivity {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
 
                     String insert = String.valueOf(stopic.getText());
-                    String[] forSearch = load(FILE_TOPICS).split(";");
-
+                    String[] forSearch = load(FILE_TOPICS).split(";;");
                     for( int i =0; i<forSearch.length; i++){
-                        //Toast.makeText(getApplicationContext(), "ciclo " + forSearch[i] , Toast.LENGTH_SHORT).show();
-                        String items = forSearch[i].split(":")[0];
+                        String items = forSearch[i].split(";")[0];
                         items.replace(" ", "");
-                        //Toast.makeText(getApplicationContext(), "primo for " + items , Toast.LENGTH_SHORT).show();
-                        String[] topics= items.split("/");
+                        String[] topics= items.split(":");
                         for(int j = 0 ; j<topics.length; j++){
-                            //Toast.makeText(getApplicationContext(), "secondo for " + topics[j] +" "+ insert, Toast.LENGTH_SHORT).show();
                             if (topics[j].contains(insert)){
-                                //Toast.makeText(getApplicationContext(), "Find in  " + items +"---"+ insert, Toast.LENGTH_SHORT).show();
-                                switchActivity(insert);
+                               switchActivity(insert);
                             }
                         }
                     }
@@ -284,6 +160,59 @@ public class search extends AppCompatActivity {
                 popup.show();//showing popup menu
             }
         });
+    }
+
+
+    private void setGridSearchLayout(String FILE_NAME, GridLayout grid) {
+        String[] res = load(FILE_NAME).split(";;");
+
+        LayoutInflater inflater = (LayoutInflater)getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        int buttons= res.length;//the number of bottons i have to put in GridLayout
+        int buttonsForEveryRow = 2; // buttons i can put inside every single row
+        int buttonsForEveryRowAlreadyAddedInTheRow =0; // count the buttons added in a single rows
+        int columnIndex=0; //cols index to which i add the button
+        int rowIndex=0; //row index to which i add the button
+        for(int i=0; i < buttons;i++) {
+                String txtSrc = res[i].split(";")[0].split(":")[1];
+                String imgSrc = res[i].split(";")[1].split(":")[1];
+
+                View view = inflater.inflate(R.layout.search_img_frame, null);
+
+                ImageView newi = (ImageView) view.findViewById(R.id.topicimg);
+                int idS = getResources().getIdentifier(imgSrc,"drawable", "com.example.clubbbycloset");
+                Bitmap bm = BitmapFactory.decodeResource(getResources(), idS);
+                Bitmap resized = Bitmap.createScaledBitmap(bm, 550, 600, false);
+                newi.setImageBitmap(resized);
+
+                TextView txt = (TextView) view.findViewById(R.id.topic);
+                txt.setText(txtSrc);
+
+                /*if numeroBottoniPerRigaInseriti equals numeroBottoniPerRiga i have to put the other buttons in a new row*/
+                if (buttonsForEveryRowAlreadyAddedInTheRow == buttonsForEveryRow) {
+                    rowIndex++; //here i increase the row index
+                    buttonsForEveryRowAlreadyAddedInTheRow = 0;
+                    columnIndex = 0;
+                }
+
+                GridLayout.Spec row = GridLayout.spec(rowIndex, 1);
+                GridLayout.Spec colspan = GridLayout.spec(columnIndex, 1);
+                GridLayout.LayoutParams gridLayoutParam = new GridLayout.LayoutParams(row, colspan);
+                grid.addView(view, gridLayoutParam);
+                grid.setVisibility(View.VISIBLE);
+
+                buttonsForEveryRowAlreadyAddedInTheRow++;
+                columnIndex++;
+
+                newi.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        switchActivity(txt.getText());
+                    }
+
+                });
+        }
+
     }
 
     public String load(String FILE_NAME) {

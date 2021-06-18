@@ -48,14 +48,15 @@ public class MainActivity extends AppCompatActivity {
             "angelo.maria:profilo3;imgSrc:img23;descrizione:provadescri4:provalocation4:provaora4:provalink4;;";
 
     private static final String FILE_TOPICS = "topics.txt";
-    private String topics = "matrimonio/evento/occasione:img1/img11/img12/img13/img14/img15/img16;" +
-            "sport in compagnia/sport/amici/corsa/passeggiata:img2/img21/img22/img23/img24/img25/img26;" +
-            "aperitivo al mare/ape/amici/amiche/compagnia/appuntamento:img3/img31/img32/img33/img34/img35/img36;" +
-            "università/scuola/liceo:img4/img41/img42/img43/img44/img45/img46;" +
-            "cena fuori/appuntamento/amici/ristorante:img5/img51/img52/img53/img54/img55/img56;" +
-            "colloquio/lavoro/formale:img6/img61/img62/img63/img64/img65/img66;" +
-            "gita fuori porta/sportivo/amici/viaggio:img7/img71/img72/img73/img74/img75/img76;" +
-            "varie/cose:img8/img81/img82/img83/img84/img85/img86;";
+    private String topics = "topic:matrimonio:evento:occasione;imgSrc:img1:img11:img12:img13:img14:img15:img16;;" +
+            "topic:sport in compagnia:sport:amici:corsa:passeggiata;imgSrc:img2:img21:img22:img23:img24:img25:img26;;" +
+            "topic:aperitivo al mare:ape:amici:amiche:compagnia:appuntamento;imgSrc:img3:img31:img32:img33:img34:img35:img36;;" +
+            "topic:università:scuola:liceo;imgSrc:img4:img41:img42:img43:img44:img45:img46;;" +
+            "topic:cena fuori:appuntamento:amici:ristorante;imgSrc:img5:img51:img52:img53:img54:img55:img56;;" +
+            "topic:colloquio:lavoro:formale;imgSrc:img6:img61:img62:img63:img64:img65:img66;;" +
+            "topic:gita fuori porta:sportivo:amici:viaggio;imgSrc:img7:img71:img72:img73:img74:img75:img76;;" +
+            "topic:varie:cose;imgSrc:img8:img81:img82:img83:img84:img85:img86;;";
+
     private  static final String FILE_ALLVOTE = "allVote.txt";
     private String votes = "username:giudc;voteSrc:img11:img12;description:provasedcrizione:provalovation:provaorario;vote:0:0;;" +
             "username:angelo.maria;voteSrc:img24:img25;description:provasedcrizione1:provalovation1:provaorario1;vote:0:0;;" +

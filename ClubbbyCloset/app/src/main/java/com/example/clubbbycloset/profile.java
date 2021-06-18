@@ -47,7 +47,6 @@ public class profile extends AppCompatActivity {
     private static int RESULT_LOAD_VOTE = 2;
     private static int RESULT_LOAD_IMAGE_PROFILE = 3;
     private static final String FILE_USER = "userdata.txt";
-    private static final String FILE_USERIMG = "userimg.txt";
     private static final String FILE_USERVOTE ="uservote.txt";
     private  static final String FILE_ALLVOTE = "allVote.txt";
     private static final String FILE_ALLUSERS = "allUsersData.txt";
@@ -110,7 +109,8 @@ public class profile extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        gridLayout = (GridLayout) this.findViewById(R.id.grid);
+
+
         linearLayout = (LinearLayout) this.findViewById(R.id.linear);
         if (type.equals("0")){
             linearLayout.setVisibility(View.INVISIBLE);

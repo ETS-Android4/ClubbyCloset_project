@@ -22,13 +22,16 @@ import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -185,8 +188,35 @@ public class profile extends AppCompatActivity {
         blogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent login = new Intent(profile.this, login.class);
-                startActivity(login); // takes the user to the signup activity
+                LayoutInflater inflater = (LayoutInflater)getSystemService(LAYOUT_INFLATER_SERVICE);
+                View popupView = inflater.inflate(R.layout.popup_logout, null);
+                int width = LinearLayout.LayoutParams.WRAP_CONTENT;
+                int height = LinearLayout.LayoutParams.WRAP_CONTENT;
+                boolean focusable = true; // lets taps outside the popup also dismiss it
+                final PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
+                // show the popup window
+                // which view you pass in doesn't matter, it is only used for the window tolken
+                popupWindow.showAtLocation(v, Gravity.CENTER, 0, 0);
+
+                // dismiss the popup window when touched
+                TextView byes = (TextView)popupView.findViewById(R.id.byes);
+                TextView bno = (TextView)popupView.findViewById(R.id.bno);
+
+                byes.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent login = new Intent(profile.this, login.class);
+                        startActivity(login); // takes the user to the signup activity
+                    }
+                });
+
+                bno.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        popupWindow.dismiss();
+                    }
+                });
+
             }
 
         });
@@ -217,7 +247,6 @@ public class profile extends AppCompatActivity {
     }
 
     private void setVoteBar(String fileUservote, LinearLayout hScroll, String username) throws IOException {
-        Toast.makeText(getApplicationContext(), "in profile img   " + load(fileUservote), Toast.LENGTH_SHORT).show();
         String[] t =load(fileUservote).split(";;");
         for (int i = t.length-1; i>-1; i--) {
             if (t[i].split(";")[0].split(":")[1].equals(username)) {

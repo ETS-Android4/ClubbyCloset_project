@@ -109,7 +109,13 @@ public class profile extends AppCompatActivity {
 
         linearLayout = (LinearLayout) this.findViewById(R.id.linear);
         gridLayout = (GridLayout) this.findViewById((R.id.grid));
-        if (type.equals("0")){
+        if (type == null){
+            linearLayout.setVisibility(View.INVISIBLE);
+            gridLayout.setVisibility(View.VISIBLE);
+            gridLayout.removeAllViews();
+            setPhotosGridLayout(FILE_ALLUSERS, gridLayout);
+            //setPhotosGridLayout(FILE_USERIMG, gridLayout);
+        }else if (type.equals("0")){
             linearLayout.setVisibility(View.INVISIBLE);
             gridLayout.setVisibility(View.VISIBLE);
             gridLayout.removeAllViews();
@@ -123,7 +129,7 @@ public class profile extends AppCompatActivity {
 
         hScroll = (LinearLayout) this.findViewById(R.id.horizScroll);
         try {
-            setVoteBar(FILE_ALLVOTE, hScroll, name);
+            setVoteBar(FILE_ALLVOTE, hScroll, id);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -211,6 +217,7 @@ public class profile extends AppCompatActivity {
     }
 
     private void setVoteBar(String fileUservote, LinearLayout hScroll, String username) throws IOException {
+        Toast.makeText(getApplicationContext(), "in profile img   " + load(fileUservote), Toast.LENGTH_SHORT).show();
         String[] t =load(fileUservote).split(";;");
         for (int i = t.length-1; i>-1; i--) {
             if (t[i].split(";")[0].split(":")[1].equals(username)) {

@@ -144,9 +144,9 @@ public class vote extends AppCompatActivity {
 
     private void setLayout(String fileAllvote, LinearLayout scrollView) {
         String[] res = load(fileAllvote).split(";;");
+
         LayoutInflater inflater = (LayoutInflater)getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         for(int i=0;i<res.length;i++){
-
             String[] r = res[i].split(";");
             String username = r[0].split(":")[1];
             String[] imgSrc = r[1].split((":"));
@@ -163,6 +163,7 @@ public class vote extends AppCompatActivity {
                 Bitmap bmr = BitmapFactory.decodeFile(imgSrc[2]);
                 Bitmap rotatedBitmap = null;
                 try {
+                    //Toast.makeText(vote.this,"String " + imgSrc[1] + "         " + imgSrc[2], Toast.LENGTH_SHORT).show();
                     rotatedBitmap = rotateImage(imgSrc[1], bml);
                     imgLeft.setImageBitmap(rotatedBitmap);
                     rotatedBitmap = rotateImage(imgSrc[2], bmr);
@@ -192,6 +193,7 @@ public class vote extends AppCompatActivity {
                     Intent profilo = new Intent(vote.this, usersProfile.class);
                     profilo.putExtra("user", username);
                     profilo.putExtra("idProfile", id);
+                    profilo.putExtra("type", "0");
                     startActivity(profilo);
                 }
             });
@@ -243,13 +245,10 @@ public class vote extends AppCompatActivity {
         vtxt[1].setText(Integer.toString(r)+ "%");
 
         //Toast.makeText(vote.this,"vtxt len  " + vtxt[0].getText()  + "  " + vtxt[1].getText(), Toast.LENGTH_SHORT).show();
-        //Toast.makeText(vote.this,"vbar len  " + vbars[0]  , Toast.LENGTH_SHORT).show();
         int w =((l*100)/400);
-        //Toast.makeText(vote.this,"w1: " + w + "l  " + l , Toast.LENGTH_SHORT).show();
         LinearLayout.LayoutParams lp = new  LinearLayout.LayoutParams(w*50, LinearLayout.LayoutParams.WRAP_CONTENT);
         vbars[0].setLayoutParams(lp);
         w =((r*100)/400);
-        //Toast.makeText(vote.this,"W2: " + w + "r   "+ r, Toast.LENGTH_SHORT).show();
         lp = new  LinearLayout.LayoutParams(w*50, LinearLayout.LayoutParams.WRAP_CONTENT);
         vbars[1].setLayoutParams(lp);
         if(l > 50 ){
@@ -266,26 +265,23 @@ public class vote extends AppCompatActivity {
     public void saveVote(String FILE_NAME, int i, int j){
         String[] res = load(FILE_NAME).split(";;");
         String[] r = res[i].split(";");
-
-        String username = r[0].split(":")[1];
         String[] vote = r[3].split(":");
         int[] v = null;
-        String toAdd;
+        String toAdd = "";
+        for (int z=0; z<i; z++){
+            toAdd = toAdd + res[z] + ";;";
+        }
         if (j == 0) {
             int vo = Integer.parseInt(vote[1]) + 1;
-            String[] file = load(FILE_NAME).split(username);
-            toAdd = file[0] + username + ";" + r[1] + ";" + r[2] + ";" + vote[0] + ":" + vo + ":" + vote[2] + ";;";
-            if (file[1].split(";;").length > 1){
-                toAdd = toAdd + file[1].split(";;")[1];
-            }
+            toAdd =  toAdd + r[0] + ";"+ r[1] + ";" + r[2] + ";" + vote[0] + ":" + vo + ":" + vote[2] + ";;";
         }else{
             int vo = Integer.parseInt(vote[2]) + 1;
-            String[] file = load(FILE_NAME).split(username);
-            toAdd = file[0] + username + ";" + r[1] + ";" + r[2] + ";" + vote[0] + ":" + vote[1] + ":" + vo + ";;";
-            if (file[1].split(";;").length > 1){
-                toAdd = toAdd + file[1].split(";;")[1];
-            }
+            toAdd =  toAdd + r[0] + ";" + r[1] + ";" + r[2] + ";" + vote[0] + ":" + vote[1] + ":" + vo + ";;";
         }
+        for (int z=i+1; z<res.length; z++){
+            toAdd = toAdd + res[z] + ";;";
+        }
+
 
         try{
             //Toast.makeText(vote.this,"ADD: " + toAdd , Toast.LENGTH_SHORT).show();

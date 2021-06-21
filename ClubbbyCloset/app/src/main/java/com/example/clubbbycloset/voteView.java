@@ -100,7 +100,7 @@ public class voteView extends AppCompatActivity {
                     //save(FILE_USERVOTEDESCRIPTION, load(FILE_USERVOTEDESCRIPTION) + toAdd + "/0:0");
 
                     String[] res = load(FILE_USERVOTE).split(";");
-                    String toAddAllVote = load(FILE_ALLVOTE) + res[0] + ";img:" + res[res.length-1].split(":")[1] + ":" +  res[res.length-1].split(":")[2] +  toAdd + ";vote:0:0;;";
+                    String toAddAllVote = load(FILE_ALLVOTE) + "username:"+ id + ";img:" + res[res.length-1].split(":")[1] + ":" +  res[res.length-1].split(":")[2] +  toAdd + ";vote:0:0;;";
                     save(FILE_ALLVOTE , toAddAllVote);
 
                 }catch (IOException e) {

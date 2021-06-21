@@ -67,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
             "username:giacomo96;voteSrc:img25:img26;description:provasedcrizione3:provalovation3:provaorario3;vote:0:0;;";
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

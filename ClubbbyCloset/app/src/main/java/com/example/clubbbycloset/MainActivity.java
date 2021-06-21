@@ -3,9 +3,21 @@ package com.example.clubbbycloset;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.text.InputType;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.widget.Button;
 import android.view.View;
 import android.content.Intent;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
@@ -66,17 +78,25 @@ public class MainActivity extends AppCompatActivity {
             "username:giacomo96;voteSrc:img26:img25;description:provasedcrizione3:provalovation3:provaorario3;vote:0:0;;"+
             "username:giacomo96;voteSrc:img25:img26;description:provasedcrizione3:provalovation3:provaorario3;vote:0:0;;";
 
-
+    private static final String FILE_USER = "userdata.txt";
+    Button b1;
+    TextView b2,forgot;
+    EditText ed1,ed2;
+    CheckBox show_hide_password;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Button btnSignup = (Button) findViewById(R.id.btnsignup);
-        Button btnLogin = (Button) findViewById(R.id.btnlogin);
+
+        b1 = (Button)findViewById(R.id.btnlogin);
+        ed1 = (EditText)findViewById(R.id.et_email);
+        ed2 = (EditText)findViewById(R.id.et_password);
+        b2 = (TextView) findViewById(R.id.newAccount);
+        forgot = (TextView) findViewById(R.id.forgot);
+        show_hide_password = (CheckBox) this.findViewById(R.id.show_hide_password);
 
         try {
-
             saveFile(users, FILE_ALLUSERS);
             saveFile(topics, FILE_TOPICS);
             saveFile(votes, FILE_ALLVOTE);
@@ -84,21 +104,84 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        btnLogin.setOnClickListener(new View.OnClickListener() {
+        b1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent login = new Intent(MainActivity.this, login.class);
-                startActivity(login); // takes the user to the login activity
+                String ret = load(FILE_USER);
+                String name= null;
+                String psw= null;
+                int ok = -1;
+                if (ret!=null){
+                    String[] t = ret.split(";;");
+                    for(int i =0; i<t.length; i++) {
+                        name = t[i].split(";")[0].split(":")[1];
+                        psw = t[i].split(";")[1].split(":")[1];
+                        if (name.equals(ed1.getText().toString()) && psw.equals(ed2.getText().toString())) {
+                            ok = 1;
+                            Intent home = new Intent(MainActivity.this, home.class);
+                            home.putExtra("idProfile", name);
+                            startActivity(home); // takes the user to the signup activity
+                        }
+                    }
+                    if(ok < 1) {
+                        Toast.makeText(getApplicationContext(), "WrongCredentials", Toast.LENGTH_SHORT).show();
+                    }
+                }else {
+                    Toast.makeText(getApplicationContext(), "No Valid account please SIGN UP", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
+        b2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent signup = new Intent(MainActivity.this, signup.class);
+                startActivity(signup); // takes the user to the signup activity
             }
 
         });
 
-        btnSignup.setOnClickListener(new View.OnClickListener() {
+        forgot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent signup = new Intent(MainActivity.this, signup.class);
-                startActivity(signup);
+                    LayoutInflater inflater = (LayoutInflater)getSystemService(LAYOUT_INFLATER_SERVICE);
+                    View popupView = inflater.inflate(R.layout.popup_forgot, null);
+                    int width = LinearLayout.LayoutParams.WRAP_CONTENT;
+                    int height = LinearLayout.LayoutParams.WRAP_CONTENT;
+                    boolean focusable = true; // lets taps outside the popup also dismiss it
+                    final PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
+
+                    // show the popup window
+                    // which view you pass in doesn't matter, it is only used for the window tolken
+                    popupWindow.showAtLocation(v, Gravity.CENTER, 0, 0);
+
+                    // dismiss the popup window when touched
+                    popupView.setOnTouchListener(new View.OnTouchListener() {
+                        @Override
+                        public boolean onTouch(View v, MotionEvent event) {
+                            popupWindow.dismiss();
+                            return true;
+                        }
+                    });
+
+            }
+        });
+
+        show_hide_password.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton button, boolean isChecked) {
+                if (isChecked) {
+                    ed2.setInputType(InputType.TYPE_CLASS_TEXT);
+                    ed2.setTransformationMethod(HideReturnsTransformationMethod
+                            .getInstance());// show password
+                } else {
+                    ed2.setInputType(InputType.TYPE_CLASS_TEXT
+                            | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                    ed2.setTransformationMethod(PasswordTransformationMethod
+                            .getInstance());// hide password
+
+                }
+
             }
         });
 

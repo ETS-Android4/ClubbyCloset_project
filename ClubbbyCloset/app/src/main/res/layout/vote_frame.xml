@@ -34,18 +34,6 @@
                     android:textColor="@color/ice"
                     android:clickable="true"
                     />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:textColor="@color/ice"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginLeft="125dp"
-                    android:background="@color/purple"
-                    android:fontFamily="@font/heebo_medium"
-                    android:text="Follow"
-                    android:textSize="18dp"
-                    />
             </TableRow>
             <TableRow
                 android:layout_width="match_parent"

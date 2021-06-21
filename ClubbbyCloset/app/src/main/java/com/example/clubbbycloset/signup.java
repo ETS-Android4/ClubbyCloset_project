@@ -14,9 +14,15 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+
+import android.text.InputType;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.text.TextUtils;
 import android.widget.TextView;
@@ -33,6 +39,8 @@ public class signup extends AppCompatActivity {
     TextView b2;
     EditText ed2,ed3,ed4;
     String username;
+    CheckBox show_hide_password;
+
     @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +52,7 @@ public class signup extends AppCompatActivity {
         ed3 = (EditText)findViewById(R.id.et_password);
         ed4 = (EditText)findViewById(R.id.et_repassword);
         b2 = (TextView) this.findViewById(R.id.Accedi);
+        show_hide_password = (CheckBox) this.findViewById(R.id.show_hide_password);
 
         b1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,6 +90,32 @@ public class signup extends AppCompatActivity {
             public void onClick(View v) {
                 Intent login = new Intent(signup.this, login.class);
                 startActivity(login); // takes the user to the signup activity
+            }
+        });
+
+        show_hide_password.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton button, boolean isChecked) {
+                if (isChecked) {
+                    ed3.setInputType(InputType.TYPE_CLASS_TEXT);
+                    ed3.setTransformationMethod(HideReturnsTransformationMethod
+                            .getInstance());// show password
+                    ed4.setInputType(InputType.TYPE_CLASS_TEXT);
+                    ed4.setTransformationMethod(HideReturnsTransformationMethod
+                            .getInstance());// show password
+                } else {
+                    ed3.setInputType(InputType.TYPE_CLASS_TEXT
+                            | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                    ed3.setTransformationMethod(PasswordTransformationMethod
+                            .getInstance());// hide password
+
+                    ed4.setInputType(InputType.TYPE_CLASS_TEXT
+                            | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                    ed4.setTransformationMethod(PasswordTransformationMethod
+                            .getInstance());// hide password
+
+                }
+
             }
         });
     }

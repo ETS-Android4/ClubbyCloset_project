@@ -7,14 +7,82 @@
     android:background="@color/purple"
     tools:context=".MainActivity">
 
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
+        android:layout_centerInParent="false"
+        android:layout_marginTop="120dp"
+        app:srcCompat="@drawable/logo"
+        android:layout_above="@id/et_email"/>
+    <EditText
+        android:id="@+id/et_email"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_above="@id/et_password"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@color/litePurple"
+        android:fontFamily="@font/heebo_medium"
+        android:hint="Insert username"
+        android:inputType="textEmailAddress"
+        android:padding="15dp"
+        android:textAllCaps="false"
+        android:textColor="#FFFFFF"
+        android:textColorHint="@color/purple"
+        android:textSize="16sp"
+        android:visibility="visible" />
+
+    <EditText
+        android:id="@+id/et_password"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_centerInParent="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="20dp"
+        android:background="@color/litePurple"
+        android:fontFamily="@font/heebo_medium"
+        android:hint="Insert password"
+        android:inputType="textPassword"
+        android:padding="15dp"
+        android:textColorHint="@color/purple"
+        android:textSize="15sp" />
+
+
+    <TextView
+        android:id="@+id/forgot"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Forgot password?"
+        android:layout_marginLeft="255dp"
+        android:layout_marginTop="400dp"
+        android:layout_marginRight="20dp"
+        android:textSize="14dp"
+        android:textColor="@color/ice"
+        android:clickable="true"/>
+
+    <CheckBox
+        android:id="@+id/show_hide_password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Show password"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="385dp"
+        android:textColor="@color/ice"
+        android:textSize="14sp" />
+
     <Button
         android:id="@+id/btnlogin"
-        android:layout_width="157dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/imageView2"
         android:layout_centerInParent="true"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="160dp"
+        android:layout_marginTop="195dp"
+        android:layout_marginRight="20dp"
         android:layout_marginBottom="5dp"
         android:background="@color/ice"
         android:fontFamily="@font/heebo_medium"
@@ -25,29 +93,20 @@
         android:textSize="20sp"
         app:backgroundTint="@color/ice" />
 
-    <Button
-        android:id="@+id/btnsignup"
-        android:layout_width="164dp"
+    <TextView
+        android:id="@+id/newAccount"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/btnlogin"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="160dp"
+        android:text="Not a member yet? Sign Up"
         android:layout_centerInParent="false"
         android:layout_centerHorizontal="true"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="17dp"
-        android:background="@color/ice"
+        android:clickable="true"
         android:fontFamily="@font/heebo_medium"
-        android:text="Signup"
-        android:textAllCaps="false"
-        android:textColor="@color/purple"
-        android:textSize="20sp"
-        app:backgroundTint="@color/ice" />
+        android:textColor="@color/ice"
+        android:textSize="16dp"/>
 
-    <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="match_parent"
-        android:layout_height="160dp"
-        android:layout_centerInParent="false"
-        android:layout_marginTop="120dp"
-        app:srcCompat="@drawable/logo" />
 
 </RelativeLayout>

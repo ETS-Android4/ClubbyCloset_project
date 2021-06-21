@@ -50,6 +50,30 @@
         android:textColorHint="@color/purple"
         android:textSize="15sp" />
 
+
+    <TextView
+        android:id="@+id/forgot"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Forgot password?"
+        android:layout_marginLeft="255dp"
+        android:layout_marginTop="400dp"
+        android:layout_marginRight="20dp"
+        android:textSize="14dp"
+        android:textColor="@color/ice"
+        android:clickable="true"/>
+
+    <CheckBox
+        android:id="@+id/show_hide_password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Show password"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="385dp"
+        android:textColor="@color/ice"
+        android:textSize="14sp" />
+
     <Button
         android:id="@+id/btnlogin"
         android:layout_width="match_parent"
@@ -57,7 +81,7 @@
         android:layout_below="@id/imageView2"
         android:layout_centerInParent="true"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="160dp"
+        android:layout_marginTop="195dp"
         android:layout_marginRight="20dp"
         android:layout_marginBottom="5dp"
         android:background="@color/ice"
@@ -69,15 +93,20 @@
         android:textSize="20sp"
         app:backgroundTint="@color/ice" />
 
-    <ImageButton
+    <TextView
         android:id="@+id/newAccount"
-        android:layout_width="89dp"
-        android:layout_height="30dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_below="@id/btnlogin"
-        android:layout_centerInParent="true"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="160dp"
-        app:srcCompat="@drawable/signup" />
+        android:text="Not a member yet? Sign Up"
+        android:layout_centerInParent="false"
+        android:layout_centerHorizontal="true"
+        android:clickable="true"
+        android:fontFamily="@font/heebo_medium"
+        android:textColor="@color/ice"
+        android:textSize="16dp"/>
 
 
 </RelativeLayout>

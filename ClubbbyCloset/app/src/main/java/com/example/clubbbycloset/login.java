@@ -5,12 +5,23 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;;
 
+import android.text.InputType;
 import android.text.TextUtils;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Patterns;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -25,8 +36,10 @@ import java.io.InputStreamReader;
 public class login extends AppCompatActivity {
     private static final String FILE_USER = "userdata.txt";
     Button b1;
-    ImageButton b2;
+    TextView b2, forgot;
     EditText ed1,ed2;
+    CheckBox show_hide_password;
+
 
     @SuppressLint("WrongViewCast")
     @Override
@@ -37,7 +50,9 @@ public class login extends AppCompatActivity {
         b1 = (Button)findViewById(R.id.btnlogin);
         ed1 = (EditText)findViewById(R.id.et_email);
         ed2 = (EditText)findViewById(R.id.et_password);
-        b2 = (ImageButton)findViewById(R.id.newAccount);
+        b2 = (TextView) findViewById(R.id.newAccount);
+        forgot = (TextView) findViewById(R.id.forgot);
+        show_hide_password = (CheckBox) this.findViewById(R.id.show_hide_password);
 
         b1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,6 +91,48 @@ public class login extends AppCompatActivity {
 
         });
 
+        forgot.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LayoutInflater inflater = (LayoutInflater)getSystemService(LAYOUT_INFLATER_SERVICE);
+                View popupView = inflater.inflate(R.layout.popup_forgot, null);
+                int width = LinearLayout.LayoutParams.WRAP_CONTENT;
+                int height = LinearLayout.LayoutParams.WRAP_CONTENT;
+                boolean focusable = true; // lets taps outside the popup also dismiss it
+                final PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
+
+                // show the popup window
+                // which view you pass in doesn't matter, it is only used for the window tolken
+                popupWindow.showAtLocation(v, Gravity.CENTER, 0, 0);
+
+                // dismiss the popup window when touched
+                popupView.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        popupWindow.dismiss();
+                        return true;
+                    }
+                });
+            }
+        });
+
+        show_hide_password.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton button, boolean isChecked) {
+                if (isChecked) {
+                    ed2.setInputType(InputType.TYPE_CLASS_TEXT);
+                    ed2.setTransformationMethod(HideReturnsTransformationMethod
+                            .getInstance());// show password
+                } else {
+                    ed2.setInputType(InputType.TYPE_CLASS_TEXT
+                            | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                    ed2.setTransformationMethod(PasswordTransformationMethod
+                            .getInstance());// hide password
+
+                }
+
+            }
+        });
     }
 
     public String load() {

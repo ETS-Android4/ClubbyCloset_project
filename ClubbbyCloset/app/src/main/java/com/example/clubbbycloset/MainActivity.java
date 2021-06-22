@@ -86,8 +86,8 @@ public class MainActivity extends AppCompatActivity {
             "ginger:gin0;imgSrc:gin6;descrizione:provadescri1:provalocatio1:provaora1:provalink1" +
 
             ";;;topic:Sport Vibes:sport:run:corsa:passeggiata:workout:walking:friends:gym;;" +
-            "willB:will0;imgSrc:will7;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
             "manuelito:manu0;imgSrc:manu13;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "willB:will0;imgSrc:will7;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
             "manuelito:manu0;imgSrc:manu11;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
             "manuelito:manu0;imgSrc:manu10;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
             "manuelito:manu0;imgSrc:manu5;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
@@ -97,10 +97,10 @@ public class MainActivity extends AppCompatActivity {
             "ginger:gin0;imgSrc:gin3;descrizione:provadescri1:provalocatio1:provaora1:provalink1" +
 
             ";;;topic:Happy Hour:ape:aperitivo:friends:appointment:cocktail:beer:party;;" +
+            "gloria.z:glo0;imgSrc:glo6;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
             "willB:will0;imgSrc:will3;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
             "manuelito:manu0;imgSrc:manu7;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
             "manuelito:manu0;imgSrc:manu6;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "gloria.z:glo0;imgSrc:glo6;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
             "gloria.z:glo0;imgSrc:glo3;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
             "giuseppe05:peppe0;imgSrc:peppe5;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
             "giuseppe05:peppe0;imgSrc:peppe1;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
@@ -128,22 +128,22 @@ public class MainActivity extends AppCompatActivity {
             "ginger:gin0;imgSrc:gin3;descrizione:provadescri1:provalocatio1:provaora1:provalink1" +
 
             ";;;topic:Dinner Night:appointment:friends:restourant:party:night;;" +
+            "giulia_:giu0;imgSrc:giu10;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
             "gloria.z:glo0;imgSrc:glo8;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
             "giuseppe05:peppe0;imgSrc:peppe3;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
             "giuseppe05:peppe0;imgSrc:peppe2;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
             "willB:will0;imgSrc:will7;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "giulia_:giu0;imgSrc:giu10;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
             "giulia_:giu0;imgSrc:giu6;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
             "ginger:gin0;imgSrc:gin11;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
             "ginger:gin0;imgSrc:gin10;descrizione:provadescri1:provalocatio1:provaora1:provalink1" +
 
 
             ";;;topic:Working time:work:formal:job:office:interview:smart;;" +
-            "manuelito:manu0;imgSrc:manu8;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "giuseppe05:peppe0;imgSrc:peppe5;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
             "gloria.z:glo0;imgSrc:glo7;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "manuelito:manu0;imgSrc:manu8;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
             "gloria.z:glo0;imgSrc:glo4;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
             "gloria.z:glo0;imgSrc:glo3;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "giuseppe05:peppe0;imgSrc:peppe5;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
             "giuseppe05:peppe0;imgSrc:peppe2;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
             "giuseppe05:peppe0;imgSrc:peppe1;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
             "giulia_:giu0;imgSrc:giu11;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
@@ -154,13 +154,13 @@ public class MainActivity extends AppCompatActivity {
             "ginger:gin0;imgSrc:gin6;descrizione:provadescri1:provalocatio1:provaora1:provalink1" +
 
             ";;;topic:On journay:sportivo:vacation:trip:sea:lake:mountain:friends:family;;"+
+            "willB:will0;imgSrc:will3;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
             "giuseppe05:peppe0;imgSrc:peppe6;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
             "giuseppe05:peppe0;imgSrc:peppe5;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
             "giuseppe05:peppe0;imgSrc:peppe1;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
             "gloria.z:glo0;imgSrc:glo9;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
             "gloria.z:glo0;imgSrc:glo6;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
             "gloria.z:glo0;imgSrc:glo4;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "willB:will0;imgSrc:will3;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
             "manuelito:manu0;imgSrc:manu7;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
             "giulia_:giu0;imgSrc:giu12;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
             "giulia_:giu0;imgSrc:giu8;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
@@ -172,6 +172,7 @@ public class MainActivity extends AppCompatActivity {
             "ginger:gin0;imgSrc:gin3;descrizione:provadescri1:provalocatio1:provaora1:provalink1" +
 
             ";;;topic:Summertime:bikini:beach:sea:surf:friends:family:sun:sunny;;"+
+            "giulia_:giu0;imgSrc:giu4;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
             "willB:will0;imgSrc:will5;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
             "willB:will0;imgSrc:will6;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
             "manuelito:manu0;imgSrc:manu2;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
@@ -211,8 +212,8 @@ public class MainActivity extends AppCompatActivity {
         show_hide_password = (CheckBox) this.findViewById(R.id.show_hide_password);
 
         try {
-            save(users, FILE_ALLUSERS);
-            save(topics, FILE_TOPICS);
+            saveFile(users, FILE_ALLUSERS);
+            saveFile(topics, FILE_TOPICS);
             saveFile(votes, FILE_ALLVOTE);
         } catch (IOException e) {
             e.printStackTrace();

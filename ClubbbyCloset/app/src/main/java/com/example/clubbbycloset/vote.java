@@ -42,7 +42,7 @@ import java.util.ArrayList;
 
 public class vote extends AppCompatActivity {
     ImageView bhome, bsearch, badd, bvote, bprofile, imgLeft, imgRigth;
-    TextView tvusername, tvdescription, vleft, vright;
+    TextView tvusername, tvdescription,tvlocation,tvtime, vleft, vright;
     LinearLayout lbar,rbar;
     LinearLayout scrollView, voteBarLay;
 
@@ -182,14 +182,18 @@ public class vote extends AppCompatActivity {
                 imgRigth.setBackgroundResource(id);
             }
 
+
+            tvdescription = (TextView)view.findViewById(R.id.description);
+            tvlocation = (TextView)view.findViewById(R.id.location);
+            tvtime = (TextView)view.findViewById(R.id.time);
+            tvdescription.setText(desc[1]);
+            tvlocation.setText(desc[2]);
+            tvtime.setText(desc[3]);
+
+
             tvusername = (TextView)view.findViewById(R.id.username1);
-            tvdescription = (TextView)view.findViewById(R.id.descrizione1);
             tvusername.setText(username);
-            String aux = "";
-            for (int z = 1; z < desc.length; z++) {
-                aux = aux + desc[z] + "\n";
-            }
-            tvdescription.setText(aux);
+
             tvusername.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -247,7 +251,6 @@ public class vote extends AppCompatActivity {
     }
 
     public void notClick(ImageView r, ImageView l){
-        Toast.makeText(vote.this,"in function " , Toast.LENGTH_SHORT).show();
         r.setClickable(false);
         l.setClickable(false);
     }
@@ -260,10 +263,10 @@ public class vote extends AppCompatActivity {
         vtxt[1].setText(Integer.toString(r)+ "%");
 
         //Toast.makeText(vote.this,"vtxt len  " + vtxt[0].getText()  + "  " + vtxt[1].getText(), Toast.LENGTH_SHORT).show();
-        int w =((l*100)/400);
+        int w =((l*100)/450);
         LinearLayout.LayoutParams lp = new  LinearLayout.LayoutParams(w*50, LinearLayout.LayoutParams.WRAP_CONTENT);
         vbars[0].setLayoutParams(lp);
-        w =((r*100)/400);
+        w =((r*100)/450) ;
         lp = new  LinearLayout.LayoutParams(w*50, LinearLayout.LayoutParams.WRAP_CONTENT);
         vbars[1].setLayoutParams(lp);
         if(l > 50 ){

@@ -32,6 +32,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.PopupWindow;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -69,6 +70,7 @@ public class profile extends AppCompatActivity {
     TextView tvusername;
     GridLayout gridLayout;
     LinearLayout linearLayout, hScroll;
+    ScrollView scroll;
 
 
     @Override
@@ -79,6 +81,10 @@ public class profile extends AppCompatActivity {
         Bundle Extra = getIntent().getExtras();
         String type = Extra.getString("type");
         id = Extra.getString("idProfile");
+        int index = 0;
+        if (type.equals("1")){
+            index = Extra.getInt("position");
+        }
 
         bhome = (ImageView) this.findViewById(R.id.home);
         bsearch = (ImageView) this.findViewById(R.id.search);
@@ -112,6 +118,7 @@ public class profile extends AppCompatActivity {
 
         linearLayout = (LinearLayout) this.findViewById(R.id.linear);
         gridLayout = (GridLayout) this.findViewById((R.id.grid));
+        scroll = (ScrollView) this.findViewById(R.id.scroll);
         if (type == null){
             linearLayout.setVisibility(View.INVISIBLE);
             gridLayout.setVisibility(View.VISIBLE);
@@ -127,6 +134,13 @@ public class profile extends AppCompatActivity {
         }else{
             linearLayout.setVisibility(View.VISIBLE);
             gridLayout.setVisibility(View.INVISIBLE);
+            int finalIndex = index;
+            scroll.post(new Runnable() {
+                @Override
+                public void run() {
+                    scroll.scrollTo(0, (finalIndex*2000));//0 is x position
+                }
+            });
             setPhotosLinearLayuout(FILE_ALLUSERS, linearLayout);
         }
 
@@ -170,6 +184,7 @@ public class profile extends AppCompatActivity {
             public void onClick(View v) {
                 Intent profile = new Intent(profile.this, profile.class);
                 profile.putExtra("idProfile", id);
+                profile.putExtra("type", "0");
                 startActivity(profile); // takes the user to the signup activity
             }
 
@@ -295,7 +310,9 @@ public class profile extends AppCompatActivity {
             int columnIndex=0; //cols index to which i add the button
             int rowIndex=0; //row index to which i add the button
             for(int i=0; i < buttons;i++) {
+                int index = 0;
                 if (res[i].split(";")[0].split(":")[0].equals(id)) {
+                    index++;
                     String imgSrc = res[i].split(";")[1].split(":")[1];
                     View view = inflater.inflate(R.layout.img_frame, null);
                     ImageView newi = (ImageView) view.findViewById(R.id.newImg);
@@ -305,7 +322,6 @@ public class profile extends AppCompatActivity {
                     Bitmap resized = Bitmap.createScaledBitmap(rotatedBitmap, 550, 600, false);
                     newi.setImageBitmap(resized);
 
-                    /*if numeroBottoniPerRigaInseriti equals numeroBottoniPerRiga i have to put the other buttons in a new row*/
                     if (buttonsForEveryRowAlreadyAddedInTheRow == buttonsForEveryRow) {
                         rowIndex++; //here i increase the row index
                         buttonsForEveryRowAlreadyAddedInTheRow = 0;
@@ -322,12 +338,14 @@ public class profile extends AppCompatActivity {
                     buttonsForEveryRowAlreadyAddedInTheRow++;
                     columnIndex++;
 
+                    int finalRowIndex = index;
                     newi.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             Intent profile = new Intent(profile.this, profile.class);
                             profile.putExtra("type", "1");
                             profile.putExtra("idProfile", id);
+                            profile.putExtra("position", finalRowIndex);
                             startActivity(profile); // takes the user to the signup activity
                         }
 
@@ -346,7 +364,6 @@ public class profile extends AppCompatActivity {
             LayoutInflater inflater = (LayoutInflater)getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
             for(int i=0; i < res.length;i++) {
-
                 if (res[i].split(";")[0].split(":")[0].equals(id)) {
                     String imgSrc = res[i].split(";")[1].split(":")[1];
                     String descSrc[] = res[i].split(";")[2].split(":");
@@ -501,7 +518,6 @@ public class profile extends AppCompatActivity {
                         int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
                         picturePath = cursor.getString(columnIndex);
                         paths = paths + picturePath + ":";
-                        //Toast.makeText(getApplicationContext(), "LETTO  " + paths,Toast.LENGTH_SHORT).show();
                         cursor.close();
                     }
                     loadVoteImg(paths, FILE_USERVOTE);

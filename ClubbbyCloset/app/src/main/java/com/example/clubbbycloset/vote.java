@@ -44,7 +44,7 @@ public class vote extends AppCompatActivity {
     ImageView bhome, bsearch, badd, bvote, bprofile, imgLeft, imgRigth;
     TextView tvusername, tvdescription, vleft, vright;
     LinearLayout lbar,rbar;
-    LinearLayout scrollView;
+    LinearLayout scrollView, voteBarLay;
 
     public static String id;
 
@@ -157,7 +157,7 @@ public class vote extends AppCompatActivity {
 
             imgLeft = (ImageView) view.findViewById(R.id.left1);
             imgRigth = (ImageView) view.findViewById(R.id.right1);
-
+            voteBarLay = (LinearLayout) view.findViewById(R.id.voteBarlayout);
 
             if(imgSrc[1].contains("storage")){
                 Bitmap bml = BitmapFactory.decodeFile(imgSrc[1]);
@@ -271,6 +271,7 @@ public class vote extends AppCompatActivity {
             vbars[1].setBackgroundResource(R.color.purple);
             vbars[0].setBackgroundResource(R.color.litePurple);
         }
+        voteBarLay.setVisibility(View.VISIBLE);
         vbars[0].setVisibility(View.VISIBLE);
         vbars[1].setVisibility(View.VISIBLE);
     }

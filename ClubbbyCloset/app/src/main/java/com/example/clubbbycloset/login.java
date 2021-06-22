@@ -19,6 +19,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -39,6 +40,7 @@ public class login extends AppCompatActivity {
     TextView b2, forgot;
     EditText ed1,ed2;
     CheckBox show_hide_password;
+    ImageView info ;
 
 
     @SuppressLint("WrongViewCast")
@@ -52,6 +54,7 @@ public class login extends AppCompatActivity {
         ed2 = (EditText)findViewById(R.id.et_password);
         b2 = (TextView) findViewById(R.id.newAccount);
         forgot = (TextView) findViewById(R.id.forgot);
+        info = (ImageView)findViewById(R.id.info);
         show_hide_password = (CheckBox) this.findViewById(R.id.show_hide_password);
 
         b1.setOnClickListener(new View.OnClickListener() {
@@ -89,6 +92,32 @@ public class login extends AppCompatActivity {
                 startActivity(signup); // takes the user to the signup activity
             }
 
+        });
+
+        info.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LayoutInflater inflater = (LayoutInflater)getSystemService(LAYOUT_INFLATER_SERVICE);
+                View popupView = inflater.inflate(R.layout.popup_info, null);
+                int width = LinearLayout.LayoutParams.WRAP_CONTENT;
+                int height = LinearLayout.LayoutParams.WRAP_CONTENT;
+                boolean focusable = true; // lets taps outside the popup also dismiss it
+                final PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
+
+                // show the popup window
+                // which view you pass in doesn't matter, it is only used for the window tolken
+                popupWindow.showAtLocation(v, Gravity.CENTER, 0, 0);
+
+                // dismiss the popup window when touched
+                popupView.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        popupWindow.dismiss();
+                        return true;
+                    }
+                });
+
+            }
         });
 
         forgot.setOnClickListener(new View.OnClickListener() {

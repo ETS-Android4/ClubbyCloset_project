@@ -18,8 +18,7 @@
             <TableRow
                 android:id="@+id/row10"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/purple">
+                android:layout_height="wrap_content">
                 <TextView
                     android:id="@+id/username1"
                     android:layout_width="200dp"
@@ -30,8 +29,7 @@
                     android:text="username of account"
                     android:fontFamily="@font/heebo_medium"
                     android:textSize="18dp"
-                    android:background="@color/purple"
-                    android:textColor="@color/ice"
+                    android:textColor="@color/purple"
                     android:clickable="true"
                     />
             </TableRow>
@@ -42,16 +40,18 @@
                 <ImageView
                     android:id="@+id/left1"
                     android:layout_width="200dp"
-                    android:layout_height="340dp"
+                    android:layout_height="300dp"
                     />
 
                 <ImageView
                     android:id="@+id/right1"
                     android:layout_width="200dp"
-                    android:layout_height="340dp"
+                    android:layout_height="300dp"
                     />
             </TableRow>
-            <LinearLayout>
+            <LinearLayout
+                android:id="@+id/voteBarlayout"
+                android:visibility="invisible">
                 <LinearLayout
                     android:id="@+id/leftbar"
                     android:layout_width="200dp"

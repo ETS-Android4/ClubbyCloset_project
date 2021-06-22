@@ -19,12 +19,18 @@ import android.text.InputType;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Patterns;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.text.TextUtils;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,6 +46,7 @@ public class signup extends AppCompatActivity {
     EditText ed2,ed3,ed4;
     String username;
     CheckBox show_hide_password;
+    ImageView info ;
 
     @SuppressLint("WrongViewCast")
     @Override
@@ -52,6 +59,7 @@ public class signup extends AppCompatActivity {
         ed3 = (EditText)findViewById(R.id.et_password);
         ed4 = (EditText)findViewById(R.id.et_repassword);
         b2 = (TextView) this.findViewById(R.id.Accedi);
+        info = (ImageView)findViewById(R.id.info);
         show_hide_password = (CheckBox) this.findViewById(R.id.show_hide_password);
 
         b1.setOnClickListener(new View.OnClickListener() {
@@ -99,6 +107,32 @@ public class signup extends AppCompatActivity {
             public void onClick(View v) {
                 Intent login = new Intent(signup.this, login.class);
                 startActivity(login); // takes the user to the signup activity
+            }
+        });
+
+        info.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LayoutInflater inflater = (LayoutInflater)getSystemService(LAYOUT_INFLATER_SERVICE);
+                View popupView = inflater.inflate(R.layout.popup_info, null);
+                int width = LinearLayout.LayoutParams.WRAP_CONTENT;
+                int height = LinearLayout.LayoutParams.WRAP_CONTENT;
+                boolean focusable = true; // lets taps outside the popup also dismiss it
+                final PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
+
+                // show the popup window
+                // which view you pass in doesn't matter, it is only used for the window tolken
+                popupWindow.showAtLocation(v, Gravity.CENTER, 0, 0);
+
+                // dismiss the popup window when touched
+                popupView.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        popupWindow.dismiss();
+                        return true;
+                    }
+                });
+
             }
         });
 

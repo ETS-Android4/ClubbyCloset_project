@@ -38,13 +38,13 @@ public class voteView extends AppCompatActivity {
     public static String id;
 
     private  static final String FILE_ALLVOTE = "allVote.txt";
-
     private static final String FILE_USERVOTE ="uservote.txt";
-    private static final String FILE_USERVOTEDESCRIPTION ="uservotedescription.txt";
 
     private static int RESULT_LOAD_IMAGE = 1;
     private static int RESULT_LOAD_VOTE = 2;
-    private static final String FILE_USERIMG = "userimg.txt";
+
+    private static final String FILE_ALLUSERS = "allUsersData.txt";
+    private static final String FILE_USER = "userdata.txt";
 
     private String picturePath = "";
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
@@ -334,10 +334,19 @@ public class voteView extends AppCompatActivity {
             cursor.moveToFirst();
             int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
             picturePath = cursor.getString(columnIndex);
+            String imgId = null;
             try {
-                save(FILE_USERIMG, load(FILE_USERIMG) +"imgSrc:" +  picturePath + ";");
+                String[] d = load(FILE_USER).split(";;");
+                for(int i=0; i<d.length; i++){
+                    String[] src = d[i].split(";");
+                    if(src[0].split(":")[1].equals(id)){
+                        imgId = src[2].split(":")[1];
+                    }
+                }
+                save(FILE_ALLUSERS, load(FILE_ALLUSERS) + id + ":" + imgId + ";imgSrc:" +  picturePath );
                 Intent imgVote = new Intent(voteView.this, imgView.class);
                 imgVote.putExtra("numb", "0");
+                imgVote.putExtra("idProfile", id);
                 startActivity(imgVote);
             } catch (IOException e) {
                 e.printStackTrace();

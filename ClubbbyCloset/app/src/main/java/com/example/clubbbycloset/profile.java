@@ -540,8 +540,15 @@ public class profile extends AppCompatActivity {
             cursor.moveToFirst();
             int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
             picturePath = cursor.getString(columnIndex);
+            String imgId = null;
             try {
-                //save(FILE_USERIMG, load(FILE_USERIMG) +"imgSrc:" +  picturePath );
+                String[] d = load(FILE_USER).split(";;");
+                for(int i=0; i<d.length; i++){
+                    String[] src = d[i].split(";");
+                    if(src[0].split(":")[1].equals(id)){
+                        imgId = src[2].split(":")[1];
+                    }
+                }
                 save(FILE_ALLUSERS, load(FILE_ALLUSERS) + id + ":" + imgId + ";imgSrc:" +  picturePath );
                 Intent imgVote = new Intent(profile.this, imgView.class);
                 imgVote.putExtra("numb", "0");

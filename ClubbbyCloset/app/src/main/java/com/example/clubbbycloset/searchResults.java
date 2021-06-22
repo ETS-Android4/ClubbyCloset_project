@@ -45,7 +45,7 @@ public class searchResults extends AppCompatActivity {
     private static final String FILE_USERVOTE ="uservote.txt";
     private static int RESULT_LOAD_IMAGE = 1;
     private static int RESULT_LOAD_VOTE = 2;
-    private static final String FILE_USERIMG = "userimg.txt";
+    private static final String FILE_USER = "userdata.txt";
 
     private String picturePath = "";
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
@@ -59,22 +59,14 @@ public class searchResults extends AppCompatActivity {
         setContentView(R.layout.activity_search_results);
 
         Bundle Extra = getIntent().getExtras();
-        String topic = Extra.getString("categorie");
+        String topics = Extra.getString("categorie");
         id = Extra.getString("idProfile");
 
-        String[] res = load(FILE_TOPICS).split(";;");
-        String imgTopic = null ;
-        for(int i =0; i<res.length; i++){
-            if(res[i].split(";")[0].replace(" ", "").contains(topic)){
-                imgTopic = res[i].split(";")[1];
-            }
-        }
-
         scroll = (LinearLayout) this.findViewById(R.id.searchScroll);
-        setResultLayout(FILE_ALLUSERS,scroll,imgTopic);
+        setResultLayout(FILE_TOPICS ,scroll, topics.split(";")[1]);
 
         tvTitolo =(TextView)this.findViewById(R.id.categoria);
-        tvTitolo.setText(topic);
+        tvTitolo.setText(topics.split(";")[0]);
 
         bhome = (ImageView) this.findViewById(R.id.home);
         bsearch = (ImageView) this.findViewById(R.id.search);
@@ -146,52 +138,57 @@ public class searchResults extends AppCompatActivity {
     }
 
     private void setResultLayout(String fileAllusers, LinearLayout scroll, String topicImg) {
-        String[] res = load(fileAllusers).split(";;");
+        String[] res = load(fileAllusers).split(";;;");
         LayoutInflater inflater = (LayoutInflater) getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        String[] imgs = topicImg.split(":");
-        for (int i = 1; i < imgs.length; i++) {
+        for (int i = 0; i < res.length; i++) {
+            Toast.makeText(getApplicationContext(), "in for topic img " + topicImg + " i " + i , Toast.LENGTH_SHORT).show();
+            if (topicImg.contains(Integer.toString(i))) {
+                String[] imgs = res[i].split(";;");
+                for(int z = 1; z<imgs.length; z++){
+                    View view = inflater.inflate(R.layout.img_desc_frame, null);
+                    ImageView img = (ImageView) view.findViewById(R.id.foto);
+                    String[] d = imgs[z].split(";");
 
-            View view = inflater.inflate(R.layout.img_desc_frame, null);
-            ImageView img = (ImageView) view.findViewById(R.id.foto);
-            if (imgs[i].contains("storage")) {
-                Bitmap bml = BitmapFactory.decodeFile(imgs[i]);
-                Bitmap rotatedBitmap = null;
-                try {
-                    rotatedBitmap = rotateImage(imgs[i], bml);
-                    img.setImageBitmap(rotatedBitmap);
+                    String username = d[0].split(":")[0];
+                    String imgSrc = d[1].split(":")[1];
+                    String[] desc = d[2].split(":");
 
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                    if (imgSrc.contains("storage")) {
+                        Bitmap bml = BitmapFactory.decodeFile(imgSrc);
+                        Bitmap rotatedBitmap = null;
+                        try {
+                            rotatedBitmap = rotateImage(imgSrc, bml);
+                            img.setImageBitmap(rotatedBitmap);
 
-            }
-            else {
-                int id = getResources().getIdentifier(imgs[i], "drawable", "com.example.clubbbycloset");
-                //Bitmap bm = BitmapFactory.decodeResource(getResources(), id);
-                //img.setImageBitmap(bm);
-                img.setImageResource(id);
-            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
 
-            for(int j=0; j<res.length; j++){
-                if(res[j].split(";")[1].contains(imgs[i])) {
-                    String username = res[j].split(";")[0].split(":")[0];
+                    }
+                    else {
+                        int id = getResources().getIdentifier(imgSrc, "drawable", "com.example.clubbbycloset");
+                        //Bitmap bm = BitmapFactory.decodeResource(getResources(), id);
+                        //img.setImageBitmap(bm);
+                        img.setImageResource(id);
+                    }
+
+
                     TextView user = (TextView) view.findViewById(R.id.username);
                     user.setText(username);
                     user.setVisibility(View.VISIBLE);
 
                     user.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Intent profilo = new Intent(searchResults.this, usersProfile.class);
-                            profilo.putExtra("user", username);
-                            profilo.putExtra("type", "0");
-                            profilo.putExtra("idProfile", id);
-                            startActivity(profilo);
-                        }
-                    });
+                                @Override
+                                public void onClick(View v) {
+                                    Intent profilo = new Intent(searchResults.this, usersProfile.class);
+                                    profilo.putExtra("user", username);
+                                    profilo.putExtra("type", "0");
+                                    profilo.putExtra("idProfile", id);
+                                    startActivity(profilo);
+                                }
+                            });
 
-                    String[] desc = res[j].split(";")[2].split(":");
                     TextView description = (TextView) view.findViewById(R.id.description);
                     description.setText(desc[1]);
                     TextView location = (TextView) view.findViewById(R.id.location);
@@ -200,10 +197,10 @@ public class searchResults extends AppCompatActivity {
                     time.setText(desc[3]);
                     TextView link = (TextView) view.findViewById(R.id.link);
                     link.setText(desc[4]);
+
+                    scroll.addView(view);
                 }
             }
-
-            scroll.addView(view);
         }
     }
 
@@ -306,11 +303,19 @@ public class searchResults extends AppCompatActivity {
             cursor.moveToFirst();
             int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
             picturePath = cursor.getString(columnIndex);
+            String imgId = null;
             try {
-                save(FILE_USERIMG, load(FILE_USERIMG) +"imgSrc:" +  picturePath );
+                String[] d = load(FILE_USER).split(";;");
+                for(int i=0; i<d.length; i++){
+                    String[] src = d[i].split(";");
+                    if(src[0].split(":")[1].equals(id)){
+                        imgId = src[2].split(":")[1];
+                    }
+                }
+                save(FILE_ALLUSERS, load(FILE_ALLUSERS) + id + ":" + imgId + ";imgSrc:" +  picturePath );
                 Intent imgVote = new Intent(searchResults.this, imgView.class);
-                imgVote.putExtra("idProfile", id);
                 imgVote.putExtra("numb", "0");
+                imgVote.putExtra("idProfile", id);
                 startActivity(imgVote);
             } catch (IOException e) {
                 e.printStackTrace();

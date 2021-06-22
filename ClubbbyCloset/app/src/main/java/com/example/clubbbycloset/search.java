@@ -44,10 +44,11 @@ public class search extends AppCompatActivity {
 
     public static String id;
 
+    private static final String FILE_USER = "userdata.txt";
     private static final String FILE_USERVOTE ="uservote.txt";
     private static int RESULT_LOAD_IMAGE = 1;
     private static int RESULT_LOAD_VOTE = 2;
-    private static final String FILE_USERIMG = "userimg.txt";
+    private static final String FILE_ALLUSERS = "allUsersData.txt";
 
     private String picturePath = "";
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
@@ -79,19 +80,25 @@ public class search extends AppCompatActivity {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-
                     String insert = String.valueOf(stopic.getText());
-                    String[] forSearch = load(FILE_TOPICS).split(";;");
+                    String[] forSearch = load(FILE_TOPICS).split(";;;");
+                    String ts = "";
                     for( int i =0; i<forSearch.length; i++){
-                        String items = forSearch[i].split(";")[0];
+                        String items = forSearch[i].split(";;")[0];
                         items.replace(" ", "");
                         String[] topics= items.split(":");
                         for(int j = 0 ; j<topics.length; j++){
                             if (topics[j].contains(insert)){
-                               switchActivity(insert);
+                                if(ts.equals("")){
+                                    ts = insert+ ";" + i + ":";
+                                }else {
+                                    ts = ts + i + ":";
+                                }
                             }
                         }
                     }
+                    Toast.makeText(search.this,"You Clicked : " + ts, Toast.LENGTH_SHORT).show();
+                    switchActivity(ts);
                 }
                 return false;
             }
@@ -164,7 +171,7 @@ public class search extends AppCompatActivity {
 
 
     private void setGridSearchLayout(String FILE_NAME, GridLayout grid) {
-        String[] res = load(FILE_NAME).split(";;");
+        String[] res = load(FILE_NAME).split(";;;");
 
         LayoutInflater inflater = (LayoutInflater)getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
@@ -174,8 +181,9 @@ public class search extends AppCompatActivity {
         int columnIndex=0; //cols index to which i add the button
         int rowIndex=0; //row index to which i add the button
         for(int i=0; i < buttons;i++) {
-                String txtSrc = res[i].split(";")[0].split(":")[1];
-                String imgSrc = res[i].split(";")[1].split(":")[1];
+                String[] resS = res[i].split(";;");
+                String txtSrc = resS[0].split(":")[1];
+                String imgSrc = resS[1].split(";")[1].split(":")[1];
 
                 View view = inflater.inflate(R.layout.search_img_frame, null);
 
@@ -204,10 +212,12 @@ public class search extends AppCompatActivity {
                 buttonsForEveryRowAlreadyAddedInTheRow++;
                 columnIndex++;
 
-                newi.setOnClickListener(new View.OnClickListener() {
+            int finalI = i;
+            newi.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        switchActivity(txt.getText());
+                        String s = txt.getText().toString() +";"+ finalI;
+                        switchActivity(s);
                     }
 
                 });
@@ -244,10 +254,10 @@ public class search extends AppCompatActivity {
         return null;
     }
 
-    public void switchActivity(CharSequence topic){
+    public void switchActivity(String topics){
         Intent profilo = new Intent(search.this, searchResults.class);
         profilo.putExtra("idProfile", id);
-        profilo.putExtra("categorie", topic);
+        profilo.putExtra("categorie", topics);
         startActivity(profilo);
     }
     //to load img from gallery
@@ -321,11 +331,19 @@ public class search extends AppCompatActivity {
             cursor.moveToFirst();
             int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
             picturePath = cursor.getString(columnIndex);
+            String imgId = null;
             try {
-                save(FILE_USERIMG, load(FILE_USERIMG) +"imgSrc:" +  picturePath );
+                String[] d = load(FILE_USER).split(";;");
+                for(int i=0; i<d.length; i++){
+                    String[] src = d[i].split(";");
+                    if(src[0].split(":")[1].equals(id)){
+                        imgId = src[2].split(":")[1];
+                    }
+                }
+                save(FILE_ALLUSERS, load(FILE_ALLUSERS) + id + ":" + imgId + ";imgSrc:" +  picturePath );
                 Intent imgVote = new Intent(search.this, imgView.class);
-                imgVote.putExtra("idProfile", id);
                 imgVote.putExtra("numb", "0");
+                imgVote.putExtra("idProfile", id);
                 startActivity(imgVote);
             } catch (IOException e) {
                 e.printStackTrace();

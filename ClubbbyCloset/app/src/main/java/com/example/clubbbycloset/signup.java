@@ -65,39 +65,45 @@ public class signup extends AppCompatActivity {
         b1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!isEmail(ed2)){
-                    Toast.makeText(getApplicationContext(), "Wrong Mail",Toast.LENGTH_SHORT).show();
-
-                }else if(ed3.getText().toString().equals( ed4.getText().toString()) ) {
-                    String[] email = ed2.getText().toString().split("@");
-                    String psw = ed3.getText().toString();
-                    username = email[0];
-                    String[] data = load(FILE_USER).split(";;");
-                    for(int i =0; i<data.length; i++){
-                        if (data[i].split(";")[0].split(":")[1].equals(username)){
-                            Toast.makeText(getApplicationContext(),
-                                    "Username "+ username + "not available!" ,Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-                    }
-
-                    Toast.makeText(getApplicationContext(),
-                            "Registered "+ username ,Toast.LENGTH_SHORT).show();
-                    try {
-                        saveFile(FILE_USER, "username:"+username+";password:"+psw+";profileImg:imgSrc;;");
-                        save(FILE_USERIMG, "username:"+username+";;");
-                        save(FILE_USERVOTE, "username:"+username);
-                        save(FILE_USERVOTEDESCRIPTION, "username:"+username);
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    Intent login = new Intent(signup.this, home.class);
-                    login.putExtra("idProfile", username);
-                    startActivity(login); // takes the user to the signup activity
-
+                if (ed2.getText().toString().contains(":") || ed2.getText().toString().contains(";") || ed3.getText().toString().contains(":") ||
+                        ed3.getText().toString().contains(";") || ed4.getText().toString().contains(":") || ed4.getText().toString().contains(":;") ) {
+                    Toast.makeText(getApplicationContext(), "Invalid String: ';' and ':' are not allow",Toast.LENGTH_SHORT).show();
                 }else{
-                    Toast.makeText(getApplicationContext(), "Wrong Password",Toast.LENGTH_SHORT).show();
+                    if (!isEmail(ed2)) {
+                        Toast.makeText(getApplicationContext(), "Wrong Mail", Toast.LENGTH_SHORT).show();
+
+                    } else if (ed3.getText().toString().equals(ed4.getText().toString())) {
+                        String[] email = ed2.getText().toString().split("@");
+                        String psw = ed3.getText().toString();
+                        username = email[0];
+                        String[] data = load(FILE_USER).split(";;");
+                        for (int i = 0; i < data.length; i++) {
+                            if (data[i].split(";")[0].split(":")[1].equals(username)) {
+                                Toast.makeText(getApplicationContext(),
+                                        "Username " + username + "not available!", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                        }
+
+                        Toast.makeText(getApplicationContext(),
+                                "Registered " + username, Toast.LENGTH_SHORT).show();
+                        try {
+                            saveFile(FILE_USER, "username:" + username + ";password:" + psw + ";profileImg:imgSrc;;");
+                            save(FILE_USERIMG, "username:" + username + ";;");
+                            save(FILE_USERVOTE, "username:" + username);
+                            save(FILE_USERVOTEDESCRIPTION, "username:" + username);
+
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        Intent login = new Intent(signup.this, home.class);
+                        login.putExtra("idProfile", username);
+                        startActivity(login); // takes the user to the signup activity
+
+                    }
+                    else {
+                        Toast.makeText(getApplicationContext(), "Wrong Password", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });

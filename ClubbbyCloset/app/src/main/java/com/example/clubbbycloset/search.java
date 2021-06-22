@@ -81,24 +81,27 @@ public class search extends AppCompatActivity {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     String insert = String.valueOf(stopic.getText());
-                    String[] forSearch = load(FILE_TOPICS).split(";;;");
-                    String ts = "";
-                    for( int i =0; i<forSearch.length; i++){
-                        String items = forSearch[i].split(";;")[0];
-                        items.replace(" ", "");
-                        String[] topics= items.split(":");
-                        for(int j = 0 ; j<topics.length; j++){
-                            if (topics[j].contains(insert)){
-                                if(ts.equals("")){
-                                    ts = insert+ ";" + i + ":";
-                                }else {
-                                    ts = ts + i + ":";
+                    if(insert.contains(";") || insert.contains(":")){
+                        Toast.makeText(getApplicationContext(), "Invalid String: ';' and ':' are not allow", Toast.LENGTH_SHORT).show();
+                    }else{
+                        String[] forSearch = load(FILE_TOPICS).split(";;;");
+                        String ts = "";
+                        for( int i =0; i<forSearch.length; i++){
+                            String items = forSearch[i].split(";;")[0];
+                            items.replace(" ", "");
+                            String[] topics= items.split(":");
+                            for(int j = 0 ; j<topics.length; j++){
+                                if (topics[j].contains(insert)){
+                                    if(ts.equals("")){
+                                        ts = insert+ ";" + i + ":";
+                                    }else {
+                                        ts = ts + i + ":";
+                                    }
                                 }
                             }
                         }
+                        switchActivity(ts);
                     }
-                    Toast.makeText(search.this,"You Clicked : " + ts, Toast.LENGTH_SHORT).show();
-                    switchActivity(ts);
                 }
                 return false;
             }

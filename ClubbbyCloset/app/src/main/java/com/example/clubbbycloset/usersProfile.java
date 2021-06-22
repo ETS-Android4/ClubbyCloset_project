@@ -202,8 +202,13 @@ public class usersProfile extends AppCompatActivity {
 
     public void setProfileImg(String img){
         profileImg=(ImageView)this.findViewById(R.id.profile_img);
-        int id = getResources().getIdentifier(img,"drawable", "com.example.clubbbycloset");
-        profileImg.setBackgroundResource(id);
+
+        int idS = getResources().getIdentifier(img,"drawable", "com.example.clubbbycloset");
+        Bitmap bm = BitmapFactory.decodeResource(getResources(), idS);
+        //Bitmap resized = Bitmap.createScaledBitmap(bm, 200, 200, false);
+        //Bitmap conv_bm = getRoundedRectBitmap(resized, 200);
+        profileImg.setImageBitmap(bm);
+
     }
 
     private void setVoteBar(String fileUservote, LinearLayout hScroll, String username) throws IOException {
@@ -420,7 +425,6 @@ public class usersProfile extends AppCompatActivity {
             }
         }
     }
-
 
     public void newImg(int requestCode, int resultCode, Intent data){
         if (resultCode == RESULT_OK && null != data) {

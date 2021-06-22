@@ -30,155 +30,155 @@ import java.io.InputStreamReader;
 
 public class MainActivity extends AppCompatActivity {
     private static final String FILE_ALLUSERS = "allUsersData.txt";
-    private String users = "ginger:profilo1;imgSrc:gin3;descrizione:provadescri:provalocation:provaora:provalink;;" +
-            "ginger:profilo1;imgSrc:gin5;descrizione:provadescri:provalocation:provaora:provalink;;" +
-            "ginger:profilo1;imgSrc:gin6;descrizione:provadescri:provalocation:provaora:provalink;;" +
-            "ginger:profilo1;imgSrc:gin7;descrizione:provadescri:provalocation:provaora:provalink;;" +
-            "ginger:profilo1;imgSrc:gin8;descrizione:provadescri:provalocation:provaora:provalink;;" +
-            "ginger:profilo1;imgSrc:gin9;descrizione:provadescri:provalocation:provaora:provalink;;" +
-            "ginger:profilo1;imgSrc:gin10;descrizione:provadescri:provalocation:provaora:provalink;;" +
-            "ginger:profilo1;imgSrc:gin11;descrizione:provadescri:provalocation:provaora:provalink;;" +
-            "ginger:profilo1;imgSrc:gin12;descrizione:provadescri:provalocation:provaora:provalink;;" +
-            "giulia_:profilo2;imgSrc:giu5;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "giulia_:profilo2;imgSrc:giu6;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "giulia_:profilo2;imgSrc:giu7;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "giulia_:profilo2;imgSrc:giu8;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "giulia_:profilo2;imgSrc:giu9;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "giulia_:profilo2;imgSrc:giu10;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "giulia_:profilo2;imgSrc:giu11;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "giulia_:profilo2;imgSrc:giu12;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "giuseppe05:profilo3;imgSrc:peppe1;descrizione:provadescri2:provalocatio2:provaora2:provalink2;;" +
-            "giuseppe05:profilo3;imgSrc:peppe2;descrizione:provadescri2:provalocatio2:provaora2:provalink2;;" +
-            "giuseppe05:profilo3;imgSrc:peppe3;descrizione:provadescri2:provalocatio2:provaora2:provalink2;;" +
-            "giuseppe05:profilo3;imgSrc:peppe4;descrizione:provadescri2:provalocatio2:provaora2:provalink2;;" +
-            "giuseppe05:profilo3;imgSrc:peppe5;descrizione:provadescri2:provalocatio2:provaora2:provalink2;;" +
-            "giuseppe05:profilo3;imgSrc:peppe6;descrizione:provadescri2:provalocatio2:provaora2:provalink2;;" +
-            "giuseppe05:profilo3;imgSrc:peppe7;descrizione:provadescri2:provalocatio2:provaora2:provalink2;;" +
-            "gloria.z:profilo1;imgSrc:glo3;descrizione:provadescri3:provalocatio3:provaora3:provalink3;;" +
-            "gloria.z:profilo1;imgSrc:glo4;descrizione:provadescri3:provalocatio3:provaora3:provalink3;;" +
-            "gloria.z:profilo1;imgSrc:glo5;descrizione:provadescri3:provalocatio3:provaora3:provalink3;;" +
-            "gloria.z:profilo1;imgSrc:glo6;descrizione:provadescri3:provalocatio3:provaora3:provalink3;;" +
-            "gloria.z:profilo1;imgSrc:glo7;descrizione:provadescri3:provalocatio3:provaora3:provalink3;;" +
-            "gloria.z:profilo1;imgSrc:glo8;descrizione:provadescri3:provalocatio3:provaora3:provalink3;;" +
-            "gloria.z:profilo1;imgSrc:glo9;descrizione:provadescri3:provalocatio3:provaora3:provalink3;;" +
-            "manuelito:profilo3;imgSrc:manu5;descrizione:provadescri4:provalocatio4:provaora4:provalink4;;" +
-            "manuelito:profilo3;imgSrc:manu6;descrizione:provadescri4:provalocatio4:provaora4:provalink4;;" +
-            "manuelito:profilo3;imgSrc:manu7;descrizione:provadescri4:provalocatio4:provaora4:provalink4;;" +
-            "manuelito:profilo3;imgSrc:manu8;descrizione:provadescri4:provalocatio4:provaora4:provalink4;;" +
-            "manuelito:profilo3;imgSrc:manu9;descrizione:provadescri4:provalocatio4:provaora4:provalink4;;" +
-            "manuelito:profilo3;imgSrc:manu10;descrizione:provadescri4:provalocatio4:provaora4:provalink4;;" +
-            "manuelito:profilo3;imgSrc:manu11;descrizione:provadescri4:provalocatio4:provaora4:provalink4;;" +
-            "manuelito:profilo3;imgSrc:manu12;descrizione:provadescri4:provalocatio4:provaora4:provalink4;;" +
-            "manuelito:profilo3;imgSrc:manu13;descrizione:provadescri4:provalocatio4:provaora4:provalink4;;" +
-            "willB:profilo3;imgSrc:will3;descrizione:provadescri5:provalocatio5:provaora5:provalink5;;" +
-            "willB:profilo3;imgSrc:will4;descrizione:provadescri5:provalocatio5:provaora5:provalink5;;" +
-            "willB:profilo3;imgSrc:will5;descrizione:provadescri5:provalocatio5:provaora5:provalink5;;" +
-            "willB:profilo3;imgSrc:will6;descrizione:provadescri5:provalocatio5:provaora5:provalink5;;" +
-            "willB:profilo3;imgSrc:will7;descrizione:provadescri5:provalocatio5:provaora5:provalink5;;";
+    private String users = "ginger:gin0;imgSrc:gin3;descrizione:provadescri:provalocation:provaora:provalink;;" +
+            "ginger:gin0;imgSrc:gin5;descrizione:provadescri:provalocation:provaora:provalink;;" +
+            "ginger:gin0;imgSrc:gin6;descrizione:provadescri:provalocation:provaora:provalink;;" +
+            "ginger:gin0;imgSrc:gin7;descrizione:provadescri:provalocation:provaora:provalink;;" +
+            "ginger:gin0;imgSrc:gin8;descrizione:provadescri:provalocation:provaora:provalink;;" +
+            "ginger:gin0;imgSrc:gin9;descrizione:provadescri:provalocation:provaora:provalink;;" +
+            "ginger:gin0;imgSrc:gin10;descrizione:provadescri:provalocation:provaora:provalink;;" +
+            "ginger:gin0;imgSrc:gin11;descrizione:provadescri:provalocation:provaora:provalink;;" +
+            "ginger:gin0;imgSrc:gin12;descrizione:provadescri:provalocation:provaora:provalink;;" +
+            "giulia_:giu0;imgSrc:giu5;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "giulia_:giu0;imgSrc:giu6;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "giulia_:giu0;imgSrc:giu7;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "giulia_:giu0;imgSrc:giu8;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "giulia_:giu0;imgSrc:giu9;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "giulia_:giu0;imgSrc:giu10;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "giulia_:giu0;imgSrc:giu11;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "giulia_:giu0;imgSrc:giu12;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "giuseppe05:peppe0;imgSrc:peppe1;descrizione:provadescri2:provalocatio2:provaora2:provalink2;;" +
+            "giuseppe05:peppe0;imgSrc:peppe2;descrizione:provadescri2:provalocatio2:provaora2:provalink2;;" +
+            "giuseppe05:peppe0;imgSrc:peppe3;descrizione:provadescri2:provalocatio2:provaora2:provalink2;;" +
+            "giuseppe05:peppe0;imgSrc:peppe4;descrizione:provadescri2:provalocatio2:provaora2:provalink2;;" +
+            "giuseppe05:peppe0;imgSrc:peppe5;descrizione:provadescri2:provalocatio2:provaora2:provalink2;;" +
+            "giuseppe05:peppe0;imgSrc:peppe6;descrizione:provadescri2:provalocatio2:provaora2:provalink2;;" +
+            "giuseppe05:peppe0;imgSrc:peppe7;descrizione:provadescri2:provalocatio2:provaora2:provalink2;;" +
+            "gloria.z:glo0;imgSrc:glo3;descrizione:provadescri3:provalocatio3:provaora3:provalink3;;" +
+            "gloria.z:glo0;imgSrc:glo4;descrizione:provadescri3:provalocatio3:provaora3:provalink3;;" +
+            "gloria.z:glo0;imgSrc:glo5;descrizione:provadescri3:provalocatio3:provaora3:provalink3;;" +
+            "gloria.z:glo0;imgSrc:glo6;descrizione:provadescri3:provalocatio3:provaora3:provalink3;;" +
+            "gloria.z:glo0;imgSrc:glo7;descrizione:provadescri3:provalocatio3:provaora3:provalink3;;" +
+            "gloria.z:glo0;imgSrc:glo8;descrizione:provadescri3:provalocatio3:provaora3:provalink3;;" +
+            "gloria.z:glo0;imgSrc:glo9;descrizione:provadescri3:provalocatio3:provaora3:provalink3;;" +
+            "manuelito:manu0;imgSrc:manu5;descrizione:provadescri4:provalocatio4:provaora4:provalink4;;" +
+            "manuelito:manu0;imgSrc:manu6;descrizione:provadescri4:provalocatio4:provaora4:provalink4;;" +
+            "manuelito:manu0;imgSrc:manu7;descrizione:provadescri4:provalocatio4:provaora4:provalink4;;" +
+            "manuelito:manu0;imgSrc:manu8;descrizione:provadescri4:provalocatio4:provaora4:provalink4;;" +
+            "manuelito:manu0;imgSrc:manu9;descrizione:provadescri4:provalocatio4:provaora4:provalink4;;" +
+            "manuelito:manu0;imgSrc:manu10;descrizione:provadescri4:provalocatio4:provaora4:provalink4;;" +
+            "manuelito:manu0;imgSrc:manu11;descrizione:provadescri4:provalocatio4:provaora4:provalink4;;" +
+            "manuelito:manu0;imgSrc:manu12;descrizione:provadescri4:provalocatio4:provaora4:provalink4;;" +
+            "manuelito:manu0;imgSrc:manu13;descrizione:provadescri4:provalocatio4:provaora4:provalink4;;" +
+            "willB:will0;imgSrc:will3;descrizione:provadescri5:provalocatio5:provaora5:provalink5;;" +
+            "willB:will0;imgSrc:will4;descrizione:provadescri5:provalocatio5:provaora5:provalink5;;" +
+            "willB:will0;imgSrc:will5;descrizione:provadescri5:provalocatio5:provaora5:provalink5;;" +
+            "willB:will0;imgSrc:will6;descrizione:provadescri5:provalocatio5:provaora5:provalink5;;" +
+            "willB:will0;imgSrc:will7;descrizione:provadescri5:provalocatio5:provaora5:provalink5;;";
 
     private static final String FILE_TOPICS = "topics.txt";
     private String topics = "topic:Special Occasion:evento:wedding:party:pool:birthday:cerimony:graduation;;" +
-            "gloria.z:profilo1;imgSrc:glo5;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "giuseppe05:profilo3;imgSrc:peppe4;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "giuseppe05:profilo3;imgSrc:peppe3;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "giulia_:profilo2;imgSrc:giu10;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "giulia_:profilo2;imgSrc:giu9;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "ginger:profilo1;imgSrc:gin6;descrizione:provadescri1:provalocatio1:provaora1:provalink1" +
+            "gloria.z:glo0;imgSrc:glo5;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "giuseppe05:peppe0;imgSrc:peppe4;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "giuseppe05:peppe0;imgSrc:peppe3;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "giulia_:giu0;imgSrc:giu10;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "giulia_:giu0;imgSrc:giu9;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "ginger:gin0;imgSrc:gin6;descrizione:provadescri1:provalocatio1:provaora1:provalink1" +
 
             ";;;topic:Sport Vibes:sport:run:corsa:passeggiata:workout:walking:friends:gym;;" +
-            "willB:profilo3;imgSrc:will7;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "manuelito:profilo3;imgSrc:manu13;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "manuelito:profilo3;imgSrc:manu11;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "manuelito:profilo3;imgSrc:manu10;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "manuelito:profilo3;imgSrc:manu5;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "gloria.z:profilo1;imgSrc:glo9;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "giuseppe05:profilo3;imgSrc:peppe6;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "giulia_:profilo2;imgSrc:giu12;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "ginger:profilo1;imgSrc:gin3;descrizione:provadescri1:provalocatio1:provaora1:provalink1" +
+            "willB:will0;imgSrc:will7;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "manuelito:manu0;imgSrc:manu13;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "manuelito:manu0;imgSrc:manu11;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "manuelito:manu0;imgSrc:manu10;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "manuelito:manu0;imgSrc:manu5;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "gloria.z:glo0;imgSrc:glo9;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "giuseppe05:peppe0;imgSrc:peppe6;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "giulia_:giu0;imgSrc:giu12;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "ginger:gin0;imgSrc:gin3;descrizione:provadescri1:provalocatio1:provaora1:provalink1" +
 
             ";;;topic:Happy Hour:ape:aperitivo:friends:appointment:cocktail:beer:party;;" +
-            "willB:profilo3;imgSrc:will3;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "manuelito:profilo3;imgSrc:manu7;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "manuelito:profilo3;imgSrc:manu6;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "gloria.z:profilo1;imgSrc:glo6;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "gloria.z:profilo1;imgSrc:glo3;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "giuseppe05:profilo3;imgSrc:peppe5;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "giuseppe05:profilo3;imgSrc:peppe1;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "giulia_:profilo2;imgSrc:giu11;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "giulia_:profilo2;imgSrc:giu9;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "giulia_:profilo2;imgSrc:giu6;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "ginger:profilo1;imgSrc:gin10;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "ginger:profilo1;imgSrc:gin11;descrizione:provadescri1:provalocatio1:provaora1:provalink1" +
+            "willB:will0;imgSrc:will3;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "manuelito:manu0;imgSrc:manu7;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "manuelito:manu0;imgSrc:manu6;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "gloria.z:glo0;imgSrc:glo6;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "gloria.z:glo0;imgSrc:glo3;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "giuseppe05:peppe0;imgSrc:peppe5;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "giuseppe05:peppe0;imgSrc:peppe1;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "giulia_:giu0;imgSrc:giu11;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "giulia_:giu0;imgSrc:giu9;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "giulia_:giu0;imgSrc:giu6;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "ginger:gin0;imgSrc:gin10;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "ginger:gin0;imgSrc:gin11;descrizione:provadescri1:provalocatio1:provaora1:provalink1" +
 
             ";;;topic:Back to school:scuola:liceo:college:university:library:caffee;;" +
-            "ginger:profilo1;imgSrc:gin12;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "manuelito:profilo3;imgSrc:manu8;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "manuelito:profilo3;imgSrc:manu6;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "gloria.z:profilo1;imgSrc:glo7;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "gloria.z:profilo1;imgSrc:glo4;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "willB:profilo3;imgSrc:will3;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "giuseppe05:profilo3;imgSrc:peppe6;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "giulia_:profilo2;imgSrc:giu12;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "giulia_:profilo2;imgSrc:giu7;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "giulia_:profilo2;imgSrc:giu8;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "giulia_:profilo2;imgSrc:giu5;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "ginger:profilo1;imgSrc:gin8;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "ginger:profilo1;imgSrc:gin7;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "ginger:profilo1;imgSrc:gin5;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "ginger:profilo1;imgSrc:gin3;descrizione:provadescri1:provalocatio1:provaora1:provalink1" +
+            "ginger:gin0;imgSrc:gin12;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "manuelito:manu0;imgSrc:manu8;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "manuelito:manu0;imgSrc:manu6;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "gloria.z:glo0;imgSrc:glo7;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "gloria.z:glo0;imgSrc:glo4;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "willB:will0;imgSrc:will3;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "giuseppe05:peppe0;imgSrc:peppe6;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "giulia_:giu0;imgSrc:giu12;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "giulia_:giu0;imgSrc:giu7;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "giulia_:giu0;imgSrc:giu8;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "giulia_:giu0;imgSrc:giu5;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "ginger:gin0;imgSrc:gin8;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "ginger:gin0;imgSrc:gin7;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "ginger:gin0;imgSrc:gin5;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "ginger:gin0;imgSrc:gin3;descrizione:provadescri1:provalocatio1:provaora1:provalink1" +
 
             ";;;topic:Dinner Night:appointment:friends:restourant:party:night;;" +
-            "gloria.z:profilo1;imgSrc:glo8;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "giuseppe05:profilo3;imgSrc:peppe3;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "giuseppe05:profilo3;imgSrc:peppe2;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "willB:profilo3;imgSrc:will7;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "giulia_:profilo2;imgSrc:giu10;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "giulia_:profilo2;imgSrc:giu6;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "ginger:profilo1;imgSrc:gin11;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "ginger:profilo1;imgSrc:gin10;descrizione:provadescri1:provalocatio1:provaora1:provalink1" +
+            "gloria.z:glo0;imgSrc:glo8;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "giuseppe05:peppe0;imgSrc:peppe3;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "giuseppe05:peppe0;imgSrc:peppe2;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "willB:will0;imgSrc:will7;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "giulia_:giu0;imgSrc:giu10;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "giulia_:giu0;imgSrc:giu6;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "ginger:gin0;imgSrc:gin11;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "ginger:gin0;imgSrc:gin10;descrizione:provadescri1:provalocatio1:provaora1:provalink1" +
 
 
             ";;;topic:Working time:work:formal:job:office:interview:smart;;" +
-            "manuelito:profilo3;imgSrc:manu8;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "gloria.z:profilo1;imgSrc:glo7;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "gloria.z:profilo1;imgSrc:glo4;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "gloria.z:profilo1;imgSrc:glo3;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "giuseppe05:profilo3;imgSrc:peppe5;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "giuseppe05:profilo3;imgSrc:peppe2;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "giuseppe05:profilo3;imgSrc:peppe1;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "giulia_:profilo2;imgSrc:giu11;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "giulia_:profilo2;imgSrc:giu7;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "giulia_:profilo2;imgSrc:giu8;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "ginger:profilo1;imgSrc:gin12;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "ginger:profilo1;imgSrc:gin10;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "ginger:profilo1;imgSrc:gin6;descrizione:provadescri1:provalocatio1:provaora1:provalink1" +
+            "manuelito:manu0;imgSrc:manu8;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "gloria.z:glo0;imgSrc:glo7;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "gloria.z:glo0;imgSrc:glo4;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "gloria.z:glo0;imgSrc:glo3;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "giuseppe05:peppe0;imgSrc:peppe5;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "giuseppe05:peppe0;imgSrc:peppe2;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "giuseppe05:peppe0;imgSrc:peppe1;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "giulia_:giu0;imgSrc:giu11;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "giulia_:giu0;imgSrc:giu7;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "giulia_:giu0;imgSrc:giu8;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "ginger:gin0;imgSrc:gin12;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "ginger:gin0;imgSrc:gin10;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "ginger:gin0;imgSrc:gin6;descrizione:provadescri1:provalocatio1:provaora1:provalink1" +
 
             ";;;topic:On journay:sportivo:vacation:trip:sea:lake:mountain:friends:family;;"+
-            "giuseppe05:profilo3;imgSrc:peppe6;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "giuseppe05:profilo3;imgSrc:peppe5;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "giuseppe05:profilo3;imgSrc:peppe1;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "gloria.z:profilo1;imgSrc:glo9;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "gloria.z:profilo1;imgSrc:glo6;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "gloria.z:profilo1;imgSrc:glo4;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "willB:profilo3;imgSrc:will3;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "manuelito:profilo3;imgSrc:manu7;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "giulia_:profilo2;imgSrc:giu12;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "giulia_:profilo2;imgSrc:giu8;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "giulia_:profilo2;imgSrc:giu7;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "giulia_:profilo2;imgSrc:giu5;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "ginger:profilo1;imgSrc:gin12;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "ginger:profilo1;imgSrc:gin7;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "ginger:profilo1;imgSrc:gin5;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "ginger:profilo1;imgSrc:gin3;descrizione:provadescri1:provalocatio1:provaora1:provalink1" +
+            "giuseppe05:peppe0;imgSrc:peppe6;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "giuseppe05:peppe0;imgSrc:peppe5;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "giuseppe05:peppe0;imgSrc:peppe1;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "gloria.z:glo0;imgSrc:glo9;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "gloria.z:glo0;imgSrc:glo6;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "gloria.z:glo0;imgSrc:glo4;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "willB:will0;imgSrc:will3;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "manuelito:manu0;imgSrc:manu7;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "giulia_:giu0;imgSrc:giu12;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "giulia_:giu0;imgSrc:giu8;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "giulia_:giu0;imgSrc:giu7;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "giulia_:giu0;imgSrc:giu5;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "ginger:gin0;imgSrc:gin12;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "ginger:gin0;imgSrc:gin7;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "ginger:gin0;imgSrc:gin5;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "ginger:gin0;imgSrc:gin3;descrizione:provadescri1:provalocatio1:provaora1:provalink1" +
 
             ";;;topic:Summertime:bikini:beach:sea:surf:friends:family:sun:sunny;;"+
-            "willB:profilo3;imgSrc:will5;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "willB:profilo3;imgSrc:will6;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "manuelito:profilo3;imgSrc:manu2;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "giulia_:profilo2;imgSrc:giu10;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "giulia_:profilo2;imgSrc:giu9;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "ginger:profilo1;imgSrc:gin11;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "ginger:profilo1;imgSrc:gin9;descrizione:provadescri1:provalocatio1:provaora1:provalink1" ;
+            "willB:will0;imgSrc:will5;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "willB:will0;imgSrc:will6;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "manuelito:manu0;imgSrc:manu2;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "giulia_:giu0;imgSrc:giu10;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "giulia_:giu0;imgSrc:giu9;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "ginger:gin0;imgSrc:gin11;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "ginger:gin0;imgSrc:gin9;descrizione:provadescri1:provalocatio1:provaora1:provalink1" ;
 
     private  static final String FILE_ALLVOTE = "allVote.txt";
     private String votes = "username:ginger;voteSrc:gin1:gin2;description:provasedcrizione:provalovation:provaorario;vote:0:0;;" +
@@ -211,7 +211,7 @@ public class MainActivity extends AppCompatActivity {
         show_hide_password = (CheckBox) this.findViewById(R.id.show_hide_password);
 
         try {
-            saveFile(users, FILE_ALLUSERS);
+            save(users, FILE_ALLUSERS);
             save(topics, FILE_TOPICS);
             saveFile(votes, FILE_ALLVOTE);
         } catch (IOException e) {

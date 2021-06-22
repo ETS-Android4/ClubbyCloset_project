@@ -158,6 +158,7 @@ public class vote extends AppCompatActivity {
             imgLeft = (ImageView) view.findViewById(R.id.left1);
             imgRigth = (ImageView) view.findViewById(R.id.right1);
 
+
             if(imgSrc[1].contains("storage")){
                 Bitmap bml = BitmapFactory.decodeFile(imgSrc[1]);
                 Bitmap bmr = BitmapFactory.decodeFile(imgSrc[2]);
@@ -208,33 +209,45 @@ public class vote extends AppCompatActivity {
             LinearLayout[] vbars = {lbar,rbar};
 
             int finalI = i;
-            imgLeft.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    saveVote(fileAllvote, finalI, 0);
+            if (! username.equals(id) ){
+                imgRigth.setClickable(true);
+                imgLeft.setClickable(true);
 
-                    String[] res = load(fileAllvote).split(";;");
-                    String[] r = res[finalI].split(";");
-                    String[] vote = r[3].split(":");
-                    int[] vot = {Integer.parseInt(vote[1]),Integer.parseInt(vote[2])};
-                    setVoteBar(vot[0], vot[1], vtxt,vbars);
-                }
-            });
-            imgRigth.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    saveVote(fileAllvote, finalI, 1);
+                imgLeft.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        saveVote(fileAllvote, finalI, 0);
 
-                    String[] res = load(fileAllvote).split(";;");
-                    String[] r = res[finalI].split(";");
-                    String[] vote = r[3].split(":");
-                    int[] vot = {Integer.parseInt(vote[1]),Integer.parseInt(vote[2])};
-                    setVoteBar(vot[0], vot[1], vtxt,vbars);
-                }
-            });
+                        String[] res = load(fileAllvote).split(";;");
+                        String[] r = res[finalI].split(";");
+                        String[] vote = r[3].split(":");
+                        int[] vot = {Integer.parseInt(vote[1]), Integer.parseInt(vote[2])};
+                        setVoteBar(vot[0], vot[1], vtxt, vbars);
+                        notClick(imgLeft,imgRigth);
+                    }
+                });
+                imgRigth.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        saveVote(fileAllvote, finalI, 1);
 
+                        String[] res = load(fileAllvote).split(";;");
+                        String[] r = res[finalI].split(";");
+                        String[] vote = r[3].split(":");
+                        int[] vot = {Integer.parseInt(vote[1]), Integer.parseInt(vote[2])};
+                        setVoteBar(vot[0], vot[1], vtxt, vbars);
+                        notClick(imgLeft,imgRigth);
+                    }
+                });
+            }
             scrollView.addView(view);
         }
+    }
+
+    public void notClick(ImageView r, ImageView l){
+        Toast.makeText(vote.this,"in function " , Toast.LENGTH_SHORT).show();
+        r.setClickable(false);
+        l.setClickable(false);
     }
 
     public void setVoteBar(int lvote, int rvote, TextView[] vtxt, LinearLayout[] vbars){

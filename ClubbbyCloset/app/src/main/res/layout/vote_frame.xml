@@ -43,14 +43,12 @@
                     android:id="@+id/left1"
                     android:layout_width="200dp"
                     android:layout_height="340dp"
-                    android:clickable="true"
                     />
 
                 <ImageView
                     android:id="@+id/right1"
                     android:layout_width="200dp"
                     android:layout_height="340dp"
-                    android:clickable="true"
                     />
             </TableRow>
             <LinearLayout>

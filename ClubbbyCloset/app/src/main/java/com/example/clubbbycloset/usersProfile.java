@@ -340,42 +340,39 @@ public class usersProfile extends AppCompatActivity {
 
                     TextView edesc, elocation, etime, elink;
 
-                    edesc = (TextView)lview.findViewById(R.id.edesc);
+                    edesc = (TextView) lview.findViewById(R.id.edesc);
                     edesc.setText(new String(Character.toChars(0x1F4F7)));
 
-                    elocation = (TextView)lview.findViewById(R.id.elocation);
+                    elocation = (TextView) lview.findViewById(R.id.elocation);
                     elocation.setText(new String(Character.toChars(0x1F4CD)));
 
-                    etime = (TextView)lview.findViewById(R.id.etime);
+                    etime = (TextView) lview.findViewById(R.id.etime);
                     etime.setText(new String(Character.toChars(0x1F552)));
 
-                    elink = (TextView)lview.findViewById(R.id.elink);
+                    elink = (TextView) lview.findViewById(R.id.elink);
                     elink.setText(new String(Character.toChars(0x1F517)));
 
                     TextView description = (TextView) lview.findViewById(R.id.description);
                     TextView location = (TextView) lview.findViewById(R.id.location);
                     TextView time = (TextView) lview.findViewById(R.id.time);
                     TextView link = (TextView) lview.findViewById(R.id.link);
-                    TextView[] arr ={description,location,time,link};
-                    for(int k=1; k<arr.length; k++){
-                        arr[k-1].setText(descSrc[k]);
-                    }
-                    newi.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Intent profile = new Intent(usersProfile.this, usersProfile.class);
-                            profile.putExtra("type", "0");
-                            profile.putExtra("user", username);
-                            profile.putExtra("idProfile", id);
-                            startActivity(profile); // takes the user to the signup activity
+                    TextView[] arr = {description, location, time, link};
+                    for (int k = 1; k < descSrc.length; k++) {
+                        arr[k - 1].setText(descSrc[k]);
+                        if (k == 4 && descSrc[k].contains("bit.ly")) {
+                            int finalK = k;
+                            arr[k - 1].setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Uri uri = Uri.parse("http://" + descSrc[finalK]); // missing 'http://' will cause crashed
+                                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                                    startActivity(intent);
+                                }
+                            });
                         }
-
-                    });
-
-                    linearLayout.addView(lview);
+                    }
                 }
             }
-
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

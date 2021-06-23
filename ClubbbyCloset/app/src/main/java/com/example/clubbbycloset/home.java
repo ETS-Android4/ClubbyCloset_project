@@ -169,7 +169,8 @@ public class home extends AppCompatActivity {
                         e.printStackTrace();
                     }
 
-                } else {
+                }
+                else {
                     int id = getResources().getIdentifier(imgSrc, "drawable", "com.example.clubbbycloset");
                     //Bitmap bm = BitmapFactory.decodeResource(getResources(), id);
                     //img.setImageBitmap(bm);
@@ -183,7 +184,8 @@ public class home extends AppCompatActivity {
                     Bitmap conv_bm = getRoundedRectBitmap(rotateImage(userProfileImageSrc, resized), 200);
                     userProfileImage.setImageBitmap(conv_bm);
 
-                } else {
+                }
+                else {
                     int id = getResources().getIdentifier(userProfileImageSrc, "drawable", "com.example.clubbbycloset");
                     Bitmap bm = BitmapFactory.decodeResource(getResources(), id);
                     Bitmap resized = Bitmap.createScaledBitmap(bm, 200, 200, false);
@@ -206,13 +208,25 @@ public class home extends AppCompatActivity {
 
 
                 TextView description = (TextView) view.findViewById(R.id.description);
-                description.setText(desc[1]);
                 TextView location = (TextView) view.findViewById(R.id.location);
-                location.setText(desc[2]);
                 TextView time = (TextView) view.findViewById(R.id.time);
-                time.setText(desc[3]);
                 TextView link = (TextView) view.findViewById(R.id.link);
-                link.setText(desc[4]);
+                TextView[] arr ={description,location,time,link};
+                for(int k=1; k<desc.length; k++){
+                    arr[k-1].setText(desc[k]);
+                    if(k==4 && desc[k].contains("bit.ly")){
+                        int finalK = k;
+                        arr[k-1].setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Uri uri = Uri.parse("http://" + desc[finalK]); // missing 'http://' will cause crashed
+                                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                                startActivity(intent);
+                            }
+                        });
+                    }
+                }
+
 
                 TextView user = (TextView) view.findViewById(R.id.username);
                 user.setText(username);

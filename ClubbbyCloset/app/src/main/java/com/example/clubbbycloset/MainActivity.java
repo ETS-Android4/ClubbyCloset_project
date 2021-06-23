@@ -2,9 +2,11 @@ package com.example.clubbbycloset;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputType;
 import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.LinkMovementMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -78,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String FILE_TOPICS = "topics.txt";
     private String topics = "topic:Special Occasion:evento:wedding:party:pool:birthday:cerimony:graduation;;" +
-            "gloria.z:glo0;imgSrc:glo5;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
+            "gloria.z:glo0;imgSrc:glo5;descrizione:provadescri1:provalocatio1:provaora1:bit.ly/2TZXvTV;;" +
             "giuseppe05:peppe0;imgSrc:peppe4;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
             "giuseppe05:peppe0;imgSrc:peppe3;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
             "giulia_:giu0;imgSrc:giu10;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
@@ -202,6 +204,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         b1 = (Button)findViewById(R.id.btnlogin);
         ed1 = (EditText)findViewById(R.id.et_email);
         ed2 = (EditText)findViewById(R.id.et_password);
@@ -212,7 +215,7 @@ public class MainActivity extends AppCompatActivity {
 
         try {
             saveFile(users, FILE_ALLUSERS);
-            saveFile(topics, FILE_TOPICS);
+            save(topics, FILE_TOPICS);
             saveFile(votes, FILE_ALLVOTE);
         } catch (IOException e) {
             e.printStackTrace();

@@ -130,6 +130,7 @@
             android:layout_marginLeft="8dp"
             android:fontFamily="@font/heebo_medium"
             android:textSize="15dp"
+            android:clickable="true"
             />
     </LinearLayout>
     </LinearLayout>

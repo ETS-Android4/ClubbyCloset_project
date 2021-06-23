@@ -205,6 +205,26 @@ public class searchResults extends AppCompatActivity {
                     TextView elink = (TextView)view.findViewById(R.id.elink);
                     elink.setText(new String(Character.toChars(0x1F517)));
 
+                    TextView description = (TextView) view.findViewById(R.id.description);
+                    TextView location = (TextView) view.findViewById(R.id.location);
+                    TextView time = (TextView) view.findViewById(R.id.time);
+                    TextView link = (TextView) view.findViewById(R.id.link);
+                    TextView[] arr ={description,location,time,link};
+                    for(int k=1; k<desc.length; k++){
+                        arr[k-1].setText(desc[k]);
+                        if(k==4 && desc[k].contains("bit.ly")){
+                            int finalK = k;
+                            arr[k-1].setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Uri uri = Uri.parse("http://" + desc[finalK]); // missing 'http://' will cause crashed
+                                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                                    startActivity(intent);
+                                }
+                            });
+                        }
+                    }
+
 
                     ImageView userProfileImage = (ImageView)view.findViewById(R.id.userProfileImg);
                     if (userProfileImageSrc.contains("storage")) {
@@ -225,15 +245,6 @@ public class searchResults extends AppCompatActivity {
                         Bitmap conv_bm = getRoundedRectBitmap(resized, 200);
                         userProfileImage.setImageBitmap(conv_bm);
                     }
-
-                    TextView description = (TextView) view.findViewById(R.id.description);
-                    description.setText(desc[1]);
-                    TextView location = (TextView) view.findViewById(R.id.location);
-                    location.setText(desc[2]);
-                    TextView time = (TextView) view.findViewById(R.id.time);
-                    time.setText(desc[3]);
-                    TextView link = (TextView) view.findViewById(R.id.link);
-                    link.setText(desc[4]);
 
                     scroll.addView(view);
                 }

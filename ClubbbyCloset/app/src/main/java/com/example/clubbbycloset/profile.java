@@ -393,9 +393,20 @@ public class profile extends AppCompatActivity {
                     TextView time = (TextView) lview.findViewById(R.id.time);
                     TextView link = (TextView) lview.findViewById(R.id.link);
                     TextView[] arr ={description,location,time,link};
-                     for(int k=1; k<arr.length; k++){
-                         arr[k-1].setText(descSrc[k]);
-                     }
+                    for(int k=1; k<descSrc.length; k++){
+                        arr[k-1].setText(descSrc[k]);
+                        if(k==4 && descSrc[k].contains("bit.ly")){
+                            int finalK = k;
+                            arr[k-1].setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Uri uri = Uri.parse("http://" + descSrc[finalK]); // missing 'http://' will cause crashed
+                                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                                    startActivity(intent);
+                                }
+                            });
+                        }
+                    }
                     newi.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {

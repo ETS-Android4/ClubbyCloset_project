@@ -56,7 +56,6 @@ public class profile extends AppCompatActivity {
     private static final String FILE_ALLUSERS = "allUsersData.txt";
 
     public static String id;
-    private static String imgId;
 
     private String picturePath = "";
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
@@ -124,7 +123,6 @@ public class profile extends AppCompatActivity {
             gridLayout.setVisibility(View.VISIBLE);
             gridLayout.removeAllViews();
             setPhotosGridLayout(FILE_ALLUSERS, gridLayout);
-            //setPhotosGridLayout(FILE_USERIMG, gridLayout);
         }else if (type.equals("0")){
             linearLayout.setVisibility(View.INVISIBLE);
             gridLayout.setVisibility(View.VISIBLE);
@@ -263,8 +261,9 @@ public class profile extends AppCompatActivity {
 
     private void setVoteBar(String fileUservote, LinearLayout hScroll, String username) throws IOException {
         String[] t =load(fileUservote).split(";;");
+
         for (int i = t.length-1; i>-1; i--) {
-            if (t[i].split(";")[0].split(":")[1].equals(username)) {
+            if (t[i].split(";")[0].split(":")[0].equals(username)) {
                 ImageView vimg = new ImageView(this);
                 String[] s = t[i].split(";")[1].split(":");
                 if (s.length > 2) {
@@ -390,14 +389,13 @@ public class profile extends AppCompatActivity {
                     elink.setText(new String(Character.toChars(0x1F517)));
 
                     TextView description = (TextView) lview.findViewById(R.id.description);
-                    description.setText(descSrc[1]);
                     TextView location = (TextView) lview.findViewById(R.id.location);
-                    location.setText(descSrc[2]);
                     TextView time = (TextView) lview.findViewById(R.id.time);
-                    time.setText(descSrc[3]);
                     TextView link = (TextView) lview.findViewById(R.id.link);
-                    link.setText(descSrc[4]);
-
+                    TextView[] arr ={description,location,time,link};
+                     for(int k=1; k<arr.length; k++){
+                         arr[k-1].setText(descSrc[k]);
+                     }
                     newi.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -496,6 +494,8 @@ public class profile extends AppCompatActivity {
             cursor.moveToFirst();
             int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
             picturePath = cursor.getString(columnIndex);
+
+            Toast.makeText(getApplicationContext(), "source" + picturePath,Toast.LENGTH_SHORT).show();
             try {
                 changeProfileImg(picturePath,FILE_USER);
             } catch (IOException e) {
@@ -576,12 +576,10 @@ public class profile extends AppCompatActivity {
     }
 
     private void loadVoteImg(String picPath, String FILE_NAME) throws IOException {
-        //Toast.makeText(getApplicationContext(), "LETTO  " + load(FILE_NAME),Toast.LENGTH_SHORT).show();
         String t = load(FILE_NAME) + ";voteSrc:" + picPath;
         FileOutputStream fos = null;
         fos = openFileOutput(FILE_NAME, MODE_PRIVATE);
         fos.write(t.getBytes());
-        //Toast.makeText(getApplicationContext(), "Scritto   " + t,Toast.LENGTH_SHORT).show();
         if (fos != null) {
             try {
                 fos.close();
@@ -645,13 +643,12 @@ public class profile extends AppCompatActivity {
         String toAdd ="";
         for (int i = 0; i<t.length; i++){
             if(t[i].split(";")[0].split(":")[1].equals(id)){
-                imgId = picPath;
                toAdd =  toAdd + t[i].split(";")[0] + ";" +t[i].split(";")[1] + ";" + t[i].split(";")[2].split(":")[0] + ":" + picPath + ";;";
             }else{
                 toAdd = toAdd + t[i] + ";;";
             }
         }
-        Toast.makeText(getApplicationContext(), "to addd " + toAdd,Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getApplicationContext(), "to addd " + toAdd,Toast.LENGTH_SHORT).show();
         FileOutputStream fos = null;
         fos = openFileOutput(FILE_NAME, MODE_PRIVATE);
         fos.write(toAdd.getBytes());

@@ -164,7 +164,6 @@ public class MainActivity extends AppCompatActivity {
             "manuelito:manu0;imgSrc:manu7;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
             "giulia_:giu0;imgSrc:giu12;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
             "giulia_:giu0;imgSrc:giu8;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
-            "giulia_:giu0;imgSrc:giu7;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
             "giulia_:giu0;imgSrc:giu5;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
             "ginger:gin0;imgSrc:gin12;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
             "ginger:gin0;imgSrc:gin7;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
@@ -182,14 +181,14 @@ public class MainActivity extends AppCompatActivity {
             "ginger:gin0;imgSrc:gin9;descrizione:provadescri1:provalocatio1:provaora1:provalink1" ;
 
     private  static final String FILE_ALLVOTE = "allVote.txt";
-    private String votes = "username:ginger;voteSrc:gin1:gin2;description:provasedcrizione:provalovation:provaorario;vote:0:0;;" +
-            "username:ginger;voteSrc:gin3:gin4;description:provasedcrizione:provalovation:provaorario;vote:0:0;;" +
-            "username:giulia_;voteSrc:giu1:giu2;description:provasedcrizione1:provalovation1:provaorario1;vote:0:0;;" +
-            "username:giulia_;voteSrc:giu3:giu4;description:provasedcrizione1:provalovation1:provaorario1;vote:0:0;;" +
-            "username:gloria.z;voteSrc:glo1:glo2;description:provasedcrizione2:provalovation2:provaorario2;vote:0:0;;" +
-            "username:manuelito;voteSrc:manu1:manu2;description:provasedcrizione3:provalovation3:provaorario3;vote:0:0;;" +
-            "username:manuelito;voteSrc:manu3:manu4;description:provasedcrizione3:provalovation3:provaorario3;vote:0:0;;" +
-            "username:willB;voteSrc:will1:will2;description:provasedcrizione4:provalovation4:provaorario4;vote:10:3;;" ;
+    private String votes = "ginger:gin0;voteSrc:gin1:gin2;description:provasedcrizione:provalovation:provaorario;vote:0:0;;" +
+            "ginger:gin0;voteSrc:gin3:gin4;description:provasedcrizione:provalovation:provaorario;vote:0:0;;" +
+            "giulia_:giu0;voteSrc:giu1:giu2;description:provasedcrizione1:provalovation1:provaorario1;vote:0:0;;" +
+            "giulia_:giu0;voteSrc:giu3:giu4;description:provasedcrizione1:provalovation1:provaorario1;vote:0:0;;" +
+            "gloria.z:glo0;voteSrc:glo1:glo2;description:provasedcrizione2:provalovation2:provaorario2;vote:0:0;;" +
+            "manuelito:manu0;voteSrc:manu1:manu2;description:provasedcrizione3:provalovation3:provaorario3;vote:0:0;;" +
+            "manuelito:manu0;voteSrc:manu3:manu4;description:provasedcrizione3:provalovation3:provaorario3;vote:0:0;;" +
+            "willB:will0;voteSrc:will1:will2;description:provasedcrizione4:provalovation4:provaorario4;vote:10:3;;" ;
 
     private static final String FILE_USER = "userdata.txt";
     Button b1;

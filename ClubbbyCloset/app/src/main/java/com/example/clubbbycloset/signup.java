@@ -41,6 +41,8 @@ public class signup extends AppCompatActivity {
     private static final String FILE_USERVOTE ="uservote.txt";
     private static final String FILE_USERVOTEDESCRIPTION ="uservotedescription.txt";
 
+    private static final String FILE_ALLUSERS = "allUsersData.txt";
+
     Button b1;
     TextView b2;
     EditText ed2,ed3,ed4;
@@ -77,10 +79,18 @@ public class signup extends AppCompatActivity {
                         String psw = ed3.getText().toString();
                         username = email[0];
                         String[] data = load(FILE_USER).split(";;");
+                        String[] datauser = load(FILE_ALLUSERS).split(";;");
                         for (int i = 0; i < data.length; i++) {
                             if (data[i].split(";")[0].split(":")[1].equals(username)) {
                                 Toast.makeText(getApplicationContext(),
-                                        "Username " + username + "not available!", Toast.LENGTH_SHORT).show();
+                                        "Username " + username + " not available!", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                        }
+                        for (int i = 0; i < datauser.length; i++) {
+                            if (datauser[i].split(";")[0].split(":")[0].equals(username)) {
+                                Toast.makeText(getApplicationContext(),
+                                        "Username " + username + " not available!", Toast.LENGTH_SHORT).show();
                                 return;
                             }
                         }

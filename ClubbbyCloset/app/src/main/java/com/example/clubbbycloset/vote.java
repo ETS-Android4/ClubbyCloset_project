@@ -12,8 +12,13 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
 import android.net.Uri;
@@ -150,7 +155,8 @@ public class vote extends AppCompatActivity {
         LayoutInflater inflater = (LayoutInflater)getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         for(int i=0;i<res.length;i++){
             String[] r = res[i].split(";");
-            String username = r[0].split(":")[1];
+            String username = r[0].split(":")[0];
+            String userProfileImageSrc = r[0].split(":")[1];
             String[] imgSrc = r[1].split((":"));
             String[] desc = r[2].split(":");
             String[] vote = r[3].split(":");
@@ -166,7 +172,6 @@ public class vote extends AppCompatActivity {
                 Bitmap bmr = BitmapFactory.decodeFile(imgSrc[2]);
                 Bitmap rotatedBitmap = null;
                 try {
-                    //Toast.makeText(vote.this,"String " + imgSrc[1] + "         " + imgSrc[2], Toast.LENGTH_SHORT).show();
                     rotatedBitmap = rotateImage(imgSrc[1], bml);
                     imgLeft.setImageBitmap(rotatedBitmap);
                     rotatedBitmap = rotateImage(imgSrc[2], bmr);
@@ -180,6 +185,27 @@ public class vote extends AppCompatActivity {
                 imgLeft.setBackgroundResource(id);
                 id = getResources().getIdentifier(imgSrc[2],"drawable", "com.example.clubbbycloset");
                 imgRigth.setBackgroundResource(id);
+            }
+
+            ImageView userProfileImage = (ImageView)view.findViewById(R.id.userProfileImg);
+            if (userProfileImageSrc.contains("storage")) {
+
+                Bitmap bml = BitmapFactory.decodeFile(userProfileImageSrc);
+                Bitmap resized = Bitmap.createScaledBitmap(bml, 200, 200, false);
+                Bitmap conv_bm = null;
+                try {
+                    conv_bm = conv_bm = getRoundedRectBitmap(rotateImage(userProfileImageSrc, resized), 200);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                ;
+                userProfileImage.setImageBitmap(conv_bm);
+            } else {
+                int id = getResources().getIdentifier(userProfileImageSrc, "drawable", "com.example.clubbbycloset");
+                Bitmap bm = BitmapFactory.decodeResource(getResources(), id);
+                Bitmap resized = Bitmap.createScaledBitmap(bm, 200, 200, false);
+                Bitmap conv_bm = getRoundedRectBitmap(resized, 200);
+                userProfileImage.setImageBitmap(conv_bm);
             }
 
             edesc = (TextView)view.findViewById(R.id.edesc);
@@ -196,11 +222,10 @@ public class vote extends AppCompatActivity {
             tvdescription = (TextView)view.findViewById(R.id.description);
             tvlocation = (TextView)view.findViewById(R.id.location);
             tvtime = (TextView)view.findViewById(R.id.time);
-            tvdescription.setText(desc[1]);
-            tvlocation.setText(desc[2]);
-            tvtime.setText(desc[3]);
-
-
+            TextView[] arr= {tvdescription,tvlocation,tvtime};
+            for(int k= 1 ; k<desc.length ; k++){
+                arr[k-1].setText(desc[k]);
+            }
             tvusername = (TextView)view.findViewById(R.id.username1);
             tvusername.setText(username);
 
@@ -511,6 +536,28 @@ public class vote extends AppCompatActivity {
         matrix.postRotate(angle);
         return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(),
                 matrix, true);
+    }
+
+    public static Bitmap getRoundedRectBitmap(Bitmap bitmap, int pixels) {
+        Bitmap result = null;
+        try {
+            result = Bitmap.createBitmap(200, 200, Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(result);
+
+            int color = 0xff424242;
+            Paint paint = new Paint();
+            Rect rect = new Rect(0, 0, 200, 200);
+            paint.setAntiAlias(true);
+            canvas.drawARGB(0, 0, 0, 0);
+            paint.setColor(color);
+            canvas.drawCircle(100, 100, 100, paint);
+            paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+            canvas.drawBitmap(bitmap, rect, rect, paint);
+
+        } catch (NullPointerException e) {
+        } catch (OutOfMemoryError o) {
+        }
+        return result;
     }
 
 }

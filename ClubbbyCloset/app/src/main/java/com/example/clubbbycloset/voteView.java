@@ -96,11 +96,17 @@ public class voteView extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 try{
+                    String profileImg ="";
                     String toAdd = ";description:" + edDesc.getText().toString() + ":" + edLoc.getText().toString() + ":" + edTime.getText().toString();
-                    //save(FILE_USERVOTEDESCRIPTION, load(FILE_USERVOTEDESCRIPTION) + toAdd + "/0:0");
+                    String[] userData = load(FILE_USER).split(";;");
+                    for (int i=0; i<userData.length; i++){
+                        if(userData[i].split(";")[0].split(":")[1].equals(id)){
+                            profileImg = userData[i].split(";")[2].split(":")[1];
+                        }
+                    }
 
                     String[] res = load(FILE_USERVOTE).split(";");
-                    String toAddAllVote = load(FILE_ALLVOTE) + "username:"+ id + ";img:" + res[res.length-1].split(":")[1] + ":" +  res[res.length-1].split(":")[2] +  toAdd + ";vote:0:0;;";
+                    String toAddAllVote = load(FILE_ALLVOTE) + id + ":" + profileImg + ";voteSrc:" + res[res.length-1].split(":")[1] + ":" +  res[res.length-1].split(":")[2] +  toAdd + ";vote:0:0;;";
                     save(FILE_ALLVOTE , toAddAllVote);
 
                 }catch (IOException e) {
@@ -108,6 +114,7 @@ public class voteView extends AppCompatActivity {
                 }
                 Intent profile = new Intent(voteView.this, profile.class);
                 profile.putExtra("idProfile", id);
+                profile.putExtra("type", "0");
                 startActivity(profile);
             }
         });

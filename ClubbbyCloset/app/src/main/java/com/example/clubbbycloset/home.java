@@ -12,7 +12,12 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
@@ -64,7 +69,11 @@ public class home extends AppCompatActivity {
         id = Extra.getString("idProfile");
 
         scroll = (LinearLayout) this.findViewById(R.id.homeScroll);
-        setHomeLayout(FILE_ALLUSERS,scroll);
+        try {
+            setHomeLayout(FILE_ALLUSERS,scroll);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
 
         bhome = (ImageView) this.findViewById(R.id.home);
@@ -132,9 +141,9 @@ public class home extends AppCompatActivity {
 
     }
 
-    private void setHomeLayout(String fileAllusers, LinearLayout scroll) {
+    private void setHomeLayout(String fileAllusers, LinearLayout scroll) throws IOException {
         String[] res = load(fileAllusers).split(";;");
-        Integer n = new Random().nextInt(res.length);
+        Integer n = new Random().nextInt((res.length - (res.length/2))-1) + (res.length/2);
 
         LayoutInflater inflater = (LayoutInflater) getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         for (int i = 0; i < n; i++) {
@@ -142,6 +151,7 @@ public class home extends AppCompatActivity {
             String[] r = res[j].split(";");
             if (r.length == 3) {
                 String username = r[0].split(":")[0];
+                String userProfileImageSrc = r[0].split(":")[1];
                 String imgSrc = r[1].split(":")[1];
                 String[] desc = r[2].split(":");
 
@@ -166,6 +176,22 @@ public class home extends AppCompatActivity {
                     //img.setImageBitmap(bm);
                     img.setImageResource(id);
                 }
+
+                ImageView userProfileImage = (ImageView)view.findViewById(R.id.userProfileImg);
+                if (userProfileImageSrc.contains("storage")) {
+                    Bitmap bml = BitmapFactory.decodeFile(userProfileImageSrc);
+                    Bitmap resized = Bitmap.createScaledBitmap(bml, 200, 200, false);
+                    Bitmap conv_bm = getRoundedRectBitmap(rotateImage(userProfileImageSrc, resized), 200);
+                    userProfileImage.setImageBitmap(conv_bm);
+
+                } else {
+                    int id = getResources().getIdentifier(userProfileImageSrc, "drawable", "com.example.clubbbycloset");
+                    Bitmap bm = BitmapFactory.decodeResource(getResources(), id);
+                    Bitmap resized = Bitmap.createScaledBitmap(bm, 200, 200, false);
+                    Bitmap conv_bm = getRoundedRectBitmap(resized, 200);
+                    userProfileImage.setImageBitmap(conv_bm);
+                }
+
 
                 edesc = (TextView)view.findViewById(R.id.edesc);
                 edesc.setText(new String(Character.toChars(0x1F4F7)));
@@ -381,6 +407,28 @@ public class home extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
+    }
+
+    public static Bitmap getRoundedRectBitmap(Bitmap bitmap, int pixels) {
+        Bitmap result = null;
+        try {
+            result = Bitmap.createBitmap(200, 200, Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(result);
+
+            int color = 0xff424242;
+            Paint paint = new Paint();
+            Rect rect = new Rect(0, 0, 200, 200);
+            paint.setAntiAlias(true);
+            canvas.drawARGB(0, 0, 0, 0);
+            paint.setColor(color);
+            canvas.drawCircle(100, 100, 100, paint);
+            paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+            canvas.drawBitmap(bitmap, rect, rect, paint);
+
+        } catch (NullPointerException e) {
+        } catch (OutOfMemoryError o) {
+        }
+        return result;
     }
 
 }

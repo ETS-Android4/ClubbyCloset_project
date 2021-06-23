@@ -13,8 +13,12 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
             >
+            <ImageView
+                android:id="@+id/userProfileImg"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_marginLeft="8dp"></ImageView>
             <TextView
                 android:id="@+id/username"
                 android:visibility="invisible"
@@ -24,6 +28,7 @@
                 android:textColor="@color/purple"
                 android:fontFamily="@font/heebo_medium"
                 android:textSize="18dp"
+                android:layout_gravity="center"
                 />
         </LinearLayout>
         <LinearLayout

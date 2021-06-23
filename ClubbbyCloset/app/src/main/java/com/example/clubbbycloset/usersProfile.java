@@ -214,7 +214,7 @@ public class usersProfile extends AppCompatActivity {
     private void setVoteBar(String fileUservote, LinearLayout hScroll, String username) throws IOException {
         String[] t =load(fileUservote).split(";;");
         for (int i = t.length-1; i>-1; i--) {
-            if (t[i].split(";")[0].split(":")[1].equals(username)) {
+            if (t[i].split(";")[0].split(":")[0].equals(username)) {
                 ImageView vimg = new ImageView(this);
                 String[] s = t[i].split(";")[1].split(":");
                 if (s.length > 2) {
@@ -353,14 +353,13 @@ public class usersProfile extends AppCompatActivity {
                     elink.setText(new String(Character.toChars(0x1F517)));
 
                     TextView description = (TextView) lview.findViewById(R.id.description);
-                    description.setText(descSrc[1]);
                     TextView location = (TextView) lview.findViewById(R.id.location);
-                    location.setText(descSrc[2]);
                     TextView time = (TextView) lview.findViewById(R.id.time);
-                    time.setText(descSrc[3]);
                     TextView link = (TextView) lview.findViewById(R.id.link);
-                    link.setText(descSrc[4]);
-
+                    TextView[] arr ={description,location,time,link};
+                    for(int k=1; k<arr.length; k++){
+                        arr[k-1].setText(descSrc[k]);
+                    }
                     newi.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -495,6 +494,36 @@ public class usersProfile extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
+    }
+
+    public static Bitmap rotateImage(String path, Bitmap source) throws IOException {
+        Float angle = null;
+        ExifInterface ei = new ExifInterface(path);
+        int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+                ExifInterface.ORIENTATION_UNDEFINED);
+
+        switch(orientation) {
+
+            case ExifInterface.ORIENTATION_ROTATE_90:
+                angle = Float.valueOf(90);
+                break;
+
+            case ExifInterface.ORIENTATION_ROTATE_180:
+                angle = Float.valueOf(180);
+                break;
+
+            case ExifInterface.ORIENTATION_ROTATE_270:
+                angle = Float.valueOf(270);
+                break;
+
+            case ExifInterface.ORIENTATION_NORMAL:
+            default:
+                angle = Float.valueOf(0);
+        }
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(),
+                matrix, true);
     }
 
 }

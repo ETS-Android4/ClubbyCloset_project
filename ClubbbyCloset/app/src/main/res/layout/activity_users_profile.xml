@@ -4,17 +4,37 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/purple"
-    tools:context=".home">
-
+    tools:context=".usersProfile">
+    <LinearLayout
+        android:id="@+id/voteBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/TopAppBar"
+        android:background="@color/purple">
+        <HorizontalScrollView
+            android:id="@+id/oldvote"
+            android:layout_height="55dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="6dp"
+            android:layout_width="match_parent">
+            <LinearLayout
+                android:id="@+id/horizScroll"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:background="@color/purple"
+                android:orientation="horizontal"/>
+        </HorizontalScrollView>
+    </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@id/bottomAppBar"
-        app:layout_constraintTop_toBottomOf="@id/voteBar">
+        >
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="540dp"
+            android:layout_height="552dp"
             >
             <LinearLayout
                 android:id="@+id/lf"
@@ -37,25 +57,7 @@
             </LinearLayout>
         </ScrollView>
     </LinearLayout>
-    <LinearLayout
-        android:id="@+id/voteBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/TopAppBar">
-        <HorizontalScrollView
-            android:id="@+id/oldvote"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <LinearLayout
-                android:id="@+id/horizScroll"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="left"
-                android:background="@color/purple"
-                android:orientation="horizontal"/>
-        </HorizontalScrollView>
-    </LinearLayout>
+
     <LinearLayout
         android:id="@+id/TopAppBar"
         android:layout_width="match_parent"

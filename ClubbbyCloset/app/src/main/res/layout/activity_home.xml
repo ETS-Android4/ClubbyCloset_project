@@ -8,9 +8,9 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="610dp"
-        app:layout_constraintBottom_toBottomOf="@id/bottomAppBar"
-        app:layout_constraintTop_toTopOf="@id/TopAppBar">
+        android:layout_height="680dp"
+        app:layout_constraintBottom_toTopOf="@id/bottomAppBar"
+        >
 
         <LinearLayout
             android:id="@+id/homeScroll"

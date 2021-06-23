@@ -2,9 +2,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/addImg"
-        android:title="Add new img" />
+        android:title="New photo" />
     <item
         android:id="@+id/addVote"
-        android:title="Add new vote"/>
+        android:title="New poll"/>
 
 </menu>

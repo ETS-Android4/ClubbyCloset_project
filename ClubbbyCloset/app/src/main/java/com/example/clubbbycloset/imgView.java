@@ -116,30 +116,29 @@ public class imgView extends AppCompatActivity {
 
             });
 
-            badd.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    PopupMenu popup = new PopupMenu(imgView.this, badd);
-                    popup.getMenuInflater().inflate(R.menu.popup_menu, popup.getMenu());
-                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                        public boolean onMenuItemClick(MenuItem item) {
-                            //Toast.makeText(home.this,"You Clicked : " + item.getTitle(), Toast.LENGTH_SHORT).show();
-                            if (item.getTitle().equals("Add new img")){
-                                Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                                startActivityForResult(i, RESULT_LOAD_IMAGE);
-                            } if (item.getTitle().equals("Add new vote")){
-                                Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                                i.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-                                startActivityForResult(i, RESULT_LOAD_VOTE);
-                            }
-                            return true;
+        badd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PopupMenu popup = new PopupMenu(imgView.this, badd);
+                popup.getMenuInflater().inflate(R.menu.popup_menu, popup.getMenu());
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    public boolean onMenuItemClick(MenuItem item) {
+                        if (item.getTitle().equals("New photo")){
+                            Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                            startActivityForResult(i, RESULT_LOAD_IMAGE);
+                        } if (item.getTitle().equals("New poll")){
+                            Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                            i.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                            startActivityForResult(i, RESULT_LOAD_VOTE);
                         }
-                    });
-                    popup.show();//showing popup menu
-                }
-            });
+                        return true;
+                    }
+                });
+                popup.show();//showing popup menu
+            }
+        });
 
-            bsave.setOnClickListener(new View.OnClickListener() {
+        bsave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try{

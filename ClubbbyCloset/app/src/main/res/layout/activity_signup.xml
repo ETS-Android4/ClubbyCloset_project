@@ -74,7 +74,7 @@
         android:layout_weight="1"
         android:text="Show password"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="440dp"
+        android:layout_marginTop="450dp"
         android:textColor="@color/ice"
         android:textSize="14sp" />
 

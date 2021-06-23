@@ -42,7 +42,7 @@ import java.util.ArrayList;
 
 public class vote extends AppCompatActivity {
     ImageView bhome, bsearch, badd, bvote, bprofile, imgLeft, imgRigth;
-    TextView tvusername, tvdescription,tvlocation,tvtime, vleft, vright;
+    TextView tvusername, tvdescription,tvlocation,tvtime, vleft, vright, edesc, elocation, etime;
     LinearLayout lbar,rbar;
     LinearLayout scrollView, voteBarLay;
 
@@ -181,6 +181,16 @@ public class vote extends AppCompatActivity {
                 id = getResources().getIdentifier(imgSrc[2],"drawable", "com.example.clubbbycloset");
                 imgRigth.setBackgroundResource(id);
             }
+
+            edesc = (TextView)view.findViewById(R.id.edesc);
+            edesc.setText(new String(Character.toChars(0x1F4F7)));
+
+            elocation = (TextView)view.findViewById(R.id.elocation);
+            elocation.setText(new String(Character.toChars(0x1F4CD)));
+
+            etime = (TextView)view.findViewById(R.id.etime);
+            etime.setText(new String(Character.toChars(0x1F552)));
+
 
 
             tvdescription = (TextView)view.findViewById(R.id.description);

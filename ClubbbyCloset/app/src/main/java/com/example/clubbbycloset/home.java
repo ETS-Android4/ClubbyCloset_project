@@ -37,6 +37,7 @@ import java.util.Random;
 
 
 public class home extends AppCompatActivity {
+    TextView edesc, elocation, etime, elink;
     ImageView bhome, bsearch, badd, bvote, bprofile;
     LinearLayout scroll;
     public static String id;
@@ -165,6 +166,18 @@ public class home extends AppCompatActivity {
                     //img.setImageBitmap(bm);
                     img.setImageResource(id);
                 }
+
+                edesc = (TextView)view.findViewById(R.id.edesc);
+                edesc.setText(new String(Character.toChars(0x1F4F7)));
+
+                elocation = (TextView)view.findViewById(R.id.elocation);
+                elocation.setText(new String(Character.toChars(0x1F4CD)));
+
+                etime = (TextView)view.findViewById(R.id.etime);
+                etime.setText(new String(Character.toChars(0x1F552)));
+
+                elink = (TextView)view.findViewById(R.id.elink);
+                elink.setText(new String(Character.toChars(0x1F517)));
 
 
                 TextView description = (TextView) view.findViewById(R.id.description);

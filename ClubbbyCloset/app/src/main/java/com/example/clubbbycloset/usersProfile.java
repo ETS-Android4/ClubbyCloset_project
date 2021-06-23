@@ -338,6 +338,20 @@ public class usersProfile extends AppCompatActivity {
                     Bitmap bm = BitmapFactory.decodeResource(getResources(), id);
                     newi.setImageBitmap(bm);
 
+                    TextView edesc, elocation, etime, elink;
+
+                    edesc = (TextView)lview.findViewById(R.id.edesc);
+                    edesc.setText(new String(Character.toChars(0x1F4F7)));
+
+                    elocation = (TextView)lview.findViewById(R.id.elocation);
+                    elocation.setText(new String(Character.toChars(0x1F4CD)));
+
+                    etime = (TextView)lview.findViewById(R.id.etime);
+                    etime.setText(new String(Character.toChars(0x1F552)));
+
+                    elink = (TextView)lview.findViewById(R.id.elink);
+                    elink.setText(new String(Character.toChars(0x1F517)));
+
                     TextView description = (TextView) lview.findViewById(R.id.description);
                     description.setText(descSrc[1]);
                     TextView location = (TextView) lview.findViewById(R.id.location);

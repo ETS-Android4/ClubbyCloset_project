@@ -71,6 +71,8 @@ public class profile extends AppCompatActivity {
     LinearLayout linearLayout, hScroll;
     ScrollView scroll;
 
+    int finalRowIndex;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -309,9 +311,9 @@ public class profile extends AppCompatActivity {
             int columnIndex=0; //cols index to which i add the button
             int rowIndex=0; //row index to which i add the button
             for(int i=0; i < buttons;i++) {
-                int index = 0;
+                int indexDaMandare = 0;
                 if (res[i].split(";")[0].split(":")[0].equals(id)) {
-                    index++;
+                    indexDaMandare++;
                     String imgSrc = res[i].split(";")[1].split(":")[1];
                     View view = inflater.inflate(R.layout.img_frame, null);
                     ImageView newi = (ImageView) view.findViewById(R.id.newImg);
@@ -337,7 +339,7 @@ public class profile extends AppCompatActivity {
                     buttonsForEveryRowAlreadyAddedInTheRow++;
                     columnIndex++;
 
-                    int finalRowIndex = index;
+                    finalRowIndex = indexDaMandare;
                     newi.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {

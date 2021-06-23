@@ -29,6 +29,7 @@ import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,6 +47,8 @@ public class usersProfile extends AppCompatActivity {
     TextView name;
     LinearLayout linearLayout, hScroll;
     GridLayout gridLayout;
+    ScrollView scroll;
+    int finalRowIndex;
     public static String id;
 
     private static final String FILE_ALLUSERS = "allUsersData.txt";
@@ -71,11 +74,18 @@ public class usersProfile extends AppCompatActivity {
         String type = Extra.getString("type");
         id = Extra.getString("idProfile");
 
+        int index = 0;
+        if (type.equals("1")){
+            index = Extra.getInt("position");
+        }
+
         bhome = (ImageView) this.findViewById(R.id.home);
         bsearch = (ImageView) this.findViewById(R.id.search);
         badd = (ImageView) this.findViewById(R.id.add);
         bvote = (ImageView) this.findViewById(R.id.vote);
         bprofile = (ImageView) this.findViewById(R.id.profile);
+
+        scroll = (ScrollView) this.findViewById(R.id.scroll);
 
         bhome.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -161,6 +171,13 @@ public class usersProfile extends AppCompatActivity {
         }else{
             linearLayout.setVisibility(View.VISIBLE);
             gridLayout.setVisibility(View.INVISIBLE);
+            int finalIndex = index;
+            scroll.post(new Runnable() {
+                @Override
+                public void run() {
+                    scroll.scrollTo(0, (finalIndex*2000));//0 is x position
+                }
+            });
             setPhotosLinearLayuout(res, linearLayout, textView);
         }
 
@@ -280,17 +297,17 @@ public class usersProfile extends AppCompatActivity {
             int columnIndex=0; //cols index to which i add the button
             int rowIndex=0; //row index to which i add the button
             for(int i=0; i < buttons;i++) {
+                int indexDaMandare=0;
                 if (res[i].split(";")[0].split(":")[0].equals(username)) {
                     String imgSrc = res[i].split(";")[1].split(":")[1];
                     View view = inflater.inflate(R.layout.img_frame, null);
                     ImageView newi = (ImageView) view.findViewById(R.id.newImg);
 
-                    int id = getResources().getIdentifier(imgSrc, "drawable", "com.example.clubbbycloset");
-                    Bitmap bm = BitmapFactory.decodeResource(getResources(), id);
+                    int ids = getResources().getIdentifier(imgSrc, "drawable", "com.example.clubbbycloset");
+                    Bitmap bm = BitmapFactory.decodeResource(getResources(), ids);
                     Bitmap resized = Bitmap.createScaledBitmap(bm, 550, 600, false);
                     newi.setImageBitmap(resized);
 
-                    /*if numeroBottoniPerRigaInseriti equals numeroBottoniPerRiga i have to put the other buttons in a new row*/
                     if (buttonsForEveryRowAlreadyAddedInTheRow == buttonsForEveryRow) {
                         rowIndex++; //here i increase the row index
                         buttonsForEveryRowAlreadyAddedInTheRow = 0;
@@ -306,7 +323,8 @@ public class usersProfile extends AppCompatActivity {
 
                     buttonsForEveryRowAlreadyAddedInTheRow++;
                     columnIndex++;
-
+                    indexDaMandare ++;
+                    finalRowIndex = indexDaMandare;
                     newi.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -314,6 +332,7 @@ public class usersProfile extends AppCompatActivity {
                             profile.putExtra("user", username);
                             profile.putExtra("type", "1");
                             profile.putExtra("idProfile", id);
+                            profile.putExtra("position", finalRowIndex);
                             startActivity(profile); // takes the user to the signup activity
                         }
 
@@ -334,8 +353,8 @@ public class usersProfile extends AppCompatActivity {
 
                     ImageView newi = (ImageView) lview.findViewById(R.id.foto);
 
-                    int id = getResources().getIdentifier(imgSrc, "drawable", "com.example.clubbbycloset");
-                    Bitmap bm = BitmapFactory.decodeResource(getResources(), id);
+                    int ids = getResources().getIdentifier(imgSrc, "drawable", "com.example.clubbbycloset");
+                    Bitmap bm = BitmapFactory.decodeResource(getResources(), ids);
                     newi.setImageBitmap(bm);
 
                     TextView edesc, elocation, etime, elink;
@@ -371,6 +390,19 @@ public class usersProfile extends AppCompatActivity {
                             });
                         }
                     }
+
+                    newi.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent profile = new Intent(usersProfile.this, profile.class);
+                            profile.putExtra("type", "0");
+                            profile.putExtra("idProfile", id);
+                            startActivity(profile); // takes the user to the signup activity
+                        }
+
+                    });
+
+                    linearLayout.addView(lview);
                 }
             }
     }

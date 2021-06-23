@@ -1,5 +1,7 @@
 package com.example.clubbbycloset;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
@@ -20,6 +22,7 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.media.ExifInterface;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
@@ -59,6 +62,9 @@ public class home extends AppCompatActivity {
     private static String[] PERMISSIONS_STORAGE = {
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE};
+
+    private static final int CAMERA_REQUEST = 1888;
+    private static final int MY_CAMERA_PERMISSION_CODE = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,14 +128,25 @@ public class home extends AppCompatActivity {
                 PopupMenu popup = new PopupMenu(home.this, badd);
                 popup.getMenuInflater().inflate(R.menu.popup_menu, popup.getMenu());
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @RequiresApi(api = Build.VERSION_CODES.M)
                     public boolean onMenuItemClick(MenuItem item) {
                         if (item.getTitle().equals("New photo")){
                             Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                             startActivityForResult(i, RESULT_LOAD_IMAGE);
-                        } if (item.getTitle().equals("New poll")){
+                        }else if (item.getTitle().equals("New poll")){
                             Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                             i.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
                             startActivityForResult(i, RESULT_LOAD_VOTE);
+                        }else if (item.getTitle().equals("Take a picture")){
+                            if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)
+                            {
+                                requestPermissions(new String[]{Manifest.permission.CAMERA}, MY_CAMERA_PERMISSION_CODE);
+                            }
+                            else
+                            {
+                                Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                                startActivityForResult(cameraIntent, CAMERA_REQUEST);
+                            }
                         }
                         return true;
                     }
@@ -219,7 +236,7 @@ public class home extends AppCompatActivity {
                         arr[k-1].setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                Uri uri = Uri.parse("http://" + desc[finalK]); // missing 'http://' will cause crashed
+                                Uri uri = Uri.parse("http://" + desc[finalK].split(" ")[1]); // missing 'http://' will cause crashed
                                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                                 startActivity(intent);
                             }
@@ -304,7 +321,7 @@ public class home extends AppCompatActivity {
             return null;
         }
 
-        //to load img from gallery
+    @RequiresApi(api = Build.VERSION_CODES.M)
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         verifyStoragePermissions(this);
@@ -316,6 +333,35 @@ public class home extends AppCompatActivity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }else if (requestCode == CAMERA_REQUEST ){
+            newCameraImg(requestCode,resultCode,data);
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void newCameraImg(int requestCode, int resultCode, Intent data) {
+        if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK)
+        {
+            Bitmap photo = (Bitmap) data.getExtras().get("data");
+            String imgId = null;
+            try {
+                String[] d = load(FILE_USER).split(";;");
+                for(int i=0; i<d.length; i++){
+                    String[] src = d[i].split(";");
+                    if(src[0].split(":")[1].equals(id)){
+                        imgId = src[2].split(":")[1];
+                    }
+                }
+                save(FILE_ALLUSERS, load(FILE_ALLUSERS) + id + ":" + imgId + ";imgSrc:" +  photo );
+                Intent imgVote = new Intent(home.this, imgView.class);
+                imgVote.putExtra("numb", "0");
+                imgVote.putExtra("idProfile", id);
+                startActivity(imgVote);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            Toast.makeText(getApplicationContext(), "da data  " + photo,Toast.LENGTH_SHORT).show();
+
         }
     }
 
@@ -394,7 +440,25 @@ public class home extends AppCompatActivity {
             cursor.close();
         }
     }
-    //to give the permission for load img
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults){
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == MY_CAMERA_PERMISSION_CODE)
+        {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
+            {
+                Toast.makeText(this, "camera permission granted", Toast.LENGTH_LONG).show();
+                Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(cameraIntent, CAMERA_REQUEST);
+            }
+            else
+            {
+                Toast.makeText(this, "camera permission denied", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
     public static void verifyStoragePermissions(Activity activity) {
         // Check if we have write permission
         int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);

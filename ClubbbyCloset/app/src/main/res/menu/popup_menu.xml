@@ -6,5 +6,9 @@
     <item
         android:id="@+id/addVote"
         android:title="New poll"/>
+    <item
+        android:id="@+id/addCameraPicture"
+        android:title="Take a picture"/>
+
 
 </menu>

@@ -58,9 +58,6 @@ public class home extends AppCompatActivity {
 
     private static final String FILE_USER = "userdata.txt";
     private static final String FILE_USERVOTE ="uservote.txt";
-    private static int RESULT_LOAD_IMAGE = 1;
-    private static int RESULT_LOAD_VOTE = 2;
-    private static int REQUEST_IMAGE_CAPTURE = 3;
 
     private String picturePath = "";
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
@@ -68,7 +65,15 @@ public class home extends AppCompatActivity {
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
+    private static int RESULT_LOAD_IMAGE = 1;
+    private static int RESULT_LOAD_VOTE = 2;
+    private static int REQUEST_IMAGE_CAPTURE = 3;
+    private static int REQUEST_VOTE_IMAGE_CAPTURE = 4;
     String currentPhotoPath;
+    String currentVotePhotoPath1;
+    String currentVotePhotoPath2;
+
+    int n;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,14 +139,16 @@ public class home extends AppCompatActivity {
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @RequiresApi(api = Build.VERSION_CODES.M)
                     public boolean onMenuItemClick(MenuItem item) {
-                        if (item.getTitle().equals("New photo")){
+                        if (item.getTitle().equals("Add photo from gallery")){
                             Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                             startActivityForResult(i, RESULT_LOAD_IMAGE);
-                        }else if (item.getTitle().equals("New poll")){
+                        }
+                        else if (item.getTitle().equals("Add photos from gallery")){
                             Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                             i.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
                             startActivityForResult(i, RESULT_LOAD_VOTE);
-                        }else if (item.getTitle().equals("Take a picture")){
+                        }
+                        else if (item.getTitle().equals("Take a picture")){
                             Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                             // Ensure that there's a camera activity to handle the intent
                             if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
@@ -160,13 +167,16 @@ public class home extends AppCompatActivity {
                             }
 
                         }
+                        else if (item.getTitle().equals("Take pictures")){
+                            n=1;
+                            StartActivity();
+                        }
                         return true;
                     }
                 });
                 popup.show();//showing popup menu
             }
         });
-
     }
 
     private void setHomeLayout(String fileAllusers, LinearLayout scroll) throws IOException {
@@ -275,64 +285,6 @@ public class home extends AppCompatActivity {
         }
     }
 
-    public static Bitmap rotateImage(String path, Bitmap source) throws IOException {
-        Float angle = null;
-        ExifInterface ei = new ExifInterface(path);
-        int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
-                ExifInterface.ORIENTATION_UNDEFINED);
-
-        switch(orientation) {
-
-            case ExifInterface.ORIENTATION_ROTATE_90:
-                angle = Float.valueOf(90);
-                break;
-
-            case ExifInterface.ORIENTATION_ROTATE_180:
-                angle = Float.valueOf(180);
-                break;
-
-            case ExifInterface.ORIENTATION_ROTATE_270:
-                angle = Float.valueOf(270);
-                break;
-
-            case ExifInterface.ORIENTATION_NORMAL:
-            default:
-                angle = Float.valueOf(0);
-        }
-        Matrix matrix = new Matrix();
-        matrix.postRotate(angle);
-        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(),
-                matrix, true);
-    }
-
-    public String load(String FILE_NAME) {
-            FileInputStream fis = null;
-            try {
-                fis = openFileInput(FILE_NAME);
-                InputStreamReader isr = new InputStreamReader(fis);
-                BufferedReader br = new BufferedReader(isr);
-                StringBuilder sb = new StringBuilder();
-                String text;
-                while ((text = br.readLine()) != null) {
-                    sb.append(text);
-                }
-                return sb.toString();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }finally {
-                if (fis != null) {
-                    try {
-                        fis.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-            return null;
-        }
-
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         verifyStoragePermissions(this);
@@ -346,7 +298,68 @@ public class home extends AppCompatActivity {
             }
         }else if (requestCode == REQUEST_IMAGE_CAPTURE) {
             takeAPicture(resultCode, data);
+        }else if (requestCode == REQUEST_VOTE_IMAGE_CAPTURE) {
+            takeAVotePictures(resultCode, data);
         }
+    }
+
+    private void StartActivity() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createVoteFile();
+            } catch (IOException ex) {
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                Uri photoURI = getUriForFile(home.this, "com.example.clubbbycloset", photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(takePictureIntent, REQUEST_VOTE_IMAGE_CAPTURE);
+            }
+        }
+    }
+
+    private void takeAVotePictures(int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            if(n == 2){
+                try {
+                    String paths = currentVotePhotoPath1 + ":" + currentVotePhotoPath2;
+                    loadVoteImg(paths, FILE_USERVOTE);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                Intent voteView = new Intent(home.this, voteView.class);
+                    voteView.putExtra("numb", "0");
+                    voteView.putExtra("idProfile", id);
+                    startActivity(voteView);
+            }else {
+                n = 2;
+                StartActivity();
+            }
+        }
+
+        }
+
+    private File createVoteFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+        if(n == 1){
+        // Save a file: path for use with ACTION_VIEW intents
+            currentVotePhotoPath1= image.getAbsolutePath();
+        }else{
+            currentVotePhotoPath2= image.getAbsolutePath();
+        }
+        return image;
     }
 
     private void takeAPicture(int resultCode, Intent data) {
@@ -475,6 +488,64 @@ public class home extends AppCompatActivity {
                     REQUEST_EXTERNAL_STORAGE
             );
         }
+    }
+
+    public static Bitmap rotateImage(String path, Bitmap source) throws IOException {
+        Float angle = null;
+        ExifInterface ei = new ExifInterface(path);
+        int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+                ExifInterface.ORIENTATION_UNDEFINED);
+
+        switch(orientation) {
+
+            case ExifInterface.ORIENTATION_ROTATE_90:
+                angle = Float.valueOf(90);
+                break;
+
+            case ExifInterface.ORIENTATION_ROTATE_180:
+                angle = Float.valueOf(180);
+                break;
+
+            case ExifInterface.ORIENTATION_ROTATE_270:
+                angle = Float.valueOf(270);
+                break;
+
+            case ExifInterface.ORIENTATION_NORMAL:
+            default:
+                angle = Float.valueOf(0);
+        }
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(),
+                matrix, true);
+    }
+
+    public String load(String FILE_NAME) {
+        FileInputStream fis = null;
+        try {
+            fis = openFileInput(FILE_NAME);
+            InputStreamReader isr = new InputStreamReader(fis);
+            BufferedReader br = new BufferedReader(isr);
+            StringBuilder sb = new StringBuilder();
+            String text;
+            while ((text = br.readLine()) != null) {
+                sb.append(text);
+            }
+            return sb.toString();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally {
+            if (fis != null) {
+                try {
+                    fis.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return null;
     }
 
     public void save(String FILE_NAME, String text) throws IOException {

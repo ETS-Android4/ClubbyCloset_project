@@ -1,5 +1,6 @@
 package com.example.clubbbycloset;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
@@ -13,7 +14,9 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,12 +27,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+
+import static androidx.core.content.FileProvider.getUriForFile;
 
 public class voteView extends AppCompatActivity {
     ImageView bhome, bsearch, badd, bvote, bprofile , f1, f2;
@@ -42,6 +50,13 @@ public class voteView extends AppCompatActivity {
 
     private static int RESULT_LOAD_IMAGE = 1;
     private static int RESULT_LOAD_VOTE = 2;
+    private static int REQUEST_IMAGE_CAPTURE = 3;
+    private static int REQUEST_VOTE_IMAGE_CAPTURE = 4;
+    String currentPhotoPath;
+    String currentVotePhotoPath1;
+    String currentVotePhotoPath2;
+
+    int n;
 
     private static final String FILE_ALLUSERS = "allUsersData.txt";
     private static final String FILE_USER = "userdata.txt";
@@ -163,14 +178,39 @@ public class voteView extends AppCompatActivity {
                 PopupMenu popup = new PopupMenu(voteView.this, badd);
                 popup.getMenuInflater().inflate(R.menu.popup_menu, popup.getMenu());
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @RequiresApi(api = Build.VERSION_CODES.M)
                     public boolean onMenuItemClick(MenuItem item) {
-                        if (item.getTitle().equals("New photo")){
+                        if (item.getTitle().equals("Add photo from gallery")){
                             Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                             startActivityForResult(i, RESULT_LOAD_IMAGE);
-                        } if (item.getTitle().equals("New poll")){
+                        }
+                        else if (item.getTitle().equals("Add photos from gallery")){
                             Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                             i.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
                             startActivityForResult(i, RESULT_LOAD_VOTE);
+                        }
+                        else if (item.getTitle().equals("Take a picture")){
+                            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                            // Ensure that there's a camera activity to handle the intent
+                            if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+                                // Create the File where the photo should go
+                                File photoFile = null;
+                                try {
+                                    photoFile = createImageFile();
+                                } catch (IOException ex) {
+                                }
+                                // Continue only if the File was successfully created
+                                if (photoFile != null) {
+                                    Uri photoURI = getUriForFile(voteView.this,"com.example.clubbbycloset",photoFile);
+                                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+                                }
+                            }
+
+                        }
+                        else if (item.getTitle().equals("Take pictures")){
+                            n=1;
+                            StartActivity();
                         }
                         return true;
                     }
@@ -178,8 +218,6 @@ public class voteView extends AppCompatActivity {
                 popup.show();//showing popup menu
             }
         });
-
-
     }
 
 
@@ -214,6 +252,15 @@ public class voteView extends AppCompatActivity {
         bsave.setVisibility(View.INVISIBLE);
         rv.setVisibility(View.VISIBLE);
         lv.setVisibility(View.VISIBLE);
+
+       TextView edesc = (TextView)this.findViewById(R.id.edesc);
+        edesc.setText(new String(Character.toChars(0x1F4F7)));
+
+        TextView elocation = (TextView)this.findViewById(R.id.elocation);
+        elocation.setText(new String(Character.toChars(0x1F4CD)));
+
+        TextView etime = (TextView)this.findViewById(R.id.etime);
+        etime.setText(new String(Character.toChars(0x1F552)));
 
         for (int i = 1; i < descSrc.split(":").length; i++) {
             des[i - 1].setText(descSrc.split(":")[i]);
@@ -271,7 +318,6 @@ public class voteView extends AppCompatActivity {
                 matrix, true);
     }
 
-    //to load img from gallery
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         verifyStoragePermissions(this);
@@ -283,7 +329,107 @@ public class voteView extends AppCompatActivity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }else if (requestCode == REQUEST_IMAGE_CAPTURE) {
+            takeAPicture(resultCode, data);
+        }else if (requestCode == REQUEST_VOTE_IMAGE_CAPTURE) {
+            takeAVotePictures(resultCode, data);
         }
+    }
+
+    private void StartActivity() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createVoteFile();
+            } catch (IOException ex) {
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                Uri photoURI = getUriForFile(voteView.this, "com.example.clubbbycloset", photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(takePictureIntent, REQUEST_VOTE_IMAGE_CAPTURE);
+            }
+        }
+    }
+
+    private void takeAVotePictures(int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            if(n == 2){
+                try {
+                    String paths = currentVotePhotoPath1 + ":" + currentVotePhotoPath2;
+                    loadVoteImg(paths, FILE_USERVOTE);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                Intent voteView = new Intent(voteView.this, voteView.class);
+                voteView.putExtra("numb", "0");
+                voteView.putExtra("idProfile", id);
+                startActivity(voteView);
+            }else {
+                n = 2;
+                StartActivity();
+            }
+        }
+
+    }
+    private File createVoteFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+        if(n == 1){
+            // Save a file: path for use with ACTION_VIEW intents
+            currentVotePhotoPath1= image.getAbsolutePath();
+        }else{
+            currentVotePhotoPath2= image.getAbsolutePath();
+        }
+        return image;
+    }
+
+    private void takeAPicture(int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            String imgId = null;
+            try {
+                String[] d = load(FILE_USER).split(";;");
+                for(int i=0; i<d.length; i++){
+                    String[] src = d[i].split(";");
+                    if(src[0].split(":")[1].equals(id)){
+                        imgId = src[2].split(":")[1];
+                    }
+                }
+                save(FILE_ALLUSERS, load(FILE_ALLUSERS) + id + ":" + imgId + ";imgSrc:" +  currentPhotoPath );
+                Intent imgVote = new Intent(voteView.this, imgView.class);
+                imgVote.putExtra("numb", "0");
+                imgVote.putExtra("idProfile", id);
+                startActivity(imgVote);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+        // Save a file: path for use with ACTION_VIEW intents
+        currentPhotoPath = image.getAbsolutePath();
+        return image;
     }
 
     private void newVote(int requestCode, int resultCode, Intent data) throws IOException {
@@ -362,7 +508,6 @@ public class voteView extends AppCompatActivity {
         }
     }
 
-    //to give the permission for load img
     public static void verifyStoragePermissions(Activity activity) {
         // Check if we have write permission
         int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
@@ -374,22 +519,6 @@ public class voteView extends AppCompatActivity {
                     PERMISSIONS_STORAGE,
                     REQUEST_EXTERNAL_STORAGE
             );
-        }
-    }
-
-    public void changeProfileImg(String picPath, String FILE_NAME) throws IOException {
-        //Toast.makeText(getApplicationContext(), "LETTO  " + load(FILE_NAME),Toast.LENGTH_SHORT).show();
-        String t =load(FILE_NAME)+":"+picPath;
-        FileOutputStream fos = null;
-        fos = openFileOutput(FILE_NAME, MODE_PRIVATE);
-        fos.write(t.getBytes());
-        //Toast.makeText(getApplicationContext(), "Scritto   " + t,Toast.LENGTH_SHORT).show();
-        if (fos != null) {
-            try {
-                fos.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
     }
 
@@ -419,6 +548,22 @@ public class voteView extends AppCompatActivity {
             }
         }
         return null;
+    }
+
+    private void loadVoteImg(String picPath, String FILE_NAME) throws IOException {
+        //Toast.makeText(getApplicationContext(), "LETTO  " + load(FILE_NAME),Toast.LENGTH_SHORT).show();
+        String t = load(FILE_NAME) + ";voteSrc:" + picPath;
+        FileOutputStream fos = null;
+        fos = openFileOutput(FILE_NAME, MODE_PRIVATE);
+        fos.write(t.getBytes());
+        //Toast.makeText(getApplicationContext(), "Scritto   " + t,Toast.LENGTH_SHORT).show();
+        if (fos != null) {
+            try {
+                fos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public void save(String FILE_NAME, String text) throws IOException {

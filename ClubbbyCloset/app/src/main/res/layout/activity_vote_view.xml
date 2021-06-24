@@ -96,6 +96,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:background="@color/white">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/edesc"
+                    android:layout_marginLeft="6dp"
+                    android:textSize="17dp"
+                    />
                 <EditText
                     android:id="@+id/description"
                     android:layout_width="wrap_content"
@@ -113,6 +120,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:background="@color/white">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/elocation"
+                    android:layout_marginLeft="6dp"
+                    android:textSize="17dp"
+                    />
                 <EditText
                     android:id="@+id/location"
                     android:layout_width="wrap_content"
@@ -129,6 +143,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:background="@color/white">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/etime"
+                    android:layout_marginLeft="6dp"
+                    android:textSize="17dp"
+                    />
                 <EditText
                     android:id="@+id/time"
                     android:layout_width="wrap_content"

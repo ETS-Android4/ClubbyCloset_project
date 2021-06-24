@@ -2,7 +2,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/addImg"
-        android:title="New photo" >
+        android:title="New photo"
+        >
         <menu>
             <item android:id="@+id/fromGallery" android:title="Add photo from gallery"></item>
             <item android:id="@+id/takePicture" android:title="Take a picture"></item>

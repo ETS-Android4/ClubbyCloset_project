@@ -261,11 +261,23 @@ public class usersProfile extends AppCompatActivity {
     public void setProfileImg(String img){
         profileImg=(ImageView)this.findViewById(R.id.profile_img);
 
-        int idS = getResources().getIdentifier(img,"drawable", "com.example.clubbbycloset");
-        Bitmap bm = BitmapFactory.decodeResource(getResources(), idS);
-        //Bitmap resized = Bitmap.createScaledBitmap(bm, 200, 200, false);
-        //Bitmap conv_bm = getRoundedRectBitmap(resized, 200);
-        profileImg.setImageBitmap(bm);
+        if(img.contains("storage")){
+            Bitmap bm = BitmapFactory.decodeFile(img);
+            Bitmap resized = Bitmap.createScaledBitmap(bm, 200, 200, false);
+            Bitmap conv_bm = null;
+            try {
+                conv_bm = getRoundedRectBitmap(rotateImage(img,resized), 200);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            profileImg.setImageBitmap(conv_bm);
+        }else{
+            int idS = getResources().getIdentifier(img,"drawable", "com.example.clubbbycloset");
+            Bitmap bm = BitmapFactory.decodeResource(getResources(), idS);
+            //Bitmap resized = Bitmap.createScaledBitmap(bm, 200, 200, false);
+            //Bitmap conv_bm = getRoundedRectBitmap(resized, 200);
+            profileImg.setImageBitmap(bm);
+        }
 
     }
 
@@ -276,11 +288,19 @@ public class usersProfile extends AppCompatActivity {
                 ImageView vimg = new ImageView(this);
                 String[] s = t[i].split(";")[1].split(":");
                 if (s.length > 2) {
-                    int id = getResources().getIdentifier(s[(s.length - 1)], "drawable", "com.example.clubbbycloset");
-                    Bitmap bm = BitmapFactory.decodeResource(getResources(), id);
-                    Bitmap resized = Bitmap.createScaledBitmap(bm, 200, 200, false);
-                    Bitmap conv_bm = getRoundedRectBitmap(resized, 200);
-                    vimg.setImageBitmap(conv_bm);
+                    String img = s[(s.length - 1)];
+                    if(img.contains("storage")){
+                        Bitmap bm = BitmapFactory.decodeFile(img);
+                        Bitmap resized = Bitmap.createScaledBitmap(bm, 200, 200, false);
+                        Bitmap conv_bm = getRoundedRectBitmap(rotateImage(img, resized), 200);
+                        vimg.setImageBitmap(conv_bm);
+                    }else{
+                        int id = getResources().getIdentifier(img, "drawable", "com.example.clubbbycloset");
+                        Bitmap bm = BitmapFactory.decodeResource(getResources(), id);
+                        Bitmap resized = Bitmap.createScaledBitmap(bm, 200, 200, false);
+                        Bitmap conv_bm = getRoundedRectBitmap(resized, 200);
+                        vimg.setImageBitmap(conv_bm);
+                    }
                 }
 
                 int finalI = i;
@@ -342,12 +362,21 @@ public class usersProfile extends AppCompatActivity {
                 if (res[i].split(";")[0].split(":")[0].equals(username)) {
                     String imgSrc = res[i].split(";")[1].split(":")[1];
                     View view = inflater.inflate(R.layout.img_frame, null);
+
                     ImageView newi = (ImageView) view.findViewById(R.id.newImg);
 
-                    int ids = getResources().getIdentifier(imgSrc, "drawable", "com.example.clubbbycloset");
-                    Bitmap bm = BitmapFactory.decodeResource(getResources(), ids);
-                    Bitmap resized = Bitmap.createScaledBitmap(bm, 550, 600, false);
-                    newi.setImageBitmap(resized);
+                    if (imgSrc.contains("storage")){
+                        Bitmap bm = BitmapFactory.decodeFile(imgSrc);
+                        Bitmap rotatedBitmap = rotateImage(imgSrc, bm);
+                        Bitmap resized = Bitmap.createScaledBitmap(rotatedBitmap, 550, 600, false);
+                        newi.setImageBitmap(resized);
+
+                    } else{
+                        int ids = getResources().getIdentifier(imgSrc, "drawable", "com.example.clubbbycloset");
+                        Bitmap bm = BitmapFactory.decodeResource(getResources(), ids);
+                        Bitmap resized = Bitmap.createScaledBitmap(bm, 550, 600, false);
+                        newi.setImageBitmap(resized);
+                    }
 
                     if (buttonsForEveryRowAlreadyAddedInTheRow == buttonsForEveryRow) {
                         rowIndex++; //here i increase the row index
@@ -394,9 +423,20 @@ public class usersProfile extends AppCompatActivity {
 
                     ImageView newi = (ImageView) lview.findViewById(R.id.foto);
 
-                    int ids = getResources().getIdentifier(imgSrc, "drawable", "com.example.clubbbycloset");
-                    Bitmap bm = BitmapFactory.decodeResource(getResources(), ids);
-                    newi.setImageBitmap(bm);
+                    if(imgSrc.contains("storage")) {
+                        Bitmap bm = BitmapFactory.decodeFile(imgSrc);
+                        Bitmap rotatedBitmap = null;
+                        try {
+                            rotatedBitmap = rotateImage(imgSrc, bm);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        newi.setImageBitmap(rotatedBitmap);
+                    }else{
+                        int ids = getResources().getIdentifier(imgSrc, "drawable", "com.example.clubbbycloset");
+                        Bitmap bm = BitmapFactory.decodeResource(getResources(), ids);
+                        newi.setImageBitmap(bm);
+                    }
 
                     TextView edesc, elocation, etime, elink;
 

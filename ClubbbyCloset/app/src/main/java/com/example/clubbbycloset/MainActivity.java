@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
             "willB:will0;imgSrc:will7;descrizione:provadescri5:provalocatio5:provaora5:provalink5;;";
 
     private static final String FILE_TOPICS = "topics.txt";
-    private String topics = "topic:Special Occasion:evento:wedding:party:pool:birthday:cerimony:graduation;;" +
+    private String topics = "topic:Special Occasion:occasion:special:evento:wedding:party:pool:birthday:cerimony:graduation;;" +
             "gloria.z:glo0;imgSrc:glo5;descrizione:provadescri1:provalocatio1:provaora1:bit.ly/2TZXvTV;;" +
             "giuseppe05:peppe0;imgSrc:peppe4;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
             "giuseppe05:peppe0;imgSrc:peppe3;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
             "ginger:gin0;imgSrc:gin10;descrizione:I feel like a business woman:Pizza restaurant or pub:Afternoon or evening:Coat bit.ly/3wV73hU;;" +
             "ginger:gin0;imgSrc:gin11;descrizione:Happy birthday to me!:Holiday farm:Evening:No link available" +
 
-            ";;;topic:Back to school:scuola:liceo:college:university:library:caffee;;" +
+            ";;;topic:Back to school:school:scuola:liceo:college:university:library:caffee;;" +
             "ginger:gin0;imgSrc:gin12;descrizione:After school, I have found a job in order to save some money:Part-time babysitting:All day:Jeans bit.ly/3gXqcJc;;" +
             "manuelito:manu0;imgSrc:manu8;descrizione:First day of work, hoping for the best:Dress shop:All day:Jumper bit.ly/3j6kION;;" +
             "manuelito:manu0;imgSrc:manu6;descrizione:Chilling!:City centre:Morning or afternoon:Andrea Pompilio limited edition shirt bit.ly/3qjKOj3;;" +
@@ -129,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
             "ginger:gin0;imgSrc:gin5;descrizione:Today is the last day!!!:School:Morning:Shoes bit.ly/3qhOeCY;;" +
             "ginger:gin0;imgSrc:gin3;descrizione:American streetwear:School or a walk with friends:Afternoon:Tshirt bit.ly/3d7wXXM" +
 
-            ";;;topic:Dinner Night:appointment:friends:restourant:party:night;;" +
+            ";;;topic:Dinner Night:dinner:appointment:friends:restourant:party:night;;" +
             "giulia_:giu0;imgSrc:giu10;Tonight I will try a new cute restaurant:Typical bistrot:Summer night:Dress bit.ly/2TYtkNb;;" +
             "gloria.z:glo0;imgSrc:glo8;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
             "giuseppe05:peppe0;imgSrc:peppe3;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
@@ -139,8 +139,7 @@ public class MainActivity extends AppCompatActivity {
             "ginger:gin0;imgSrc:gin11;descrizione:Happy birthday to me!:Holiday farm:Evening:No link available;;" +
             "ginger:gin0;imgSrc:gin10;descrizione:I feel like a business woman:Pizza restaurant or pub:Afternoon or evening:Coat bit.ly/3wV73hU" +
 
-
-            ";;;topic:Working time:work:formal:job:office:interview:smart;;" +
+            ";;;topic:Working time:working:work:formal:job:office:interview:smart;;" +
             "giuseppe05:peppe0;imgSrc:peppe5;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
             "gloria.z:glo0;imgSrc:glo7;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
             "manuelito:manu0;imgSrc:manu8;descrizione:First day of work, hoping for the best:Dress shop:All day:Jumper bit.ly/3j6kION;;" +
@@ -155,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
             "ginger:gin0;imgSrc:gin10;descrizione:I feel like a business woman:Pizza restaurant or pub:Afternoon or evening:Coat bit.ly/3wV73hU;;" +
             "ginger:gin0;imgSrc:gin6;descrizione:Lipstick makes everything better:Elegant party:Evening:Earrings bit.ly/2UuYcoK" +
 
-            ";;;topic:On journay:sportivo:vacation:trip:sea:lake:mountain:friends:family;;"+
+            ";;;topic:On journay:journay:sportivo:vacation:trip:sea:lake:mountain:friends:family;;"+
             "willB:will0;imgSrc:will3;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
             "giuseppe05:peppe0;imgSrc:peppe6;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
             "giuseppe05:peppe0;imgSrc:peppe5;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
@@ -172,7 +171,7 @@ public class MainActivity extends AppCompatActivity {
             "ginger:gin0;imgSrc:gin5;descrizione:Today is the last day!!!:School:Morning:Shoes bit.ly/3qhOeCY;;" +
             "ginger:gin0;imgSrc:gin3;descrizione:American streetwear:School or a walk with friends:Afternoon:Tshirt bit.ly/3d7wXXM" +
 
-            ";;;topic:Summertime:bikini:beach:sea:surf:friends:family:sun:sunny;;"+
+            ";;;topic:Summertime:bikini:beach:sea:surf:friends:family:sun:sunny:summer;;"+
             "giulia_:giu0;imgSrc:giu4;descrizione:Can’t wait for taking a swim:Beach resort:Morning or afternoon:Shorts bit.ly/2TZXvTV;;" +
             "willB:will0;imgSrc:will5;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
             "willB:will0;imgSrc:will6;descrizione:provadescri1:provalocatio1:provaora1:provalink1;;" +
@@ -180,7 +179,7 @@ public class MainActivity extends AppCompatActivity {
             "giulia_:giu0;imgSrc:giu10;descrizione:Tonight I will try a new cute restaurant:Typical bistrot:Summer night:Dress bit.ly/2TYtkNb;;" +
             "giulia_:giu0;imgSrc:giu9;descrizione:My best friend has officially graduated!!!:Pool party:Evening:Earrings bit.ly/35JIUic;;" +
             "ginger:gin0;imgSrc:gin11;descrizione:Happy birthday to me!:Holiday farm:Evening:No link available;;" +
-            "ginger:gin0;imgSrc:gin9;descrizione:Summer is magic and retro style:Sea:Afternoon:No link available" ;
+            "ginger:gin0;imgSrc:gin9;descrizione:Summer is magic and retro style:Sea:Afternoon:No link available";
 
     private  static final String FILE_ALLVOTE = "allVote.txt";
     private String votes = "ginger:gin0;voteSrc:gin1:gin2;description:Mum’s wedding and these are my two options:Refined restaurant:From 4 pm to late night;vote:0:0;;" +
@@ -331,7 +330,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void saveFile(String txt,String FILE_NAME) throws IOException {
+
         String res = load(FILE_NAME);
+        Toast.makeText(getApplicationContext(), "IN FILE  " +  res ,Toast.LENGTH_SHORT).show();
         if (res == null){
             save(txt, FILE_NAME);
         }else {

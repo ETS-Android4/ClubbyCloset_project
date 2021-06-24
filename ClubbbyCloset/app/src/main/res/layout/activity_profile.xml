@@ -87,8 +87,6 @@
                 android:layout_marginTop="15dp"
                 android:layout_marginBottom="5dp"
                 android:fontFamily="@font/heebo_medium"
-                android:text="@string/profile_username"
-                android:textAllCaps="false"
                 android:textSize="23dp"
                 android:visibility="visible"
                 android:textColor="@color/ice"/>

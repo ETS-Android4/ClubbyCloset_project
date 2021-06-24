@@ -47,6 +47,7 @@ public class imgView extends AppCompatActivity {
     public static String id;
 
     private static final String FILE_USERVOTE ="uservote.txt";
+    private static final String FILE_TOPICS = "topics.txt";
     private static final String FILE_ALLUSERS = "allUsersData.txt";
 
 
@@ -75,6 +76,7 @@ public class imgView extends AppCompatActivity {
         Bundle Extra = getIntent().getExtras();
         String numb = Extra.getString("numb");
         id = Extra.getString("idProfile");
+        String forTopicFile = Extra.getString("forTopicFile");
 
         bhome = (ImageView) this.findViewById(R.id.home);
         bsearch = (ImageView) this.findViewById(R.id.search);
@@ -183,10 +185,11 @@ public class imgView extends AppCompatActivity {
                 try{
                     String toAdd = ";descrizione:" + edDesc.getText().toString() + ":" + edLoc.getText().toString() + ":" + edTime.getText().toString() + ":"+edLink.getText().toString()+";;";
                     save(FILE_ALLUSERS, load(FILE_ALLUSERS) + toAdd);
-
+                    addInTopicsFile(forTopicFile,edDesc.getText().toString(), edLoc.getText().toString(), edTime.getText().toString(), edLink.getText().toString() );
                 }catch (IOException e) {
                     e.printStackTrace();
                 }
+
                 Intent profile = new Intent(imgView.this, profile.class);
                 profile.putExtra("idProfile", id);
                 profile.putExtra("type", "0");
@@ -194,6 +197,24 @@ public class imgView extends AppCompatActivity {
             }
         });
 
+
+    }
+
+    private void addInTopicsFile(String forTopicFile, String description, String location, String time, String link) throws IOException {
+        String[] topics = load(FILE_TOPICS).split(";;;");
+        String[] descr  = (description+" "+location).split(" ");
+        String toAddInTopic = "";
+        for(int i=0; i<topics.length; i++){
+            toAddInTopic = toAddInTopic + topics[i];
+            for(int j = 0; j<descr.length; j++){
+                if(topics[i].split(";;")[0].contains(descr[j])){
+                    j = descr.length; //se no aggiungo piu volte allo stesso topic
+                    toAddInTopic = toAddInTopic + forTopicFile + ";descrizione:" + description + ":" + location + ":" + time + ":" + link ;
+                }
+            }
+            toAddInTopic = toAddInTopic +";;;";
+        }
+        save(FILE_TOPICS, toAddInTopic);
 
     }
 
@@ -343,6 +364,7 @@ public class imgView extends AppCompatActivity {
                 Intent imgVote = new Intent(imgView.this, imgView.class);
                 imgVote.putExtra("numb", "0");
                 imgVote.putExtra("idProfile", id);
+                imgVote.putExtra("forTopicFile", ";;" + id + ":" + imgId + ";imgSrc:" +  currentPhotoPath );
                 startActivity(imgVote);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -451,6 +473,7 @@ public class imgView extends AppCompatActivity {
                 Intent imgVote = new Intent(imgView.this, imgView.class);
                 imgVote.putExtra("numb", "0");
                 imgVote.putExtra("idProfile", id);
+                imgVote.putExtra("forTopicFile", ";;" + id + ":" + imgId + ";imgSrc:" +  picturePath );
                 startActivity(imgVote);
             } catch (IOException e) {
                 e.printStackTrace();

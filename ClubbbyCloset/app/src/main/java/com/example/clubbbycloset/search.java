@@ -305,6 +305,7 @@ public class search extends AppCompatActivity {
                 Intent imgVote = new Intent(search.this, imgView.class);
                 imgVote.putExtra("numb", "0");
                 imgVote.putExtra("idProfile", id);
+                imgVote.putExtra("forTopicFile", ";;" + id + ":" + imgId + ";imgSrc:" +  currentPhotoPath );
                 startActivity(imgVote);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -488,6 +489,7 @@ public class search extends AppCompatActivity {
                 Intent imgVote = new Intent(search.this, imgView.class);
                 imgVote.putExtra("numb", "0");
                 imgVote.putExtra("idProfile", id);
+                imgVote.putExtra("forTopicFile", ";;" + id + ":" + imgId + ";imgSrc:" +  picturePath );
                 startActivity(imgVote);
             } catch (IOException e) {
                 e.printStackTrace();

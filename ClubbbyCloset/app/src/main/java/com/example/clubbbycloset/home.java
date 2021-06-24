@@ -54,8 +54,6 @@ public class home extends AppCompatActivity {
     LinearLayout scroll;
     public static String id;
     private static final String FILE_ALLUSERS = "allUsersData.txt";
-
-
     private static final String FILE_USER = "userdata.txt";
     private static final String FILE_USERVOTE ="uservote.txt";
 
@@ -377,6 +375,7 @@ public class home extends AppCompatActivity {
                 Intent imgVote = new Intent(home.this, imgView.class);
                 imgVote.putExtra("numb", "0");
                 imgVote.putExtra("idProfile", id);
+                imgVote.putExtra("forTopicFile", ";;" + id + ":" + imgId + ";imgSrc:" +  currentPhotoPath );
                 startActivity(imgVote);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -449,9 +448,11 @@ public class home extends AppCompatActivity {
                     }
                 }
                 save(FILE_ALLUSERS, load(FILE_ALLUSERS) + id + ":" + imgId + ";imgSrc:" +  picturePath );
+
                 Intent imgVote = new Intent(home.this, imgView.class);
                 imgVote.putExtra("numb", "0");
                 imgVote.putExtra("idProfile", id);
+                imgVote.putExtra("forTopicFile", ";;" + id + ":" + imgId + ";imgSrc:" +  picturePath );
                 startActivity(imgVote);
             } catch (IOException e) {
                 e.printStackTrace();

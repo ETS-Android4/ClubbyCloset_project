@@ -78,15 +78,21 @@ public class signup extends AppCompatActivity {
                         String[] email = ed2.getText().toString().split("@");
                         String psw = ed3.getText().toString();
                         username = email[0];
-                        String[] data = load(FILE_USER).split(";;");
-                        String[] datauser = load(FILE_ALLUSERS).split(";;");
-                        for (int i = 0; i < data.length; i++) {
-                            if (data[i].split(";")[0].split(":")[1].equals(username)) {
-                                Toast.makeText(getApplicationContext(),
-                                        "Username " + username + " not available!", Toast.LENGTH_SHORT).show();
-                                return;
+                        String dataret = load(FILE_USER);
+                        String[] data = null;
+                        if(dataret != null){
+                            data = load(FILE_USER).split(";;");
+                            for (int i = 0; i < data.length; i++) {
+                                if (data[i].split(";")[0].split(":")[1].equals(username)) {
+                                    Toast.makeText(getApplicationContext(),
+                                            "Username " + username + " not available!", Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
                             }
                         }
+
+                        String[] datauser = load(FILE_ALLUSERS).split(";;");
+
                         for (int i = 0; i < datauser.length; i++) {
                             if (datauser[i].split(";")[0].split(":")[0].equals(username)) {
                                 Toast.makeText(getApplicationContext(),

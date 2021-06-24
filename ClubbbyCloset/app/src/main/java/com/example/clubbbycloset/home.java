@@ -1,13 +1,11 @@
 package com.example.clubbbycloset;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -24,6 +22,7 @@ import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -35,13 +34,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Random;
+
+import static androidx.core.content.FileProvider.getUriForFile;
 
 
 public class home extends AppCompatActivity {
@@ -56,6 +60,7 @@ public class home extends AppCompatActivity {
     private static final String FILE_USERVOTE ="uservote.txt";
     private static int RESULT_LOAD_IMAGE = 1;
     private static int RESULT_LOAD_VOTE = 2;
+    private static int REQUEST_IMAGE_CAPTURE = 3;
 
     private String picturePath = "";
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
@@ -63,8 +68,7 @@ public class home extends AppCompatActivity {
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
-    private static final int CAMERA_REQUEST = 1888;
-    private static final int MY_CAMERA_PERMISSION_CODE = 100;
+    String currentPhotoPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -138,15 +142,23 @@ public class home extends AppCompatActivity {
                             i.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
                             startActivityForResult(i, RESULT_LOAD_VOTE);
                         }else if (item.getTitle().equals("Take a picture")){
-                            if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)
-                            {
-                                requestPermissions(new String[]{Manifest.permission.CAMERA}, MY_CAMERA_PERMISSION_CODE);
+                            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                            // Ensure that there's a camera activity to handle the intent
+                            if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+                                // Create the File where the photo should go
+                                File photoFile = null;
+                                try {
+                                    photoFile = createImageFile();
+                                } catch (IOException ex) {
+                                }
+                                // Continue only if the File was successfully created
+                                if (photoFile != null) {
+                                    Uri photoURI = getUriForFile(home.this,"com.example.clubbbycloset",photoFile);
+                                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+                                }
                             }
-                            else
-                            {
-                                Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                                startActivityForResult(cameraIntent, CAMERA_REQUEST);
-                            }
+
                         }
                         return true;
                     }
@@ -321,7 +333,6 @@ public class home extends AppCompatActivity {
             return null;
         }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         verifyStoragePermissions(this);
@@ -333,16 +344,13 @@ public class home extends AppCompatActivity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }else if (requestCode == CAMERA_REQUEST ){
-            newCameraImg(requestCode,resultCode,data);
+        }else if (requestCode == REQUEST_IMAGE_CAPTURE) {
+            takeAPicture(resultCode, data);
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    private void newCameraImg(int requestCode, int resultCode, Intent data) {
-        if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK)
-        {
-            Bitmap photo = (Bitmap) data.getExtras().get("data");
+    private void takeAPicture(int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
             String imgId = null;
             try {
                 String[] d = load(FILE_USER).split(";;");
@@ -352,7 +360,7 @@ public class home extends AppCompatActivity {
                         imgId = src[2].split(":")[1];
                     }
                 }
-                save(FILE_ALLUSERS, load(FILE_ALLUSERS) + id + ":" + imgId + ";imgSrc:" +  photo );
+                save(FILE_ALLUSERS, load(FILE_ALLUSERS) + id + ":" + imgId + ";imgSrc:" +  currentPhotoPath );
                 Intent imgVote = new Intent(home.this, imgView.class);
                 imgVote.putExtra("numb", "0");
                 imgVote.putExtra("idProfile", id);
@@ -360,9 +368,23 @@ public class home extends AppCompatActivity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            Toast.makeText(getApplicationContext(), "da data  " + photo,Toast.LENGTH_SHORT).show();
 
         }
+    }
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+        // Save a file: path for use with ACTION_VIEW intents
+        currentPhotoPath = image.getAbsolutePath();
+        return image;
     }
 
     private void newVote(int requestCode, int resultCode, Intent data) throws IOException {
@@ -392,22 +414,6 @@ public class home extends AppCompatActivity {
                 }
             }
 
-        }
-    }
-
-    private void loadVoteImg(String picPath, String FILE_NAME) throws IOException {
-        //Toast.makeText(getApplicationContext(), "LETTO  " + load(FILE_NAME),Toast.LENGTH_SHORT).show();
-        String t = load(FILE_NAME) + ";voteSrc:" + picPath;
-        FileOutputStream fos = null;
-        fos = openFileOutput(FILE_NAME, MODE_PRIVATE);
-        fos.write(t.getBytes());
-        //Toast.makeText(getApplicationContext(), "Scritto   " + t,Toast.LENGTH_SHORT).show();
-        if (fos != null) {
-            try {
-                fos.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
     }
 
@@ -441,20 +447,18 @@ public class home extends AppCompatActivity {
         }
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults){
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == MY_CAMERA_PERMISSION_CODE)
-        {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
-            {
-                Toast.makeText(this, "camera permission granted", Toast.LENGTH_LONG).show();
-                Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(cameraIntent, CAMERA_REQUEST);
-            }
-            else
-            {
-                Toast.makeText(this, "camera permission denied", Toast.LENGTH_LONG).show();
+    private void loadVoteImg(String picPath, String FILE_NAME) throws IOException {
+        //Toast.makeText(getApplicationContext(), "LETTO  " + load(FILE_NAME),Toast.LENGTH_SHORT).show();
+        String t = load(FILE_NAME) + ";voteSrc:" + picPath;
+        FileOutputStream fos = null;
+        fos = openFileOutput(FILE_NAME, MODE_PRIVATE);
+        fos.write(t.getBytes());
+        //Toast.makeText(getApplicationContext(), "Scritto   " + t,Toast.LENGTH_SHORT).show();
+        if (fos != null) {
+            try {
+                fos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
     }

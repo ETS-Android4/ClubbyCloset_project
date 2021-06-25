@@ -332,7 +332,6 @@ public class MainActivity extends AppCompatActivity {
     public void saveFile(String txt,String FILE_NAME) throws IOException {
 
         String res = load(FILE_NAME);
-        Toast.makeText(getApplicationContext(), "IN FILE  " +  res ,Toast.LENGTH_SHORT).show();
         if (res == null){
             save(txt, FILE_NAME);
         }else {

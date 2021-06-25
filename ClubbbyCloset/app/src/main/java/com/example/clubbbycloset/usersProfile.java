@@ -209,7 +209,8 @@ public class usersProfile extends AppCompatActivity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }else{
+        }
+        else{
             linearLayout.setVisibility(View.VISIBLE);
             gridLayout.setVisibility(View.INVISIBLE);
             int finalIndex = index;

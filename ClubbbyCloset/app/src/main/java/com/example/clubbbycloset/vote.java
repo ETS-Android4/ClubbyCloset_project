@@ -27,6 +27,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -207,6 +208,7 @@ public class vote extends AppCompatActivity {
             imgRigth = (ImageView) view.findViewById(R.id.right1);
             voteBarLay = (LinearLayout) view.findViewById(R.id.voteBarlayout);
 
+            //set vote img
             if(imgSrc[1].contains("storage")){
                 Bitmap bml = BitmapFactory.decodeFile(imgSrc[1]);
                 Bitmap bmr = BitmapFactory.decodeFile(imgSrc[2]);
@@ -227,6 +229,7 @@ public class vote extends AppCompatActivity {
                 imgRigth.setBackgroundResource(id);
             }
 
+            //set user profile img
             ImageView userProfileImage = (ImageView)view.findViewById(R.id.userProfileImg);
             if (userProfileImageSrc.contains("storage")) {
 
@@ -248,6 +251,8 @@ public class vote extends AppCompatActivity {
                 userProfileImage.setImageBitmap(conv_bm);
             }
 
+
+            //set emoji and description
             edesc = (TextView)view.findViewById(R.id.edesc);
             edesc.setText(new String(Character.toChars(0x1F4F7)));
 
@@ -257,18 +262,16 @@ public class vote extends AppCompatActivity {
             etime = (TextView)view.findViewById(R.id.etime);
             etime.setText(new String(Character.toChars(0x1F552)));
 
-
-
             tvdescription = (TextView)view.findViewById(R.id.description);
             tvlocation = (TextView)view.findViewById(R.id.location);
             tvtime = (TextView)view.findViewById(R.id.time);
             TextView[] arr= {tvdescription,tvlocation,tvtime};
-            for(int k= 1 ; k<desc.length ; k++){
+            for(int k= 1 ; k<desc.length && (k-1)<arr.length; k++){
                 arr[k-1].setText(desc[k]);
             }
+
             tvusername = (TextView)view.findViewById(R.id.username1);
             tvusername.setText(username);
-
             tvusername.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -280,13 +283,13 @@ public class vote extends AppCompatActivity {
                 }
             });
 
+            //set vote bar and interaciotn
             lbar = (LinearLayout)view.findViewById(R.id.leftbar);
             rbar = (LinearLayout) view.findViewById(R.id.rightbar);
             vleft = (TextView)view.findViewById(R.id.tvleft);
             vright = (TextView)view.findViewById(R.id.tvright);
 
             TextView[] vtxt = {vleft,vright};
-
             LinearLayout[] vbars = {lbar,rbar};
 
             int finalI = i;
@@ -297,27 +300,15 @@ public class vote extends AppCompatActivity {
                 imgLeft.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        saveVote(fileAllvote, finalI, 0);
-
-                        String[] res = load(fileAllvote).split(";;");
-                        String[] r = res[finalI].split(";");
-                        String[] vote = r[3].split(":");
-                        int[] vot = {Integer.parseInt(vote[1]), Integer.parseInt(vote[2])};
-                        setVoteBar(vot[0], vot[1], vtxt, vbars);
-                        notClick(imgLeft,imgRigth);
+                        int[] newVote = saveVote(fileAllvote, finalI, 0);
+                        setVoteBar(newVote[0], newVote[1], vtxt, vbars);
                     }
                 });
                 imgRigth.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        saveVote(fileAllvote, finalI, 1);
-
-                        String[] res = load(fileAllvote).split(";;");
-                        String[] r = res[finalI].split(";");
-                        String[] vote = r[3].split(":");
-                        int[] vot = {Integer.parseInt(vote[1]), Integer.parseInt(vote[2])};
-                        setVoteBar(vot[0], vot[1], vtxt, vbars);
-                        notClick(imgLeft,imgRigth);
+                        int [] newVote = saveVote(fileAllvote, finalI, 1);
+                        setVoteBar(newVote[0], newVote[1], vtxt, vbars);
                     }
                 });
             }
@@ -325,25 +316,30 @@ public class vote extends AppCompatActivity {
         }
     }
 
-    public void notClick(ImageView r, ImageView l){
-        r.setClickable(false);
-        l.setClickable(false);
-    }
-
     public void setVoteBar(int lvote, int rvote, TextView[] vtxt, LinearLayout[] vbars){
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int parentWidth = displayMetrics.widthPixels;
+
         int tot = lvote+rvote;
         int l = (lvote*100)/tot;
         int r = (rvote*100)/tot;
         vtxt[0].setText(Integer.toString(l)+ "%");
         vtxt[1].setText(Integer.toString(r)+ "%");
 
-        //Toast.makeText(vote.this,"vtxt len  " + vtxt[0].getText()  + "  " + vtxt[1].getText(), Toast.LENGTH_SHORT).show();
-        int w =((l*100)/450);
-        LinearLayout.LayoutParams lp = new  LinearLayout.LayoutParams(w*50, LinearLayout.LayoutParams.WRAP_CONTENT);
+        int wl =((l*parentWidth)/100);
+        int wr =((r*parentWidth)/100);
+        if(wl<110) {
+            wl = 110;
+            wr = 970;
+        }else if(wr<110){
+            wr = 110;
+            wl = 970;
+        }
+        LinearLayout.LayoutParams lp = new  LinearLayout.LayoutParams(wl, LinearLayout.LayoutParams.WRAP_CONTENT);
         vbars[0].setLayoutParams(lp);
-        w =((r*100)/450) ;
-        lp = new  LinearLayout.LayoutParams(w*50, LinearLayout.LayoutParams.WRAP_CONTENT);
-        vbars[1].setLayoutParams(lp);
+        LinearLayout.LayoutParams rp = new  LinearLayout.LayoutParams(wr, LinearLayout.LayoutParams.WRAP_CONTENT);
+        vbars[1].setLayoutParams(rp);
         if(l > 50 ){
             vbars[0].setBackgroundResource(R.color.purple);
             vbars[1].setBackgroundResource(R.color.litePurple);
@@ -356,7 +352,7 @@ public class vote extends AppCompatActivity {
         vbars[1].setVisibility(View.VISIBLE);
     }
 
-    public void saveVote(String FILE_NAME, int i, int j){
+    public int[] saveVote(String FILE_NAME, int i, int j){
         String[] res = load(FILE_NAME).split(";;");
         String[] r = res[i].split(";");
         String[] vote = r[3].split(":");
@@ -368,21 +364,22 @@ public class vote extends AppCompatActivity {
         if (j == 0) {
             int vo = Integer.parseInt(vote[1]) + 1;
             toAdd =  toAdd + r[0] + ";"+ r[1] + ";" + r[2] + ";" + vote[0] + ":" + vo + ":" + vote[2] + ";;";
+            v= new int[]{vo, Integer.parseInt(vote[2])};
         }else{
             int vo = Integer.parseInt(vote[2]) + 1;
             toAdd =  toAdd + r[0] + ";" + r[1] + ";" + r[2] + ";" + vote[0] + ":" + vote[1] + ":" + vo + ";;";
+            v= new int[]{Integer.parseInt(vote[1]), vo};
         }
         for (int z=i+1; z<res.length; z++){
             toAdd = toAdd + res[z] + ";;";
         }
-
-
         try{
             //Toast.makeText(vote.this,"ADD: " + toAdd , Toast.LENGTH_SHORT).show();
             save(FILE_ALLVOTE, toAdd);
         } catch(IOException e){
             e.printStackTrace();
         }
+        return v;
     }
 
     public void save(String FILE_NAME, String text) throws IOException {
@@ -620,7 +617,7 @@ public class vote extends AppCompatActivity {
             cursor.close();
         }
     }
-    //to give the permission for load img
+
     public static void verifyStoragePermissions(Activity activity) {
         // Check if we have write permission
         int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);

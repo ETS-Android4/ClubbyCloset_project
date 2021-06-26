@@ -191,6 +191,16 @@ public class MainActivity extends AppCompatActivity {
             "manuelito:manu0;voteSrc:manu3:manu4;description:Tomorrow I’m going to Milan:Train journey:Evening;vote:0:0;;" +
             "willB:will0;voteSrc:will1:will2;description:provasedcrizione4:provalovation4:provaorario4;vote:10:3;;" ;
 
+    private  static final String FILE_WHOVOTED = "whoVoted.txt";
+    private String whovoted = "ginger;voteSrc:gin1:gin2;users;;" +
+            "giulia_;voteSrc:giu3:giu4;users;;" +
+            "ginger;voteSrc:gin3:gin4;users;;" +
+            "giulia_;voteSrc:giu1:giu2;users;;" +
+            "gloria.z;voteSrc:glo1:glo2;users;;" +
+            "manuelito;voteSrc:manu1:manu2;users;;" +
+            "manuelito;voteSrc:manu3:manu4;users;;" +
+            "willB;voteSrc:will1:will2;users;;" ;
+
     private static final String FILE_USER = "userdata.txt";
     Button b1;
     TextView b2,forgot;
@@ -216,6 +226,7 @@ public class MainActivity extends AppCompatActivity {
             saveFile(users, FILE_ALLUSERS);
             saveFile(topics, FILE_TOPICS);
             saveFile(votes, FILE_ALLVOTE);
+            saveFile(whovoted, FILE_WHOVOTED);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -338,6 +349,7 @@ public class MainActivity extends AppCompatActivity {
             save(res,FILE_NAME);
         }
     }
+
     public void save(String text, String FILE_NAME) throws IOException {
         FileOutputStream fos = null;
         fos = openFileOutput(FILE_NAME, MODE_PRIVATE);

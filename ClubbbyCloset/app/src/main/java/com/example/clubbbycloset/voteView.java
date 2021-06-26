@@ -45,6 +45,8 @@ public class voteView extends AppCompatActivity {
     TextView bsave, rv, lv;
     public static String id;
 
+
+    private  static final String FILE_WHOVOTED = "whoVoted.txt";
     private  static final String FILE_ALLVOTE = "allVote.txt";
     private static final String FILE_USERVOTE ="uservote.txt";
 
@@ -105,7 +107,6 @@ public class voteView extends AppCompatActivity {
         }else {
             setPhotosVote(FILE_USERVOTE, imgs);
         }
-        //setDescriptionVote(FILE_USERVOTEDESCRIPTION, descri, numb);
 
         bsave.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -121,8 +122,11 @@ public class voteView extends AppCompatActivity {
                     }
 
                     String[] res = load(FILE_USERVOTE).split(";");
-                    String toAddAllVote = load(FILE_ALLVOTE) + id + ":" + profileImg + ";voteSrc:" + res[res.length-1].split(":")[1] + ":" +  res[res.length-1].split(":")[2] +  toAdd + ";vote:0:0;;";
+                    String v1= res[res.length-1].split(":")[1];
+                    String v2= res[res.length-1].split(":")[2];
+                    String toAddAllVote = load(FILE_ALLVOTE) + id + ":" + profileImg + ";voteSrc:" + v1 + ":" + v2  +  toAdd + ";vote:0:0;;";
                     save(FILE_ALLVOTE , toAddAllVote);
+                    save(FILE_WHOVOTED, load(FILE_WHOVOTED)+id+ ";voteSrc:" + v1 + ":" + v2 +";users;;");
 
                 }catch (IOException e) {
                      e.printStackTrace();

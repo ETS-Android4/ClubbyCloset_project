@@ -84,7 +84,6 @@ public class profile extends AppCompatActivity {
     TextView tvusername;
     GridLayout gridLayout;
     LinearLayout linearLayout, hScroll;
-    ScrollView scroll;
 
     int finalRowIndex;
 
@@ -134,7 +133,6 @@ public class profile extends AppCompatActivity {
 
         linearLayout = (LinearLayout) this.findViewById(R.id.linear);
         gridLayout = (GridLayout) this.findViewById((R.id.grid));
-        scroll = (ScrollView) this.findViewById(R.id.scroll);
         if (type == null){
             linearLayout.setVisibility(View.INVISIBLE);
             gridLayout.setVisibility(View.VISIBLE);
@@ -145,17 +143,10 @@ public class profile extends AppCompatActivity {
             gridLayout.setVisibility(View.VISIBLE);
             gridLayout.removeAllViews();
             setPhotosGridLayout(FILE_ALLUSERS, gridLayout);
-            //setPhotosGridLayout(FILE_USERIMG, gridLayout);
         }else{
             linearLayout.setVisibility(View.VISIBLE);
             gridLayout.setVisibility(View.INVISIBLE);
             int finalIndex = index;
-            scroll.post(new Runnable() {
-                @Override
-                public void run() {
-                    scroll.scrollTo(0, (finalIndex*2000));//0 is x position
-                }
-            });
             setPhotosLinearLayuout(FILE_ALLUSERS, linearLayout);
         }
 

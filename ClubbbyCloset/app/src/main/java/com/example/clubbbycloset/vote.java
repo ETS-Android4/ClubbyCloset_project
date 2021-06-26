@@ -62,6 +62,7 @@ public class vote extends AppCompatActivity {
 
     public static String id;
 
+    private  static final String FILE_WHOVOTED = "whoVoted.txt";
     private  static final String FILE_ALLVOTE = "allVote.txt";
     private static final String FILE_USERVOTE ="uservote.txt";
     private static final String FILE_ALLUSERS = "allUsersData.txt";
@@ -187,13 +188,13 @@ public class vote extends AppCompatActivity {
                 popup.show();//showing popup menu
             }
         });
-
     }
 
     private void setLayout(String fileAllvote, LinearLayout scrollView) {
         String[] res = load(fileAllvote).split(";;");
 
         LayoutInflater inflater = (LayoutInflater)getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
         for(int i=0;i<res.length;i++){
             String[] r = res[i].split(";");
             String username = r[0].split(":")[0];
@@ -243,7 +244,8 @@ public class vote extends AppCompatActivity {
                 }
                 ;
                 userProfileImage.setImageBitmap(conv_bm);
-            } else {
+            }
+            else {
                 int id = getResources().getIdentifier(userProfileImageSrc, "drawable", "com.example.clubbbycloset");
                 Bitmap bm = BitmapFactory.decodeResource(getResources(), id);
                 Bitmap resized = Bitmap.createScaledBitmap(bm, 200, 200, false);
@@ -293,27 +295,65 @@ public class vote extends AppCompatActivity {
             LinearLayout[] vbars = {lbar,rbar};
 
             int finalI = i;
-            if (! username.equals(id) ){
+            if (! username.equals(id)){
                 imgRigth.setClickable(true);
                 imgLeft.setClickable(true);
-
                 imgLeft.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        int[] newVote = saveVote(fileAllvote, finalI, 0);
-                        setVoteBar(newVote[0], newVote[1], vtxt, vbars);
+                        if(! alreadyVoted(username,imgSrc)) {
+                            int[] newVote = saveVote(fileAllvote, finalI, 0);
+                            setVoteBar(newVote[0], newVote[1], vtxt, vbars);
+                        }
                     }
                 });
                 imgRigth.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        int [] newVote = saveVote(fileAllvote, finalI, 1);
-                        setVoteBar(newVote[0], newVote[1], vtxt, vbars);
+                        if(! alreadyVoted(username,imgSrc)) {
+                            int[] newVote = saveVote(fileAllvote, finalI, 1);
+                            setVoteBar(newVote[0], newVote[1], vtxt, vbars);
+                        }
                     }
                 });
             }
             scrollView.addView(view);
         }
+    }
+
+    private boolean alreadyVoted(String username, String[] imgSrc) {
+       int x = 0;
+       String [] wv =  load(FILE_WHOVOTED).split(";;");
+       String toAdd = "";
+       for(int i = 0 ; i<wv.length; i++){
+           toAdd = toAdd + wv[i] ;
+           String[] d = wv[i].split(";");
+           if(d[0].equals(username) && d[1].split(":")[1].equals(imgSrc[1]) && d[1].split(":")[2].equals(imgSrc[2])){
+               if(d[2].split(":").length > 1){
+                   if(d[2].contains(id)){
+                       x =1;
+                   }else{
+                       toAdd = toAdd + ":" + id;
+                       x = 0;
+                   }
+               }else{
+                   toAdd = toAdd + ":" + id;
+                   x = 0;
+               }
+           }
+           toAdd = toAdd + ";;";
+       }
+        try {
+            save(FILE_WHOVOTED, toAdd);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if(x==0){
+            return false;
+        }else{
+            return true;
+        }
+
     }
 
     public void setVoteBar(int lvote, int rvote, TextView[] vtxt, LinearLayout[] vbars){
@@ -329,10 +369,10 @@ public class vote extends AppCompatActivity {
 
         int wl =((l*parentWidth)/100);
         int wr =((r*parentWidth)/100);
-        if(wl<110) {
+        if(r!= 100 && wl<110) {
             wl = 110;
             wr = 970;
-        }else if(wr<110){
+        }else if(l!=100 && wr<110){
             wr = 110;
             wl = 970;
         }

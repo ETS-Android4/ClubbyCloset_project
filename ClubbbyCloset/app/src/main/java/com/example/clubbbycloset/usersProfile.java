@@ -55,7 +55,6 @@ public class usersProfile extends AppCompatActivity {
     TextView name;
     LinearLayout linearLayout, hScroll;
     GridLayout gridLayout;
-    ScrollView scroll;
     int finalRowIndex;
     public static String id;
 
@@ -100,8 +99,6 @@ public class usersProfile extends AppCompatActivity {
         badd = (ImageView) this.findViewById(R.id.add);
         bvote = (ImageView) this.findViewById(R.id.vote);
         bprofile = (ImageView) this.findViewById(R.id.profile);
-
-        scroll = (ScrollView) this.findViewById(R.id.scroll);
 
         bhome.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -209,18 +206,10 @@ public class usersProfile extends AppCompatActivity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
-        else{
+        }else{
             linearLayout.setVisibility(View.VISIBLE);
             gridLayout.setVisibility(View.INVISIBLE);
-            int finalIndex = index;
-            scroll.post(new Runnable() {
-                @Override
-                public void run() {
-                    scroll.scrollTo(0, (finalIndex*2000));//0 is x position
-                }
-            });
-            setPhotosLinearLayuout(res, linearLayout, textView);
+            setPhotosLinearLayuout(res, linearLayout, textView, index);
         }
 
         try {
@@ -358,8 +347,9 @@ public class usersProfile extends AppCompatActivity {
             int buttonsForEveryRowAlreadyAddedInTheRow =0; // count the buttons added in a single rows
             int columnIndex=0; //cols index to which i add the button
             int rowIndex=0; //row index to which i add the button
+            int indexDaMandare=0;
             for(int i=0; i < buttons;i++) {
-                int indexDaMandare=0;
+
                 if (res[i].split(";")[0].split(":")[0].equals(username)) {
                     String imgSrc = res[i].split(";")[1].split(":")[1];
                     View view = inflater.inflate(R.layout.img_frame, null);
@@ -394,8 +384,9 @@ public class usersProfile extends AppCompatActivity {
 
                     buttonsForEveryRowAlreadyAddedInTheRow++;
                     columnIndex++;
-                    indexDaMandare ++;
                     finalRowIndex = indexDaMandare;
+                    indexDaMandare ++;
+
                     newi.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -412,7 +403,7 @@ public class usersProfile extends AppCompatActivity {
             }
     }
 
-    private void setPhotosLinearLayuout(String[] res,  LinearLayout linearLayout, String username) {
+    private void setPhotosLinearLayuout(String[] res,  LinearLayout linearLayout, String username, int index) {
 
             LayoutInflater inflater = (LayoutInflater)getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
@@ -458,14 +449,14 @@ public class usersProfile extends AppCompatActivity {
                     TextView time = (TextView) lview.findViewById(R.id.time);
                     TextView link = (TextView) lview.findViewById(R.id.link);
                     TextView[] arr = {description, location, time, link};
-                    for (int k = 1; k < descSrc.length; k++) {
-                        arr[k - 1].setText(descSrc[k]);
-                        if (k == 4 && descSrc[k].contains("bit.ly")) {
+                    for(int k=1; k<descSrc.length; k++){
+                        arr[k-1].setText(descSrc[k]);
+                        if(k==4 && descSrc[k].contains(".")){
                             int finalK = k;
-                            arr[k - 1].setOnClickListener(new View.OnClickListener() {
+                            arr[k-1].setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    Uri uri = Uri.parse("http://" + descSrc[finalK]); // missing 'http://' will cause crashed
+                                    Uri uri = Uri.parse("http://" + descSrc[finalK].split(" ")[1]); // missing 'http://' will cause crashed
                                     Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                                     startActivity(intent);
                                 }
@@ -610,7 +601,6 @@ public class usersProfile extends AppCompatActivity {
             if (data.getClipData() != null) {
                 String paths = "";
                 int cout = data.getClipData().getItemCount();
-                Toast.makeText(getApplicationContext(), "SIZE  " + cout,Toast.LENGTH_SHORT).show();
                 if(cout <= 4) {
                     for (int i = 0; i < cout; i++) {
                         // adding imageuri in array
@@ -622,7 +612,6 @@ public class usersProfile extends AppCompatActivity {
                         int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
                         picturePath = cursor.getString(columnIndex);
                         paths = paths + picturePath + ":";
-                        //Toast.makeText(getApplicationContext(), "LETTO  " + paths,Toast.LENGTH_SHORT).show();
                         cursor.close();
                     }
                     loadVoteImg(paths, FILE_USERVOTE);

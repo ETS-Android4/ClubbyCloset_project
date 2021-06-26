@@ -1,6 +1,5 @@
 package com.example.clubbbycloset;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
@@ -41,7 +40,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Random;
 
@@ -71,6 +69,9 @@ public class home extends AppCompatActivity {
     String currentVotePhotoPath1;
     String currentVotePhotoPath2;
 
+    String fileAllUsersResult;
+    String fileUserVoteResult;
+
     int n;
 
     @Override
@@ -81,9 +82,11 @@ public class home extends AppCompatActivity {
         Bundle Extra = getIntent().getExtras();
         id = Extra.getString("idProfile");
 
+        fileAllUsersResult = load(FILE_ALLUSERS);
+
         scroll = (LinearLayout) this.findViewById(R.id.homeScroll);
         try {
-            setHomeLayout(FILE_ALLUSERS,scroll);
+            setHomeLayout(fileAllUsersResult,scroll);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -135,7 +138,6 @@ public class home extends AppCompatActivity {
                 PopupMenu popup = new PopupMenu(home.this, badd);
                 popup.getMenuInflater().inflate(R.menu.popup_menu, popup.getMenu());
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @RequiresApi(api = Build.VERSION_CODES.M)
                     public boolean onMenuItemClick(MenuItem item) {
                         if (item.getTitle().equals("Add photo from gallery")){
                             Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -148,7 +150,6 @@ public class home extends AppCompatActivity {
                         }
                         else if (item.getTitle().equals("Take a picture")){
                             Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                            // Ensure that there's a camera activity to handle the intent
                             if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
                                 // Create the File where the photo should go
                                 File photoFile = null;
@@ -177,12 +178,13 @@ public class home extends AppCompatActivity {
         });
     }
 
-    private void setHomeLayout(String fileAllusers, LinearLayout scroll) throws IOException {
-        String[] res = load(fileAllusers).split(";;");
-        Integer n = new Random().nextInt((res.length - (res.length/2))-1) + (res.length/2);
+    private void setHomeLayout(String fileAllusersResult, LinearLayout scroll) throws IOException {
+        String[] res = fileAllusersResult.split(";;");
+        int max = 20;
 
         LayoutInflater inflater = (LayoutInflater) getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        for (int i = 0; i < n; i++) {
+
+        for (int i = 0; i < max; i++) {
             Integer j = new Random().nextInt(res.length);
             String[] r = res[j].split(";");
             if (r.length == 3) {
@@ -251,7 +253,7 @@ public class home extends AppCompatActivity {
                 TextView[] arr ={description,location,time,link};
                 for(int k=1; k<desc.length; k++){
                     arr[k-1].setText(desc[k]);
-                    if(k==4 && desc[k].contains("bit.ly")){
+                    if(k==4 && desc[k].contains(".")){
                         int finalK = k;
                         arr[k-1].setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -272,7 +274,7 @@ public class home extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         Intent profilo = new Intent(home.this, usersProfile.class);
-                        profilo.putExtra("user", r[0].split(":")[0]);
+                        profilo.putExtra("user", username);
                         profilo.putExtra("type", "0");
                         profilo.putExtra("idProfile", id);
                         startActivity(profilo);
@@ -280,6 +282,7 @@ public class home extends AppCompatActivity {
                 });
                 scroll.addView(view);
             }
+            //j = (j+1)%(res.length-1);
         }
     }
 

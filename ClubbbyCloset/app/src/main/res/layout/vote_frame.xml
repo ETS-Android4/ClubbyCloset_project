@@ -46,13 +46,13 @@
                 android:background="@color/white">
                 <ImageView
                     android:id="@+id/left1"
-                    android:layout_width="190dp"
+                    android:layout_width="540px"
                     android:layout_height="255dp"
                     />
 
                 <ImageView
                     android:id="@+id/right1"
-                    android:layout_width="200dp"
+                    android:layout_width="540px"
                     android:layout_height="255dp"
                     />
             </TableRow>

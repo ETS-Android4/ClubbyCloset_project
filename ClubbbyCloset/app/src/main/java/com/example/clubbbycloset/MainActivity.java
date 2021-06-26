@@ -200,6 +200,13 @@ public class MainActivity extends AppCompatActivity {
             "manuelito;voteSrc:manu1:manu2;users;;" +
             "manuelito;voteSrc:manu3:manu4;users;;" +
             "willB;voteSrc:will1:will2;users;;" ;
+    private  static final String FILE_USERBIO = "userBio.txt";
+    private String userBio = "ginger:17 yo - London - Shopping lover;" +
+            "giulia_:24 yo - Milan - Freelance;" +
+            "gloria.z:28 yo - Naples - Student;" +
+            "manuelito:30 yo - Barcelona - DJ & Producer;" +
+            "giuseppe05:26 yo - Berlin - Junior Manager;" +
+            "willB: 15 yo - NY - Tv show addicted;" ;
 
     private static final String FILE_USER = "userdata.txt";
     Button b1;
@@ -227,6 +234,7 @@ public class MainActivity extends AppCompatActivity {
             saveFile(topics, FILE_TOPICS);
             saveFile(votes, FILE_ALLVOTE);
             saveFile(whovoted, FILE_WHOVOTED);
+            saveFile(userBio, FILE_USERBIO);
         } catch (IOException e) {
             e.printStackTrace();
         }

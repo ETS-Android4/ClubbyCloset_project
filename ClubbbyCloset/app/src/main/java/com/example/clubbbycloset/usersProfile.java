@@ -61,6 +61,7 @@ public class usersProfile extends AppCompatActivity {
     private static final String FILE_ALLUSERS = "allUsersData.txt";
     private  static final String FILE_ALLVOTE = "allVote.txt";
     private static final String FILE_USERVOTE ="uservote.txt";
+    private  static final String FILE_USERBIO = "userBio.txt";
 
     private static int RESULT_LOAD_IMAGE = 1;
     private static int RESULT_LOAD_VOTE = 2;
@@ -181,6 +182,13 @@ public class usersProfile extends AppCompatActivity {
             }
         });
 
+        TextView bio = (TextView) findViewById(R.id.bio);
+        String[] bios = load(FILE_USERBIO).split(";");
+        for(int i =0; i<bios.length; i ++){
+            if(bios[i].split(":")[0].equals(textView)){
+                bio.setText(bios[i].split(":")[1]);
+            }
+        }
 
         name = (TextView)this.findViewById(R.id.username);
         name.setText(textView);

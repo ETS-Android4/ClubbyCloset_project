@@ -26,10 +26,13 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -69,6 +72,7 @@ public class profile extends AppCompatActivity {
     private static final String FILE_USERVOTE ="uservote.txt";
     private  static final String FILE_ALLVOTE = "allVote.txt";
     private static final String FILE_ALLUSERS = "allUsersData.txt";
+    private  static final String FILE_USERBIO = "userBio.txt";
 
     public static String id;
 
@@ -131,6 +135,42 @@ public class profile extends AppCompatActivity {
             e.printStackTrace();
         }
 
+        EditText bio = (EditText) findViewById(R.id.bio);
+        String[] bios = new String[0];
+        String r = "";
+        try {
+            r = load(FILE_USERBIO);
+            bios =r.split(";");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        for(int i =0; i<bios.length; i ++){
+            if(bios[i].split(":")[0].equals(id)){
+                bio.setEnabled(false);
+                bio.setText(bios[i].split(":")[1]);
+            }
+        }
+
+        String finalR = r;
+        bio.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    String insert = String.valueOf(bio.getText());
+                    if(insert.contains(";") || insert.contains(":")){
+                        Toast.makeText(getApplicationContext(), "Invalid String: ';' and ':' are not allow", Toast.LENGTH_SHORT).show();
+                    }else{
+                        try {
+                            save(FILE_USERBIO, finalR + id + ":" + insert + ";");
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+                return false;
+            }
+        });
+
         linearLayout = (LinearLayout) this.findViewById(R.id.linear);
         gridLayout = (GridLayout) this.findViewById((R.id.grid));
         if (type == null){
@@ -138,12 +178,14 @@ public class profile extends AppCompatActivity {
             gridLayout.setVisibility(View.VISIBLE);
             gridLayout.removeAllViews();
             setPhotosGridLayout(FILE_ALLUSERS, gridLayout);
-        }else if (type.equals("0")){
+        }
+        else if (type.equals("0")){
             linearLayout.setVisibility(View.INVISIBLE);
             gridLayout.setVisibility(View.VISIBLE);
             gridLayout.removeAllViews();
             setPhotosGridLayout(FILE_ALLUSERS, gridLayout);
-        }else{
+        }
+        else{
             linearLayout.setVisibility(View.VISIBLE);
             gridLayout.setVisibility(View.INVISIBLE);
             int finalIndex = index;

@@ -297,6 +297,8 @@ public class profile extends AppCompatActivity {
                             startActivityForResult(i, RESULT_LOAD_IMAGE);
                         }
                         else if (item.getTitle().equals("Add photos from gallery")){
+
+                            Toast.makeText(getApplicationContext(), "Select two pictures", Toast.LENGTH_LONG).show();
                             Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                             i.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
                             startActivityForResult(i, RESULT_LOAD_VOTE);
@@ -321,6 +323,7 @@ public class profile extends AppCompatActivity {
 
                         }
                         else if (item.getTitle().equals("Take pictures")){
+                            Toast.makeText(getApplicationContext(), "Take two pictures", Toast.LENGTH_LONG).show();
                             n=1;
                             StartActivity();
                         }

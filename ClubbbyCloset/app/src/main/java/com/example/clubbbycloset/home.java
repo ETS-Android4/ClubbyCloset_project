@@ -22,6 +22,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -144,6 +145,7 @@ public class home extends AppCompatActivity {
                             startActivityForResult(i, RESULT_LOAD_IMAGE);
                         }
                         else if (item.getTitle().equals("Add photos from gallery")){
+                            Toast.makeText(getApplicationContext(), "Select two pictures", Toast.LENGTH_LONG).show();
                             Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                             i.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
                             startActivityForResult(i, RESULT_LOAD_VOTE);
@@ -159,6 +161,7 @@ public class home extends AppCompatActivity {
                                 }
                                 // Continue only if the File was successfully created
                                 if (photoFile != null) {
+
                                     Uri photoURI = getUriForFile(home.this,"com.example.clubbbycloset",photoFile);
                                     takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                                     startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
@@ -167,6 +170,7 @@ public class home extends AppCompatActivity {
 
                         }
                         else if (item.getTitle().equals("Take pictures")){
+                            Toast.makeText(getApplicationContext(), "Take two pictures", Toast.LENGTH_SHORT).show();
                             n=1;
                             StartActivity();
                         }
@@ -180,7 +184,7 @@ public class home extends AppCompatActivity {
 
     private void setHomeLayout(String fileAllusersResult, LinearLayout scroll) throws IOException {
         String[] res = fileAllusersResult.split(";;");
-        int max = 20;
+        int max = 15;
 
         LayoutInflater inflater = (LayoutInflater) getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 

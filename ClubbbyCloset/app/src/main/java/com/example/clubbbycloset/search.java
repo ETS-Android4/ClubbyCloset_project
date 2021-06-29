@@ -94,7 +94,7 @@ public class search extends AppCompatActivity {
         stopic.setOnEditorActionListener(new EditText.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     String insert = String.valueOf(stopic.getText());
                     if(insert.contains(";") || insert.contains(":")){
                         Toast.makeText(getApplicationContext(), "Invalid String: ';' and ':' are not allow", Toast.LENGTH_SHORT).show();
@@ -177,6 +177,7 @@ public class search extends AppCompatActivity {
                             startActivityForResult(i, RESULT_LOAD_IMAGE);
                         }
                         else if (item.getTitle().equals("Add photos from gallery")){
+                            Toast.makeText(getApplicationContext(), "Select two pictures", Toast.LENGTH_LONG).show();
                             Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                             i.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
                             startActivityForResult(i, RESULT_LOAD_VOTE);
@@ -201,6 +202,7 @@ public class search extends AppCompatActivity {
 
                         }
                         else if (item.getTitle().equals("Take pictures")){
+                            Toast.makeText(getApplicationContext(), "Take two pictures", Toast.LENGTH_LONG).show();
                             n=1;
                             StartActivity();
                         }

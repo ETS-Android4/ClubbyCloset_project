@@ -20,13 +20,29 @@
             android:layout_height="wrap_content"
             android:background="@color/purple">
 
+
+            <TextView
+                android:id="@+id/imgView_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="8dp"
+                android:text="New post"
+                android:fontFamily="@font/heebo_medium"
+                android:textSize="22dp"
+                android:background="@color/purple"
+                android:gravity="right"
+                android:textColor="@color/ice"
+                />
+
             <TextView
                 android:id="@+id/save"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="5dp"
-                android:layout_marginLeft="330dp"
+                android:layout_marginLeft="230dp"
                 android:text="Save"
                 android:fontFamily="@font/heebo_medium"
                 android:textSize="22dp"
@@ -62,6 +78,8 @@
                 android:fontFamily="@font/heebo_medium"
                 android:hint="Description"
                 android:background="@null"
+                android:imeOptions="actionNext"
+                android:inputType="text"
                 />
         </LinearLayout>
         <LinearLayout
@@ -78,7 +96,8 @@
                 android:layout_marginLeft="8dp"
                 android:background="@null"
                 android:textColorHint="@color/purple"
-                android:hint="Location" />
+                android:hint="Location" android:imeOptions="actionNext"
+                android:inputType="text"/>
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -95,6 +114,8 @@
                 android:textColorHint="@color/purple"
                 android:fontFamily="@font/heebo_medium"
                 android:hint="Time "
+                android:imeOptions="actionNext"
+                android:inputType="text"
                 />
         </LinearLayout>
         <LinearLayout
@@ -112,6 +133,8 @@
                 android:textColorHint="@color/purple"
                 android:fontFamily="@font/heebo_medium"
                 android:hint="Shopping links "
+                android:imeOptions="actionDone"
+                android:inputType="text"
                 />
         </LinearLayout>
     </LinearLayout>

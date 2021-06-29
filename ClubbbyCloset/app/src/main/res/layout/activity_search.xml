@@ -38,25 +38,30 @@
         tools:ignore="BottomAppBar"
         android:gravity="center">
 
+        <LinearLayout
+            android:layout_width="383dp"
+            android:layout_height="40dp"
+            android:background="@color/litePurple"
+            android:layout_marginLeft="5dp">
+
         <EditText
             android:id="@+id/et_search"
-            android:layout_width="match_parent"
+            android:layout_width="300dp"
             android:layout_height="40dp"
-            android:layout_marginLeft="0dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginRight="14dp"
+            android:layout_marginLeft="8dp"
             android:background="@color/litePurple"
             android:fontFamily="@font/heebo_medium"
-            android:hint="  Search"
+            android:hint="Search"
             android:textAllCaps="false"
             android:textColor="#FFFFFF"
             android:textColorHint="@color/purple"
             android:textSize="16sp"
             android:visibility="visible"
-            android:inputType="text"
             android:singleLine="true"
-            android:imeOptions="actionDone"
+            android:imeOptions="actionSearch"
+            android:inputType="text"
             />
+        </LinearLayout>
     </com.google.android.material.bottomappbar.BottomAppBar>
 
     <LinearLayout

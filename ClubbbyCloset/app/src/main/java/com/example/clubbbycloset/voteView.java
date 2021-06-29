@@ -189,6 +189,7 @@ public class voteView extends AppCompatActivity {
                             startActivityForResult(i, RESULT_LOAD_IMAGE);
                         }
                         else if (item.getTitle().equals("Add photos from gallery")){
+                            Toast.makeText(getApplicationContext(), "Select two pictures", Toast.LENGTH_LONG).show();
                             Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                             i.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
                             startActivityForResult(i, RESULT_LOAD_VOTE);
@@ -213,6 +214,7 @@ public class voteView extends AppCompatActivity {
 
                         }
                         else if (item.getTitle().equals("Take pictures")){
+                            Toast.makeText(getApplicationContext(), "Take two pictures", Toast.LENGTH_LONG).show();
                             n=1;
                             StartActivity();
                         }
@@ -248,6 +250,8 @@ public class voteView extends AppCompatActivity {
     }
 
     private void setVoteLayout(String imgSrc, String descSrc, String votes, ImageView[]imgs, EditText[] des) {
+        TextView title = (TextView) findViewById(R.id.voteView_title);
+        title.setText("Poll");
 
         edDesc.setEnabled(false);
         edTime.setEnabled(false);
@@ -379,6 +383,7 @@ public class voteView extends AppCompatActivity {
         }
 
     }
+
     private File createVoteFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());

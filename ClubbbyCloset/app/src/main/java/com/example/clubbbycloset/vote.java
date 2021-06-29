@@ -155,6 +155,7 @@ public class vote extends AppCompatActivity {
                             startActivityForResult(i, RESULT_LOAD_IMAGE);
                         }
                         else if (item.getTitle().equals("Add photos from gallery")){
+                            Toast.makeText(getApplicationContext(), "Select two pictures", Toast.LENGTH_LONG).show();
                             Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                             i.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
                             startActivityForResult(i, RESULT_LOAD_VOTE);
@@ -179,6 +180,7 @@ public class vote extends AppCompatActivity {
 
                         }
                         else if (item.getTitle().equals("Take pictures")){
+                            Toast.makeText(getApplicationContext(), "Take two pictures", Toast.LENGTH_LONG).show();
                             n=1;
                             StartActivity();
                         }
@@ -223,7 +225,8 @@ public class vote extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
-            }else{
+            }
+            else{
                 int id = getResources().getIdentifier(imgSrc[1],"drawable", "com.example.clubbbycloset");
                 imgLeft.setBackgroundResource(id);
                 id = getResources().getIdentifier(imgSrc[2],"drawable", "com.example.clubbbycloset");
@@ -295,13 +298,22 @@ public class vote extends AppCompatActivity {
             LinearLayout[] vbars = {lbar,rbar};
 
             int finalI = i;
+
+            if(alreadyVoted(username,imgSrc)) {
+                int[] newVote=getVote(FILE_ALLVOTE, finalI);
+                if(newVote[0] != 0 ||newVote[1] != 0  ){
+                    setVoteBar(newVote[0], newVote[1], vtxt, vbars);
+                }
+            }
+
             if (! username.equals(id)){
                 imgRigth.setClickable(true);
                 imgLeft.setClickable(true);
                 imgLeft.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if(! alreadyVoted(username,imgSrc)) {
+                        if(!alreadyVotedandSave(username,imgSrc)) {
+                            Toast.makeText(getApplicationContext(), "in click  ",Toast.LENGTH_SHORT).show();
                             int[] newVote = saveVote(fileAllvote, finalI, 0);
                             setVoteBar(newVote[0], newVote[1], vtxt, vbars);
                         }
@@ -310,7 +322,7 @@ public class vote extends AppCompatActivity {
                 imgRigth.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if(! alreadyVoted(username,imgSrc)) {
+                        if(!alreadyVotedandSave(username,imgSrc)) {
                             int[] newVote = saveVote(fileAllvote, finalI, 1);
                             setVoteBar(newVote[0], newVote[1], vtxt, vbars);
                         }
@@ -324,25 +336,50 @@ public class vote extends AppCompatActivity {
     private boolean alreadyVoted(String username, String[] imgSrc) {
        int x = 0;
        String [] wv =  load(FILE_WHOVOTED).split(";;");
-       String toAdd = "";
        for(int i = 0 ; i<wv.length; i++){
-           toAdd = toAdd + wv[i] ;
            String[] d = wv[i].split(";");
            if(d[0].equals(username) && d[1].split(":")[1].equals(imgSrc[1]) && d[1].split(":")[2].equals(imgSrc[2])){
                if(d[2].split(":").length > 1){
                    if(d[2].contains(id)){
-                       x =1;
+                       x = 1;
                    }else{
-                       toAdd = toAdd + ":" + id;
                        x = 0;
                    }
                }else{
-                   toAdd = toAdd + ":" + id;
                    x = 0;
                }
            }
-           toAdd = toAdd + ";;";
        }
+        if(x==0){
+            return false;
+        }else{
+            return true;
+        }
+
+    }
+
+    private boolean alreadyVotedandSave(String username, String[] imgSrc) {
+        int x = 0;
+        String [] wv =  load(FILE_WHOVOTED).split(";;");
+        String toAdd = "";
+        for(int i = 0 ; i<wv.length; i++){
+            toAdd = toAdd + wv[i] ;
+            String[] d = wv[i].split(";");
+            if(d[0].equals(username) && d[1].split(":")[1].equals(imgSrc[1]) && d[1].split(":")[2].equals(imgSrc[2])){
+                if(d[2].split(":").length > 1){
+                    if(d[2].contains(id)){
+                        x = 1;
+                    }else{
+                        toAdd = toAdd + ":" + id;
+                        x = 0;
+                    }
+                }else{
+                    toAdd = toAdd + ":" + id;
+                    x = 0;
+                }
+            }
+            toAdd = toAdd + ";;";
+        }
         try {
             save(FILE_WHOVOTED, toAdd);
         } catch (IOException e) {
@@ -419,6 +456,14 @@ public class vote extends AppCompatActivity {
         } catch(IOException e){
             e.printStackTrace();
         }
+        return v;
+    }
+
+    public int[] getVote(String FILE_NAME, int i){
+        String[] res = load(FILE_NAME).split(";;");
+        String[] r = res[i].split(";");
+        String[] vote = r[3].split(":");
+        int [] v = {Integer.parseInt(vote[1]), Integer.parseInt(vote[2])};
         return v;
     }
 

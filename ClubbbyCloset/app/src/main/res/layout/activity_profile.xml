@@ -116,7 +116,7 @@
             android:textSize="14dp"
             android:visibility="visible"
             android:textColor="@color/ice"
-            android:hint="Add some personal info"
+            android:hint="Insert your biography"
             android:textColorHint="@color/ice"
             android:background="@color/purple"
             android:inputType="text"

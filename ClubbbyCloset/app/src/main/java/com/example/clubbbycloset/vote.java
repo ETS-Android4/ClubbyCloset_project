@@ -589,23 +589,19 @@ public class vote extends AppCompatActivity {
     private void takeAPicture(int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
             String imgId = null;
-            try {
-                String[] d = load(FILE_USER).split(";;");
-                for(int i=0; i<d.length; i++){
-                    String[] src = d[i].split(";");
-                    if(src[0].split(":")[1].equals(id)){
-                        imgId = src[2].split(":")[1];
-                    }
+            String[] d = load(FILE_USER).split(";;");
+            for(int i=0; i<d.length; i++){
+                String[] src = d[i].split(";");
+                if(src[0].split(":")[1].equals(id)){
+                    imgId = src[2].split(":")[1];
                 }
-                save(FILE_ALLUSERS, load(FILE_ALLUSERS) + id + ":" + imgId + ";imgSrc:" +  currentPhotoPath );
-                Intent imgVote = new Intent(vote.this, imgView.class);
-                imgVote.putExtra("numb", "0");
-                imgVote.putExtra("idProfile", id);
-                imgVote.putExtra("forTopicFile", ";;" + id + ":" + imgId + ";imgSrc:" +  currentPhotoPath );
-                startActivity(imgVote);
-            } catch (IOException e) {
-                e.printStackTrace();
             }
+            Intent imgVote = new Intent(vote.this, imgView.class);
+            imgVote.putExtra("numb", "0");
+            imgVote.putExtra("idProfile", id);
+            imgVote.putExtra("forTopicFile", ";;" + id + ":" + imgId + ";imgSrc:" +  currentPhotoPath );
+            imgVote.putExtra("forImgSet", id + ":" + imgId + ";imgSrc:" +  currentPhotoPath );
+            startActivity(imgVote);
 
         }
     }
@@ -682,23 +678,20 @@ public class vote extends AppCompatActivity {
             int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
             picturePath = cursor.getString(columnIndex);
             String imgId = null;
-            try {
-                String[] d = load(FILE_USER).split(";;");
-                for(int i=0; i<d.length; i++){
-                    String[] src = d[i].split(";");
-                    if(src[0].split(":")[1].equals(id)){
-                        imgId = src[2].split(":")[1];
-                    }
+            String[] d = load(FILE_USER).split(";;");
+            for(int i=0; i<d.length; i++){
+                String[] src = d[i].split(";");
+                if(src[0].split(":")[1].equals(id)){
+                    imgId = src[2].split(":")[1];
                 }
-                save(FILE_ALLUSERS, load(FILE_ALLUSERS) + id + ":" + imgId + ";imgSrc:" +  picturePath );
-                Intent imgVote = new Intent(vote.this, imgView.class);
-                imgVote.putExtra("numb", "0");
-                imgVote.putExtra("idProfile", id);
-                imgVote.putExtra("forTopicFile", ";;" + id + ":" + imgId + ";imgSrc:" +  picturePath );
-                startActivity(imgVote);
-            } catch (IOException e) {
-                e.printStackTrace();
             }
+
+            Intent imgVote = new Intent(vote.this, imgView.class);
+            imgVote.putExtra("numb", "0");
+            imgVote.putExtra("idProfile", id);
+            imgVote.putExtra("forTopicFile", ";;" + id + ":" + imgId + ";imgSrc:" +  picturePath );
+            imgVote.putExtra("forImgSet", id + ":" + imgId + ";imgSrc:" +  picturePath );
+            startActivity(imgVote);
             cursor.close();
         }
     }

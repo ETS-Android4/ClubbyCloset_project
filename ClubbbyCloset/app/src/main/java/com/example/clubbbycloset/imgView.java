@@ -49,7 +49,7 @@ public class imgView extends AppCompatActivity {
     private static final String FILE_USERVOTE ="uservote.txt";
     private static final String FILE_TOPICS = "topics.txt";
     private static final String FILE_ALLUSERS = "allUsersData.txt";
-
+    private static  String forImgSet;
 
     private static final String FILE_USER = "userdata.txt";
 
@@ -77,6 +77,7 @@ public class imgView extends AppCompatActivity {
         String numb = Extra.getString("numb");
         id = Extra.getString("idProfile");
         String forTopicFile = Extra.getString("forTopicFile");
+        forImgSet= Extra.getString("forImgSet");
 
         bhome = (ImageView) this.findViewById(R.id.home);
         bsearch = (ImageView) this.findViewById(R.id.search);
@@ -186,7 +187,7 @@ public class imgView extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 try{
-                    String toAdd = ";descrizione:" + edDesc.getText().toString() + ":" + edLoc.getText().toString() + ":" + edTime.getText().toString() + ":"+edLink.getText().toString()+";;";
+                    String toAdd = forImgSet + ";descrizione:" + edDesc.getText().toString() + ":" + edLoc.getText().toString() + ":" + edTime.getText().toString() + ":"+edLink.getText().toString()+";;";
                     save(FILE_ALLUSERS, load(FILE_ALLUSERS) + toAdd);
                     addInTopicsFile(forTopicFile,edDesc.getText().toString(), edLoc.getText().toString(), edTime.getText().toString(), edLink.getText().toString() );
                 }catch (IOException e) {
@@ -225,7 +226,7 @@ public class imgView extends AppCompatActivity {
         String[] ret = load(FILE_NAME).split(";;");
         String imgSrc;
         if(numb == 0 ){
-            imgSrc= ret[ret.length-1].split(";")[1].split(":")[1];
+            imgSrc= forImgSet.split(";")[1].split(":")[1];
         }else{
             imgSrc= ret[ret.length-numb].split(";")[1].split(":")[1];
             String[] descSrc = ret[ret.length-numb].split(";")[2].split(":");
@@ -234,7 +235,6 @@ public class imgView extends AppCompatActivity {
                 desc[i].setText(descSrc[i+1]);
             }
         }
-        //Toast.makeText(getApplicationContext(), "IN FILE  " + imgSrc ,Toast.LENGTH_SHORT).show();
         Bitmap bm = BitmapFactory.decodeFile(imgSrc);
         Bitmap rotatedBitmap = null;
         try {
@@ -355,23 +355,19 @@ public class imgView extends AppCompatActivity {
     private void takeAPicture(int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
             String imgId = null;
-            try {
-                String[] d = load(FILE_USER).split(";;");
-                for(int i=0; i<d.length; i++){
-                    String[] src = d[i].split(";");
-                    if(src[0].split(":")[1].equals(id)){
-                        imgId = src[2].split(":")[1];
-                    }
+            String[] d = load(FILE_USER).split(";;");
+            for(int i=0; i<d.length; i++){
+                String[] src = d[i].split(";");
+                if(src[0].split(":")[1].equals(id)){
+                    imgId = src[2].split(":")[1];
                 }
-                save(FILE_ALLUSERS, load(FILE_ALLUSERS) + id + ":" + imgId + ";imgSrc:" +  currentPhotoPath );
-                Intent imgVote = new Intent(imgView.this, imgView.class);
-                imgVote.putExtra("numb", "0");
-                imgVote.putExtra("idProfile", id);
-                imgVote.putExtra("forTopicFile", ";;" + id + ":" + imgId + ";imgSrc:" +  currentPhotoPath );
-                startActivity(imgVote);
-            } catch (IOException e) {
-                e.printStackTrace();
             }
+            Intent imgVote = new Intent(imgView.this, imgView.class);
+            imgVote.putExtra("numb", "0");
+            imgVote.putExtra("idProfile", id);
+            imgVote.putExtra("forTopicFile", ";;" + id + ":" + imgId + ";imgSrc:" +  currentPhotoPath );
+            imgVote.putExtra("forImgSet", id + ":" + imgId + ";imgSrc:" +  currentPhotoPath );
+            startActivity(imgVote);
 
         }
     }
@@ -464,23 +460,19 @@ public class imgView extends AppCompatActivity {
             int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
             picturePath = cursor.getString(columnIndex);
             String imgId = null;
-            try {
-                String[] d = load(FILE_USER).split(";;");
-                for(int i=0; i<d.length; i++){
-                    String[] src = d[i].split(";");
-                    if(src[0].split(":")[1].equals(id)){
-                        imgId = src[2].split(":")[1];
-                    }
+            String[] d = load(FILE_USER).split(";;");
+            for(int i=0; i<d.length; i++){
+                String[] src = d[i].split(";");
+                if(src[0].split(":")[1].equals(id)){
+                    imgId = src[2].split(":")[1];
                 }
-                save(FILE_ALLUSERS, load(FILE_ALLUSERS) + id + ":" + imgId + ";imgSrc:" +  picturePath );
-                Intent imgVote = new Intent(imgView.this, imgView.class);
-                imgVote.putExtra("numb", "0");
-                imgVote.putExtra("idProfile", id);
-                imgVote.putExtra("forTopicFile", ";;" + id + ":" + imgId + ";imgSrc:" +  picturePath );
-                startActivity(imgVote);
-            } catch (IOException e) {
-                e.printStackTrace();
             }
+            Intent imgVote = new Intent(imgView.this, imgView.class);
+            imgVote.putExtra("numb", "0");
+            imgVote.putExtra("idProfile", id);
+            imgVote.putExtra("forTopicFile", ";;" + id + ":" + imgId + ";imgSrc:" +  picturePath );
+            imgVote.putExtra("forImgSet", id + ":" + imgId + ";imgSrc:" +  picturePath );
+            startActivity(imgVote);
             cursor.close();
         }
     }

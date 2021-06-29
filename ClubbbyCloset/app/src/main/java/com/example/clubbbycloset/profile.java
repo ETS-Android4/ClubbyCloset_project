@@ -388,6 +388,7 @@ public class profile extends AppCompatActivity {
             for(int i=0; i < buttons;i++) {
                 int indexDaMandare = 0;
                 if (res[i].split(";")[0].split(":")[0].equals(id)) {
+
                     indexDaMandare++;
                     String imgSrc = res[i].split(";")[1].split(":")[1];
                     View view = inflater.inflate(R.layout.img_frame, null);
@@ -650,11 +651,11 @@ public class profile extends AppCompatActivity {
                         imgId = src[2].split(":")[1];
                     }
                 }
-                save(FILE_ALLUSERS, load(FILE_ALLUSERS) + id + ":" + imgId + ";imgSrc:" +  currentPhotoPath );
                 Intent imgVote = new Intent(profile.this, imgView.class);
                 imgVote.putExtra("numb", "0");
                 imgVote.putExtra("idProfile", id);
                 imgVote.putExtra("forTopicFile", ";;" + id + ":" + imgId + ";imgSrc:" +  currentPhotoPath );
+                imgVote.putExtra("forImgSet", id + ":" + imgId + ";imgSrc:" +  currentPhotoPath );
                 startActivity(imgVote);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -688,8 +689,7 @@ public class profile extends AppCompatActivity {
             int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
             picturePath = cursor.getString(columnIndex);
 
-            Toast.makeText(getApplicationContext(), "source" + picturePath,Toast.LENGTH_SHORT).show();
-            try {
+           try {
                 changeProfileImg(picturePath,FILE_USER);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -756,11 +756,11 @@ public class profile extends AppCompatActivity {
                         imgId = src[2].split(":")[1];
                     }
                 }
-                save(FILE_ALLUSERS, load(FILE_ALLUSERS) + id + ":" + imgId + ";imgSrc:" +  picturePath );
                 Intent imgVote = new Intent(profile.this, imgView.class);
                 imgVote.putExtra("numb", "0");
                 imgVote.putExtra("idProfile", id);
                 imgVote.putExtra("forTopicFile", ";;" + id + ":" + imgId + ";imgSrc:" +  picturePath );
+                imgVote.putExtra("forImgSet", id + ":" + imgId + ";imgSrc:" +  picturePath );
                 startActivity(imgVote);
             } catch (IOException e) {
                 e.printStackTrace();

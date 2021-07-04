@@ -18,11 +18,15 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -98,12 +102,14 @@ public class voteView extends AppCompatActivity {
         String imgSrc;
         String descSrc;
         String votes;
+        String voteId;
         if (numb.equals("1")){
+            voteId = Extra.getString("voteId");
             imgSrc = Extra.getString("imgSrc");
             descSrc = Extra.getString("descrSrc");
             votes = Extra.getString("votes");
 
-            setVoteLayout(imgSrc,descSrc, votes, imgs, descri);
+            setVoteLayout(imgSrc,descSrc, votes, imgs, descri, voteId);
         }else {
             setPhotosVote(FILE_USERVOTE, imgs);
         }
@@ -249,10 +255,53 @@ public class voteView extends AppCompatActivity {
 
     }
 
-    private void setVoteLayout(String imgSrc, String descSrc, String votes, ImageView[]imgs, EditText[] des) {
+    private void setVoteLayout(String imgSrc, String descSrc, String votes, ImageView[]imgs, EditText[] des, String voteId) {
         TextView title = (TextView) findViewById(R.id.voteView_title);
         title.setText("Poll");
 
+        if(id.equals(voteId)){
+            TextView delateImage = (TextView)findViewById(R.id.delateImage);
+            delateImage.setText(new String(Character.toChars(0x1f5D1)));
+            delateImage.setTextSize(20);
+            delateImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    LayoutInflater inflater = (LayoutInflater)getSystemService(LAYOUT_INFLATER_SERVICE);
+                    View popupView = inflater.inflate(R.layout.popup_delate, null);
+                    int width = LinearLayout.LayoutParams.WRAP_CONTENT;
+                    int height = LinearLayout.LayoutParams.WRAP_CONTENT;
+                    boolean focusable = true; // lets taps outside the popup also dismiss it
+                    final PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
+                    // show the popup window
+                    // which view you pass in doesn't matter, it is only used for the window tolken
+                    popupWindow.showAtLocation(v, Gravity.CENTER, 0, 0);
+
+                    // dismiss the popup window when touched
+                    TextView byes = (TextView)popupView.findViewById(R.id.byes);
+                    TextView bno = (TextView)popupView.findViewById(R.id.bno);
+
+                    byes.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            try {
+                                delateImage(imgSrc.split(":"));
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+
+                    bno.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            popupWindow.dismiss();
+                        }
+                    });
+
+                }
+
+            });
+        }
         edDesc.setEnabled(false);
         edTime.setEnabled(false);
         edLoc.setEnabled(false);
@@ -293,6 +342,24 @@ public class voteView extends AppCompatActivity {
             }
 
         }
+
+    }
+
+    private void delateImage(String[] imgs) throws IOException {
+        String[] res = load(FILE_ALLVOTE).split(";;");
+        String toAdd = "";
+        for(int i =0; i<res.length; i++){
+            if(res[i].split(";")[0].split(":")[0].equals(id) &&  res[i].split(";")[1].split(":")[1].equals(imgs[1]) &&  res[i].split(";")[1].split(":")[2].equals(imgs[2]) ){
+                toAdd = toAdd;
+            }else{
+                toAdd = toAdd + res[i] + ";;";
+            }
+        }
+        save(FILE_ALLVOTE, toAdd);
+        Intent profile = new Intent(voteView.this, profile.class);
+        profile.putExtra("idProfile", id);
+        profile.putExtra("type", "0");
+        startActivity(profile); // takes the user to the signup activity
 
     }
 

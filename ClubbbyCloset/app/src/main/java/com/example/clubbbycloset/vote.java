@@ -251,9 +251,11 @@ public class vote extends AppCompatActivity {
             else {
                 int id = getResources().getIdentifier(userProfileImageSrc, "drawable", "com.example.clubbbycloset");
                 Bitmap bm = BitmapFactory.decodeResource(getResources(), id);
-                Bitmap resized = Bitmap.createScaledBitmap(bm, 200, 200, false);
-                Bitmap conv_bm = getRoundedRectBitmap(resized, 200);
-                userProfileImage.setImageBitmap(conv_bm);
+                if(bm != null) {
+                    Bitmap resized = Bitmap.createScaledBitmap(bm, 200, 200, false);
+                    Bitmap conv_bm = getRoundedRectBitmap(resized, 200);
+                    userProfileImage.setImageBitmap(conv_bm);
+                }
             }
 
 

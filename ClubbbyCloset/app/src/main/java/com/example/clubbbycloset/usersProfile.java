@@ -313,6 +313,7 @@ public class usersProfile extends AppCompatActivity {
                         voteView.putExtra("descrSrc", t[finalI].split(";")[2]);
                         voteView.putExtra("votes", t[finalI].split(";")[3]);
                         voteView.putExtra("idProfile", id);
+                        voteView.putExtra("voteId", username);
 
                         startActivity(voteView);
                     }

@@ -361,6 +361,7 @@ public class profile extends AppCompatActivity {
                         voteView.putExtra("descrSrc", t[finalI].split(";")[2]);
                         voteView.putExtra("votes", t[finalI].split(";")[3]);
                         voteView.putExtra("idProfile", id);
+                        voteView.putExtra("voteId", id);
 
                         startActivity(voteView);
                     }
@@ -452,7 +453,7 @@ public class profile extends AppCompatActivity {
                     //Bitmap resized = Bitmap.createScaledBitmap(rotatedBitmap, 550, 600, false);
                     newi.setImageBitmap(rotatedBitmap);
 
-                    TextView edesc, elocation, etime, elink;
+                    TextView edesc, elocation, etime, elink, delateImage;
 
                     edesc = (TextView)lview.findViewById(R.id.edesc);
                     edesc.setText(new String(Character.toChars(0x1F4F7)));
@@ -465,6 +466,47 @@ public class profile extends AppCompatActivity {
 
                     elink = (TextView)lview.findViewById(R.id.elink);
                     elink.setText(new String(Character.toChars(0x1F517)));
+
+                    delateImage = (TextView)lview.findViewById(R.id.delateImage);
+                    delateImage.setText(new String(Character.toChars(0x1f5D1)));
+                    delateImage.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            LayoutInflater inflater = (LayoutInflater)getSystemService(LAYOUT_INFLATER_SERVICE);
+                            View popupView = inflater.inflate(R.layout.popup_delate, null);
+                            int width = LinearLayout.LayoutParams.WRAP_CONTENT;
+                            int height = LinearLayout.LayoutParams.WRAP_CONTENT;
+                            boolean focusable = true; // lets taps outside the popup also dismiss it
+                            final PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
+                            // show the popup window
+                            // which view you pass in doesn't matter, it is only used for the window tolken
+                            popupWindow.showAtLocation(v, Gravity.CENTER, 0, 0);
+
+                            // dismiss the popup window when touched
+                            TextView byes = (TextView)popupView.findViewById(R.id.byes);
+                            TextView bno = (TextView)popupView.findViewById(R.id.bno);
+
+                            byes.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    try {
+                                        delateImage(imgSrc);
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            });
+
+                            bno.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    popupWindow.dismiss();
+                                }
+                            });
+
+                        }
+
+                    });
 
                     TextView description = (TextView) lview.findViewById(R.id.description);
                     TextView location = (TextView) lview.findViewById(R.id.location);
@@ -502,6 +544,24 @@ public class profile extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void delateImage(String imgSrc) throws IOException {
+        String[] res = load(FILE_ALLUSERS).split(";;");
+        String toAdd = "";
+        for(int i =0; i<res.length; i++){
+            if(res[i].split(";")[0].split(":")[0].equals(id) && res[i].split(";")[1].split(":")[1].equals(imgSrc)){
+                toAdd = toAdd;
+            }else{
+                toAdd = toAdd + res[i] + ";;";
+            }
+        }
+        save(FILE_ALLUSERS, toAdd);
+        Intent profile = new Intent(profile.this, profile.class);
+        profile.putExtra("idProfile", id);
+        profile.putExtra("type", "0");
+        startActivity(profile); // takes the user to the signup activity
+
     }
 
     public static Bitmap rotateImage(String path, Bitmap source) throws IOException {

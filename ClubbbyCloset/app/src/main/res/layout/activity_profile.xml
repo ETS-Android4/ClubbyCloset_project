@@ -80,7 +80,7 @@
                 android:clickable="true"/>
 
             <TextView
-                android:id="@+id/username"
+                android:id="@+id/usernameProfile"
                 android:layout_width="265dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"

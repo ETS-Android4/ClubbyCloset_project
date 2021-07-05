@@ -31,14 +31,16 @@
                 android:textSize="18dp"
                 android:layout_gravity="center"
                 />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/delateImage"
-                android:layout_marginLeft="295dp"
-                android:layout_gravity="center_vertical"
-                android:textSize="25dp"
-                />
+
+            <ImageView
+                android:id="@+id/menu"
+                android:layout_width="15dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="200dp"
+                android:clickable="true"
+                android:src="@drawable/menuscuro"
+                android:visibility="invisible" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"

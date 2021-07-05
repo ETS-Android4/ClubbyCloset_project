@@ -111,7 +111,7 @@ public class home extends AppCompatActivity {
         bsearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent search = new Intent(home.this, search.class);
+                Intent search = new Intent(home.this,search.class);
                 search.putExtra("idProfile", id);
                 startActivity(search);
             }
@@ -185,8 +185,7 @@ public class home extends AppCompatActivity {
 
     private void setHomeLayout(String fileAllusersResult, LinearLayout scroll) throws IOException {
         String[] res = fileAllusersResult.split(";;");
-        int max = 15;
-
+        int max = 10;
         LayoutInflater inflater = (LayoutInflater) getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         for (int i = 0; i < max; i++) {

@@ -44,7 +44,7 @@ import java.util.Date;
 import static androidx.core.content.FileProvider.getUriForFile;
 
 public class voteView extends AppCompatActivity {
-    ImageView bhome, bsearch, badd, bvote, bprofile , f1, f2;
+    ImageView bhome, bsearch, badd, bvote, bprofile , f1, f2, buttonmenu;
     EditText edDesc, edLoc, edTime;
     TextView bsave, rv, lv;
     public static String id;
@@ -260,47 +260,54 @@ public class voteView extends AppCompatActivity {
         title.setText("Poll");
 
         if(id.equals(voteId)){
-            TextView delateImage = (TextView)findViewById(R.id.delateImage);
-            delateImage.setText(new String(Character.toChars(0x1f5D1)));
-            delateImage.setTextSize(20);
-            delateImage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    LayoutInflater inflater = (LayoutInflater)getSystemService(LAYOUT_INFLATER_SERVICE);
-                    View popupView = inflater.inflate(R.layout.popup_delate, null);
-                    int width = LinearLayout.LayoutParams.WRAP_CONTENT;
-                    int height = LinearLayout.LayoutParams.WRAP_CONTENT;
-                    boolean focusable = true; // lets taps outside the popup also dismiss it
-                    final PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
-                    // show the popup window
-                    // which view you pass in doesn't matter, it is only used for the window tolken
-                    popupWindow.showAtLocation(v, Gravity.CENTER, 0, 0);
+            buttonmenu = (ImageView) findViewById(R.id.menu);
+            buttonmenu.setVisibility(View.VISIBLE);
+            buttonmenu.setOnClickListener(new View.OnClickListener() {
+               @Override
+               public void onClick(View v) {
+                   PopupMenu popup_edit = new PopupMenu(voteView.this, buttonmenu);
+                   popup_edit.getMenuInflater().inflate(R.menu.popup_modify_delete_poll, popup_edit.getMenu());
+                   popup_edit.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                       @RequiresApi(api = Build.VERSION_CODES.M)
+                       public boolean onMenuItemClick(MenuItem item) {
+                           if (item.getTitle().equals("Edit poll")) {
+                               Toast.makeText(getApplicationContext(), "Function not available now", Toast.LENGTH_LONG).show();
+                           }
+                           if (item.getTitle().equals("Delete poll")) {
+                               LayoutInflater inflater = (LayoutInflater)getSystemService(LAYOUT_INFLATER_SERVICE);
+                               View popupView = inflater.inflate(R.layout.popup_delate, null);
+                               int width = LinearLayout.LayoutParams.WRAP_CONTENT;
+                               int height = LinearLayout.LayoutParams.WRAP_CONTENT;
+                               boolean focusable = true; // lets taps outside the popup also dismiss it
+                               final PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
+                               popupWindow.showAtLocation(v, Gravity.CENTER, 0, 0);
+                               TextView byes = (TextView)popupView.findViewById(R.id.byes);
+                               TextView bno = (TextView)popupView.findViewById(R.id.bno);
 
-                    // dismiss the popup window when touched
-                    TextView byes = (TextView)popupView.findViewById(R.id.byes);
-                    TextView bno = (TextView)popupView.findViewById(R.id.bno);
+                               byes.setOnClickListener(new View.OnClickListener() {
+                                   @Override
+                                   public void onClick(View v) {
+                                       try {
+                                           delateImage(imgSrc.split(":"));
+                                       } catch (IOException e) {
+                                           e.printStackTrace();
+                                       }
+                                   }
+                               });
 
-                    byes.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            try {
-                                delateImage(imgSrc.split(":"));
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    });
-
-                    bno.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            popupWindow.dismiss();
-                        }
-                    });
-
-                }
-
-            });
+                               bno.setOnClickListener(new View.OnClickListener() {
+                                   @Override
+                                   public void onClick(View v) {
+                                       popupWindow.dismiss();
+                                   }
+                               });
+                           }
+                           return true;
+                       }
+                   });
+                   popup_edit.show();//showing popup menu
+               }
+           });
         }
         edDesc.setEnabled(false);
         edTime.setEnabled(false);

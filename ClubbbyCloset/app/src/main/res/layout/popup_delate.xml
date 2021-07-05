@@ -39,7 +39,7 @@
                     android:textColor="@color/purple"
                     android:textAlignment="center"
                     android:fontFamily="@font/heebo_medium"
-                    android:text="delate?"
+                    android:text="to delete it?"
                     android:gravity="center_vertical"
                     tools:ignore="RtlCompat" />
             </TableRow>

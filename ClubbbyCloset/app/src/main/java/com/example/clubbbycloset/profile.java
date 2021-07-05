@@ -113,7 +113,7 @@ public class profile extends AppCompatActivity {
         blogout = (ImageView)this.findViewById(R.id.logout);
         bprofileImg = (ImageView)this.findViewById(R.id.profile_img);
 
-        tvusername= (TextView)this.findViewById(R.id.username);
+        tvusername= (TextView)this.findViewById(R.id.usernameProfile);
         String name =null;
         try {
             String[] t =load(FILE_USER).split(";;");
@@ -437,6 +437,9 @@ public class profile extends AppCompatActivity {
     }
 
     private void setPhotosLinearLayuout(String FILE_NAME,  LinearLayout linearLayout) {
+        LinearLayout topBar = (LinearLayout)findViewById(R.id.TopAppBar);
+        LinearLayout voteBar = (LinearLayout)findViewById(R.id.voteBar);
+
         try {
             String[] res = load(FILE_NAME).split(";;");
             LayoutInflater inflater = (LayoutInflater)getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -446,6 +449,28 @@ public class profile extends AppCompatActivity {
                     String imgSrc = res[i].split(";")[1].split(":")[1];
                     String descSrc[] = res[i].split(";")[2].split(":");
                     View lview = inflater.inflate(R.layout.img_desc_frame, null);
+
+                    TextView username = (TextView) lview.findViewById(R.id.username);
+                    username.setText(res[i].split(";")[0].split(":")[0]);
+                    username.setVisibility(View.VISIBLE);
+                    String userProfileImageSrc = res[i].split(";")[0].split(":")[1];
+                    ImageView userProfileImage = (ImageView)lview.findViewById(R.id.userProfileImg);
+                    if (userProfileImageSrc.contains("storage")) {
+                        Bitmap bml = BitmapFactory.decodeFile(userProfileImageSrc);
+                        Bitmap resized = Bitmap.createScaledBitmap(bml, 200, 200, false);
+                        Bitmap conv_bm = getRoundedRectBitmap(rotateImage(userProfileImageSrc, resized), 200);
+                        userProfileImage.setImageBitmap(conv_bm);
+
+                    }
+                    else {
+                        int id = getResources().getIdentifier(userProfileImageSrc, "drawable", "com.example.clubbbycloset");
+                        Bitmap bm = BitmapFactory.decodeResource(getResources(), id);
+                        if (bm != null ) {
+                            Bitmap resized = Bitmap.createScaledBitmap(bm, 200, 200, false);
+                            Bitmap conv_bm = getRoundedRectBitmap(resized, 200);
+                            userProfileImage.setImageBitmap(conv_bm);
+                        }
+                    }
 
                     ImageView newi = (ImageView) lview.findViewById(R.id.foto);
                     Bitmap bm = BitmapFactory.decodeFile(imgSrc);
@@ -467,45 +492,53 @@ public class profile extends AppCompatActivity {
                     elink = (TextView)lview.findViewById(R.id.elink);
                     elink.setText(new String(Character.toChars(0x1F517)));
 
-                    delateImage = (TextView)lview.findViewById(R.id.delateImage);
-                    delateImage.setText(new String(Character.toChars(0x1f5D1)));
-                    delateImage.setOnClickListener(new View.OnClickListener() {
+                    ImageView buttonmenu = (ImageView) lview.findViewById(R.id.menu);
+                    buttonmenu.setVisibility(View.VISIBLE);
+                    buttonmenu.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            LayoutInflater inflater = (LayoutInflater)getSystemService(LAYOUT_INFLATER_SERVICE);
-                            View popupView = inflater.inflate(R.layout.popup_delate, null);
-                            int width = LinearLayout.LayoutParams.WRAP_CONTENT;
-                            int height = LinearLayout.LayoutParams.WRAP_CONTENT;
-                            boolean focusable = true; // lets taps outside the popup also dismiss it
-                            final PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
-                            // show the popup window
-                            // which view you pass in doesn't matter, it is only used for the window tolken
-                            popupWindow.showAtLocation(v, Gravity.CENTER, 0, 0);
-
-                            // dismiss the popup window when touched
-                            TextView byes = (TextView)popupView.findViewById(R.id.byes);
-                            TextView bno = (TextView)popupView.findViewById(R.id.bno);
-
-                            byes.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    try {
-                                        delateImage(imgSrc);
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
+                            PopupMenu popup_edit = new PopupMenu(profile.this, buttonmenu);
+                            popup_edit.getMenuInflater().inflate(R.menu.popup_modify_delete, popup_edit.getMenu());
+                            popup_edit.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                                @RequiresApi(api = Build.VERSION_CODES.M)
+                                public boolean onMenuItemClick(MenuItem item) {
+                                    if (item.getTitle().equals("Edit post")) {
+                                        Toast.makeText(getApplicationContext(), "Function not available now", Toast.LENGTH_LONG).show();
                                     }
+                                    if (item.getTitle().equals("Delete post")) {
+                                        LayoutInflater inflater = (LayoutInflater)getSystemService(LAYOUT_INFLATER_SERVICE);
+                                        View popupView = inflater.inflate(R.layout.popup_delate, null);
+                                        int width = LinearLayout.LayoutParams.WRAP_CONTENT;
+                                        int height = LinearLayout.LayoutParams.WRAP_CONTENT;
+                                        boolean focusable = true; // lets taps outside the popup also dismiss it
+                                        final PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
+                                        popupWindow.showAtLocation(v, Gravity.CENTER, 0, 0);
+                                        TextView byes = (TextView)popupView.findViewById(R.id.byes);
+                                        TextView bno = (TextView)popupView.findViewById(R.id.bno);
+
+                                        byes.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                try {
+                                                    delateImage(imgSrc);
+                                                } catch (IOException e) {
+                                                    e.printStackTrace();
+                                                }
+                                            }
+                                        });
+
+                                        bno.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                popupWindow.dismiss();
+                                            }
+                                        });
+                                    }
+                                    return true;
                                 }
                             });
-
-                            bno.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    popupWindow.dismiss();
-                                }
-                            });
-
+                            popup_edit.show();//showing popup menu
                         }
-
                     });
 
                     TextView description = (TextView) lview.findViewById(R.id.description);

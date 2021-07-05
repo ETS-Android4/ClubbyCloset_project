@@ -315,7 +315,6 @@ public class vote extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         if(!alreadyVotedandSave(username,imgSrc)) {
-                            Toast.makeText(getApplicationContext(), "in click  ",Toast.LENGTH_SHORT).show();
                             int[] newVote = saveVote(fileAllvote, finalI, 0);
                             setVoteBar(newVote[0], newVote[1], vtxt, vbars);
                         }

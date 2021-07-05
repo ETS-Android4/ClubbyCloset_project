@@ -11,50 +11,56 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
             app:layout_constraintBottom_toTopOf="@id/bottomAppBar">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/purple">
+
                 <TextView
                     android:id="@+id/voteView_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginBottom="5dp"
-                    android:layout_marginLeft="10dp"
-                    android:text="New Poll"
                     android:fontFamily="@font/heebo_medium"
-                    android:textSize="22dp"
                     android:gravity="left"
+                    android:text="New Poll"
                     android:textColor="@color/ice"
-                    />
+                    android:textSize="22dp" />
 
-            <TextView
-                android:id="@+id/save"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="235dp"
-                android:text="Save"
-                android:fontFamily="@font/heebo_medium"
-                android:textSize="22dp"
-                android:gravity="right"
-                android:textColor="@color/ice"
-                android:clickable="true"
-                />
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
                 <TextView
+                    android:id="@+id/save"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/delateImage"
-                    android:layout_marginLeft="360dp"
-                    android:textSize="20dp"
-                    />
+                    android:layout_marginLeft="235dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="5dp"
+                    android:clickable="true"
+                    android:fontFamily="@font/heebo_medium"
+                    android:gravity="right"
+                    android:text="Save"
+                    android:textColor="@color/ice"
+                    android:textSize="22dp" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="20dp">
+
+                    <ImageView
+                        android:id="@+id/menu"
+                        android:layout_width="20dp"
+                        android:layout_height="25dp"
+                        android:layout_gravity="center"
+                        android:clickable="true"
+                        android:src="@drawable/menu"
+                        android:visibility="invisible" />
+                </LinearLayout>
+
             </LinearLayout>
+
             <TableLayout
                     android:id="@+id/tableLayout1"
                     android:layout_width="match_parent"

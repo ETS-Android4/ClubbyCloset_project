@@ -48,6 +48,7 @@
         android:inputType="textPassword"
         android:padding="15dp"
         android:textColorHint="@color/purple"
+        android:textColor="@color/ice"
         android:textSize="15sp" />
 
 
@@ -63,6 +64,7 @@
         android:hint="Insert again password"
         android:inputType="textPassword"
         android:padding="15dp"
+        android:textColor="@color/ice"
         android:textColorHint="@color/purple"
         android:textSize="15sp" />
 

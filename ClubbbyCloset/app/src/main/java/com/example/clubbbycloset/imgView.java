@@ -211,7 +211,7 @@ public class imgView extends AppCompatActivity {
         for(int i=0; i<topics.length; i++){
             toAddInTopic = toAddInTopic + topics[i];
             for(int j = 0; j<descr.length; j++){
-                if(topics[i].split(";;")[0].contains(descr[j])){
+                if(topics[i].split(";;")[0].equals(descr[j])){
                     j = descr.length; //se no aggiungo piu volte allo stesso topic
                     toAddInTopic = toAddInTopic + forTopicFile + ";descrizione:" + description + ":" + location + ":" + time + ":" + link ;
                 }

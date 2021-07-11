@@ -424,8 +424,34 @@ public class usersProfile extends AppCompatActivity {
                     String descSrc[] = res[i].split(";")[2].split(":");
                     View lview = inflater.inflate(R.layout.img_desc_frame, null);
 
-                    ImageView newi = (ImageView) lview.findViewById(R.id.foto);
+                    TextView userName = (TextView) lview.findViewById(R.id.username);
+                    userName.setText(res[i].split(";")[0].split(":")[0]);
+                    userName.setVisibility(View.VISIBLE);
+                    String userProfileImageSrc = res[i].split(";")[0].split(":")[1];
+                    ImageView userProfileImage = (ImageView)lview.findViewById(R.id.userProfileImg);
+                    if (userProfileImageSrc.contains("storage")) {
+                        Bitmap bml = BitmapFactory.decodeFile(userProfileImageSrc);
+                        Bitmap resized = Bitmap.createScaledBitmap(bml, 200, 200, false);
+                        Bitmap conv_bm = null;
+                        try {
+                            conv_bm = getRoundedRectBitmap(rotateImage(userProfileImageSrc, resized), 200);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        userProfileImage.setImageBitmap(conv_bm);
 
+                    }
+                    else {
+                        int id = getResources().getIdentifier(userProfileImageSrc, "drawable", "com.example.clubbbycloset");
+                        Bitmap bm = BitmapFactory.decodeResource(getResources(), id);
+                        if (bm != null ) {
+                            Bitmap resized = Bitmap.createScaledBitmap(bm, 200, 200, false);
+                            Bitmap conv_bm = getRoundedRectBitmap(resized, 200);
+                            userProfileImage.setImageBitmap(conv_bm);
+                        }
+                    }
+
+                    ImageView newi = (ImageView) lview.findViewById(R.id.foto);
                     if(imgSrc.contains("storage")) {
                         Bitmap bm = BitmapFactory.decodeFile(imgSrc);
                         Bitmap rotatedBitmap = null;
